@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.0-beta.2] - 2026-10-20
+
+### Changed
+- **Comprehensive Project Branding Alignment across Entire Repository (`Re:CraftLaunch` ➔ `KeyStar`)**:
+  - Unified all lingering legacy codename occurrences across `README.md`, `README_JA.md`, complete bilingual documentation (`docs/en/`, `docs/ja/`), AI directives (`GEMINI.md`, `RULES.md`, `.agents/`), and source code doc-comments/test fixture paths to official product name "**KeyStar**".
+  - Cleaned up obsolete root placeholder `TODO.md`, consolidating roadmap and checklists entirely under `docs/ja/TODO.md` and `docs/en/TODO.md`.
+  - Re-verified vertical alignment of ASCII art frames and Markdown tables with East Asian Width specifications.
+
 ## [0.1.0-beta.1] - 2026-10-20
 
 ### Changed

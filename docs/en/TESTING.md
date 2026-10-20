@@ -1,6 +1,6 @@
-# Re:CraftLaunch: Testing Architecture & Quality Guidelines (TESTING)
+# KeyStar: Testing Architecture & Quality Guidelines (TESTING)
 
-This document establishes the testing architecture, isolation conventions, and quality verification pipelines for `Re:CraftLaunch`.
+This document establishes the testing architecture, isolation conventions, and quality verification pipelines for `KeyStar`.
 
 ---
 

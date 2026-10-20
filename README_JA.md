@@ -1,12 +1,12 @@
-﻿<div align="center">
+<div align="center">
 
-# 🚀 Re:CraftLaunch
+# 🚀 KeyStar
 
 **名作「CraftLaunch 2」の原点思想を受け継ぐ、Rust製の超軽量1行キーボードランチャー**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Rust 2024](https://img.shields.io/badge/Rust-2024%20Edition-orange.svg)](https://www.rust-lang.org)
-[![Version](https://img.shields.io/badge/version-v0.1.0--alpha.5-brightgreen.svg)](Cargo.toml)
+[![Version](https://img.shields.io/badge/version-v0.1.0--beta.2-brightgreen.svg)](Cargo.toml)
 [![Platform](https://img.shields.io/badge/Platform-Windows-blue.svg)](https://github.com/tkshnkgwr/KeyStar)
 
 [English](./README.md) | [日本語](./README_JA.md)
@@ -27,7 +27,7 @@
 
 ## 背景と開発方針
 
-本ランチャー『Re:CraftLaunch』は、Windows向けの名作キーボードランチャー「CraftLaunch 2」のミニマリズムとキーボード完結の操作感をルーツとしています。
+本ランチャー『KeyStar』は、Windows向けの名作キーボードランチャー「CraftLaunch 2」のミニマリズムとキーボード完結の操作感をルーツとしています。
 
 PC全体をインデックス検索する現代の巨大なランチャーとは異なり、**「自分が決めたショートカットだけを、最短キーストロークで即座に叩く」** というCraftLaunch 2の使い心地は、四半世紀近く経った今なお色褪せない至高の道具でした。
 
@@ -36,13 +36,13 @@ PC全体をインデックス検索する現代の巨大なランチャーとは
 * **開発体制**:  
   Rustによるコード実装は、AI（Gemini / 大賢者）と相談しながら進めています。
 * **現在のステータス**:  
-  現在は `v0.1.0-beta.1`（β版初回リリース）です。Phase 0（環境・規約）、Phase 1（コアロジック）、Phase 2（egui 1行GUI）、Phase 3（OS連携常駐：Alt+Spaceホットキー・トレイ・クリップボード）、および全15種の日英完全対称ドキュメント体系がすべて整備完了・実動検証済みです。スタブ・仮置きコードが存在しないことを完全精査済みであり、ここから先のパッケージングや最適化（Phase 4: バイナリ最適化・Scoop対応等）は **β版（Beta）** フェーズとして進行します。
+  現在は `v0.1.0-beta.2` です。Phase 0（環境・規約）、Phase 1（コアロジック）、Phase 2（egui 1行GUI）、Phase 3（OS連携常駐：Alt+Spaceホットキー・トレイ・クリップボード）、および全15種の日英完全対称ドキュメント体系がすべて整備完了・実動検証済みです。スタブ・仮置きコードが存在しないことを完全精査済みであり、ここから先のパッケージングや最適化（Phase 4: バイナリ最適化・Scoop対応等）は **β版（Beta）** フェーズとして進行します。
 
 ---
 
 ## 🙏 謝辞とリスペクト (Special Thanks & Respect)
 
-本プロジェクト『Re:CraftLaunch』は、**craftware** 氏が開発されたWindows向け不朽の名作コマンドラインランチャー「**CraftLaunch**（CraftLaunch 2 / 3）」に、最大限の敬意と心からの感謝を表して開発されています。
+本プロジェクト『KeyStar』は、**craftware** 氏が開発されたWindows向け不朽の名作コマンドラインランチャー「**CraftLaunch**（CraftLaunch 2 / 3）」に、最大限の敬意と心からの感謝を表して開発されています。
 
 - **オリジナル**: CraftLaunch (clnch)
 - **作者**: **craftware** 氏

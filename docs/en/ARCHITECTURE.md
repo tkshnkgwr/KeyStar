@@ -1,8 +1,8 @@
-# Re:CraftLaunch: System Architecture (ARCHITECTURE)
+# KeyStar: System Architecture (ARCHITECTURE)
 
 ## 1. Project Objectives & Design Philosophy
 
-`Re:CraftLaunch` is an ultra-lightweight keyboard launcher built in **Rust (Edition 2024)**, reincarnating the core design principles of the classic Windows keyboard launcher "**CraftLaunch 2**" (single-line, instant response, keyboard-driven, registered shortcuts execution).
+`KeyStar` is an ultra-lightweight keyboard launcher built in **Rust (Edition 2024)**, reincarnating the core design principles of the classic Windows keyboard launcher "**CraftLaunch 2**" (single-line, instant response, keyboard-driven, registered shortcuts execution).
 
 ### 🎯 Three Core Pillars
 1. **Ultimate Minimalism (100–300 Lines of Elegance)**:
@@ -25,7 +25,7 @@ flowchart TD
         ShellExecute["open::that_detached (Shell Association)"]
     end
 
-    subgraph App ["Re:CraftLaunch Application"]
+    subgraph App ["KeyStar Application"]
         Tray["System Tray Resident (tray-icon)"]
         GUI["Single-Line Minimal Window (eframe / egui)"]
         

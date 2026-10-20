@@ -1,10 +1,10 @@
-# Re:CraftLaunch: Specification (SPECIFICATION)
+# KeyStar: Specification (SPECIFICATION)
 
 ## 1. Application Overview
 
 | Item              | Details                                                                  |
 | :---------------- | :----------------------------------------------------------------------- |
-| **Name**          | Re:CraftLaunch                                                           |
+| **Name**          | KeyStar                                                                  |
 | **Category**      | Ultra-Lightweight Single-Line Windows Keyboard Launcher                  |
 | **Language**      | Rust (Edition 2024)                                                      |
 | **GUI Framework** | `eframe` / `egui`                                                        |

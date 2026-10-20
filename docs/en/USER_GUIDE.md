@@ -1,13 +1,13 @@
-# Re:CraftLaunch: User Guide (USER_GUIDE)
+# KeyStar: User Guide (USER_GUIDE)
 
-User manual and setup guide for `Re:CraftLaunch`, the ultra-lightweight keyboard launcher reviving the spirit of CraftLaunch 2.
+User manual and setup guide for `KeyStar`, the ultra-lightweight keyboard launcher reviving the spirit of CraftLaunch 2.
 
 ---
 
 ## 1. Quick Start
 
 ### Step 1: Launch
-- Run `Re-CraftLaunch.exe`.
+- Run `KeyStar.exe`.
 - It sits quietly in the **system tray** without cluttering your taskbar. Monitored folders are created automatically.
 
 ### Step 2: Invoke

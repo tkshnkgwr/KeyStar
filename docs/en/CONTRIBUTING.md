@@ -1,6 +1,6 @@
-# Re:CraftLaunch: Contribution Guidelines (CONTRIBUTING)
+# KeyStar: Contribution Guidelines (CONTRIBUTING)
 
-Thank you for your interest in contributing to `Re:CraftLaunch`!
+Thank you for your interest in contributing to `KeyStar`!
 This project prioritizes preserving the core spirit of CraftLaunch 2 (ultra-lightweight, blazing fast, keyboard-first) while sustaining a clean, highly reliable Rust codebase.
 
 ---

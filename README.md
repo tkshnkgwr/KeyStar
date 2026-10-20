@@ -1,12 +1,12 @@
-﻿<div align="center">
+<div align="center">
 
-# 🚀 Re:CraftLaunch
+# 🚀 KeyStar
 
 **Ultra-Lightweight, Single-Line Keyboard Launcher in Rust, Reincarnating the Spirit of the Classic "CraftLaunch 2"**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Rust 2024](https://img.shields.io/badge/Rust-2024%20Edition-orange.svg)](https://www.rust-lang.org)
-[![Version](https://img.shields.io/badge/version-v0.1.0--alpha.5-brightgreen.svg)](Cargo.toml)
+[![Version](https://img.shields.io/badge/version-v0.1.0--beta.2-brightgreen.svg)](Cargo.toml)
 [![Platform](https://img.shields.io/badge/Platform-Windows-blue.svg)](https://github.com/tkshnkgwr/KeyStar)
 
 [English](./README.md) | [日本語](./README_JA.md)
@@ -27,22 +27,22 @@
 
 ## Background & Philosophy
 
-`Re:CraftLaunch` is rooted in the minimalist design philosophy and keyboard-first ergonomics of the legendary Windows command-line launcher "**CraftLaunch 2**".
+`KeyStar` is rooted in the minimalist design philosophy and keyboard-first ergonomics of the legendary Windows command-line launcher "**CraftLaunch 2**".
 
 Unlike modern, resource-heavy desktop launchers that index entire drives and pollute search results, the core principle of CraftLaunch 2 remains timeless: **"Trigger only the shortcuts you explicitly placed in your designated folder, with minimal keystrokes."**
 
-Having relied on CraftLaunch for many years, the author wanted to create an everlasting, zero-dependency, single-binary successor tailored for modern Windows 11. By using modern Rust and a cleanroom approach (reconstructing solely the UI layout and tactile keyboard ergonomics), `Re:CraftLaunch` aims to be an indestructible daily utility.
+Having relied on CraftLaunch for many years, the author wanted to create an everlasting, zero-dependency, single-binary successor tailored for modern Windows 11. By using modern Rust and a cleanroom approach (reconstructing solely the UI layout and tactile keyboard ergonomics), `KeyStar` aims to be an indestructible daily utility.
 
 * **Development Approach**:  
   Implemented in Rust in collaborative pair programming with AI (Gemini).
 * **Current Status**:  
-  Currently at `v0.1.0-beta.1` (Beta Phase Initial Release). Phase 0 (Setup & Specs), Phase 1 (Core Logic), Phase 2 (egui minimal 1-line GUI), Phase 3 (OS integration: Alt+Space global hotkey, system tray daemon, and arboard clipboard copy), and the complete 15-document bilingual specification suite are fully delivered and verified. All stub implementations have been audited and confirmed zero. Subsequent packaging and optimizations (Phase 4) are conducted under the **Beta** phase.
+  Currently at `v0.1.0-beta.2`. Phase 0 (Setup & Specs), Phase 1 (Core Logic), Phase 2 (egui minimal 1-line GUI), Phase 3 (OS integration: Alt+Space global hotkey, system tray daemon, and arboard clipboard copy), and the complete 15-document bilingual specification suite are fully delivered and verified. All stub implementations have been audited and confirmed zero. Subsequent packaging and optimizations (Phase 4) are conducted under the **Beta** phase.
 
 ---
 
 ## 🙏 Special Thanks & Respect
 
-The `Re:CraftLaunch` project is developed with the utmost respect and heartfelt gratitude to **craftware**, the creator of the timeless, legendary Windows keyboard launcher "**CraftLaunch** (CraftLaunch 2 / 3)".
+The `KeyStar` project is developed with the utmost respect and heartfelt gratitude to **craftware**, the creator of the timeless, legendary Windows keyboard launcher "**CraftLaunch** (CraftLaunch 2 / 3)".
 
 - **Original Software**: CraftLaunch (clnch)
 - **Author**: **craftware**
@@ -58,7 +58,7 @@ We express our deepest appreciation to craftware for creating such an exceptiona
 ## 🎯 Concept & Design Highlights
 
 - **Modern Remake of the Classic "CraftLaunch 2"**:
-  - Rather than recreating the bloated, Python-embedded path of "CraftLaunch 3", `Re:CraftLaunch` revives the widely celebrated essence of **CraftLaunch 2 (single-line, instant response, keyboard-driven, registered shortcuts execution)** in modern Rust.
+  - Rather than recreating the bloated, Python-embedded path of "CraftLaunch 3", `KeyStar` revives the widely celebrated essence of **CraftLaunch 2 (single-line, instant response, keyboard-driven, registered shortcuts execution)** in modern Rust.
   - Adheres to the ultimate minimalism: **"Trigger only the shortcuts you placed in your designated folder, with minimal keystrokes."**
 - **Two Sharpened Core Features**:
   1. **Incremental Shortcut Completion & Launch**:

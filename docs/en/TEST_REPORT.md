@@ -1,6 +1,6 @@
-# Re:CraftLaunch: Test Execution Report (TEST_REPORT)
+# KeyStar: Test Execution Report (TEST_REPORT)
 
-This document provides the official quality verification and test execution report across all development phases of `Re:CraftLaunch`.
+This document provides the official quality verification and test execution report across all development phases of `KeyStar`.
 
 ---
 

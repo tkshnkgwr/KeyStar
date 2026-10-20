@@ -1,8 +1,8 @@
-# Re:CraftLaunch: システムアーキテクチャ設計書 (ARCHITECTURE)
+# KeyStar: システムアーキテクチャ設計書 (ARCHITECTURE)
 
 ## 1. プロジェクト目的 & 設計思想
 
-本プロジェクト（`Re:CraftLaunch`）は、Windows向けの名作キーボードランチャー「**CraftLaunch 2**」の原点思想（1行・爆速・キーボード特化・登録ショートカット即起動）を受け継ぎ、モダンかつ安全・高速なプログラミング言語である **Rust (Edition 2024)** でゼロから再構築する超軽量キーボードランチャーです。
+本プロジェクト（`KeyStar`）は、Windows向けの名作キーボードランチャー「**CraftLaunch 2**」の原点思想（1行・爆速・キーボード特化・登録ショートカット即起動）を受け継ぎ、モダンかつ安全・高速なプログラミング言語である **Rust (Edition 2024)** でゼロから再構築する超軽量キーボードランチャーです。
 
 ### 🎯 3大設計思想
 1. **極限のミニマリズム（100〜300行の凝縮美）**:
@@ -25,7 +25,7 @@ flowchart TD
         ShellExecute["open::that_detached (関連付け起動)"]
     end
 
-    subgraph App ["Re:CraftLaunch アプリケーション本体"]
+    subgraph App ["KeyStar アプリケーション本体"]
         Tray["システムトレイ常駐 (tray-icon)"]
         GUI["1行極小ウィンドウ (eframe / egui)"]
         

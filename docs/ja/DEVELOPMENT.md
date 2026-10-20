@@ -1,6 +1,6 @@
-# Re:CraftLaunch: 開発ガイド (DEVELOPMENT)
+# KeyStar: 開発ガイド (DEVELOPMENT)
 
-本ドキュメントは、`Re:CraftLaunch` の開発環境構築、ビルド、テスト、およびコード品質維持のための開発者向けガイドラインです。
+本ドキュメントは、`KeyStar` の開発環境構築、ビルド、テスト、およびコード品質維持のための開発者向けガイドラインです。
 
 ---
 
@@ -20,8 +20,8 @@
 
 ```powershell
 # 1. リポジトリのクローン
-git clone https://github.com/tkshnkgwr/KeyStar.git Re-CraftLaunch
-cd Re-CraftLaunch
+git clone https://github.com/tkshnkgwr/KeyStar.git KeyStar
+cd KeyStar
 
 # 2. 依存関係の取得とコンパイルチェック
 cargo check --all-targets

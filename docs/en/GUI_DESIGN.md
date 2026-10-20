@@ -1,4 +1,4 @@
-# Re:CraftLaunch: GUI Design & UI/UX Specifications (GUI_DESIGN)
+# KeyStar: GUI Design & UI/UX Specifications (GUI_DESIGN)
 
 ## 1. Design Philosophy (Spirit of CraftLaunch 2)
 
@@ -13,7 +13,7 @@
 ```
 
 The greatest appeal of the classic "CraftLaunch 2" was its unobtrusive presence: **"It occupies zero unnecessary screen estate, never gets in your way, and is immediately there as your typing target the millisecond you summon it."**
-`Re:CraftLaunch` intentionally rejects modern visual bloat (translucent acrylic blurs, oversized search cards, heavy thumbnails) to prioritize **razor-sharp tactile speed and immediate legibility**.
+`KeyStar` intentionally rejects modern visual bloat (translucent acrylic blurs, oversized search cards, heavy thumbnails) to prioritize **razor-sharp tactile speed and immediate legibility**.
 
 ---
 

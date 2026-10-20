@@ -4,6 +4,14 @@
 
 ---
 
+## [0.1.0-beta.2] - 2026-10-20
+
+### Changed
+- **ドキュメント全域のブランド名完全統一（`Re:CraftLaunch` ➔ `KeyStar`）**:
+  - `README.md`, `README_JA.md`, 日英全ドキュメント（`docs/en/`, `docs/ja/`）、AI規約（`GEMINI.md`, `RULES.md`, `.agents/`）およびソースコード内のコメント・テストパスに残存していた旧名称表記を正式名称「**KeyStar**」へ完全統一。
+  - ルート直下に残存していた旧中継用プレースホルダー `TODO.md` を削除し、開発ロードマップを `docs/ja/TODO.md` および `docs/en/TODO.md` へ完全集約。
+  - アスキーアート枠線および Markdown テーブルの全角幅垂直整列を再検証・整合完了。
+
 ## [0.1.0-beta.1] - 2026-10-20
 
 ### Changed

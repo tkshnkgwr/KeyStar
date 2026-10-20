@@ -1,6 +1,6 @@
 # Rust Pre-Commit Quality Checks
 
-Rust プロジェクト（Re-CraftLaunch）において git commit を実行する前に、必ず以下の検証手順を順番に実行し、すべてのエラーおよび警告が解消されていることを確認してください。
+Rust プロジェクト（KeyStar）において git commit を実行する前に、必ず以下の検証手順を順番に実行し、すべてのエラーおよび警告が解消されていることを確認してください。
 
 1. **フォーマット整形**:
    `cargo fmt` を実行してコードスタイルを Rust 標準に整える。

@@ -1,11 +1,11 @@
-﻿//! ショートカットインデクサの公開API統合テスト。
+//! ショートカットインデクサの公開API統合テスト。
 
 use KeyStar::indexer::{ShortcutIndexer, ShortcutItem};
 use std::fs::{self, File};
 
 #[test]
 fn test_indexer_lifecycle() {
-    let temp_dir = std::env::temp_dir().join("recraftlaunch_test_indexer_integration");
+    let temp_dir = std::env::temp_dir().join("keystar_test_indexer_integration");
     let _ = fs::remove_dir_all(&temp_dir);
     fs::create_dir_all(&temp_dir).unwrap();
 

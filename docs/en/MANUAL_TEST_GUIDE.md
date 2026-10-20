@@ -1,6 +1,6 @@
-# Re:CraftLaunch: Manual Acceptance Test Checklist (MANUAL_TEST_GUIDE)
+# KeyStar: Manual Acceptance Test Checklist (MANUAL_TEST_GUIDE)
 
-This document provides a comprehensive acceptance checklist for human testers and developers to verify the look, feel, and keyboard ergonomics of `Re:CraftLaunch` on Windows.
+This document provides a comprehensive acceptance checklist for human testers and developers to verify the look, feel, and keyboard ergonomics of `KeyStar` on Windows.
 
 ---
 
@@ -11,7 +11,7 @@ This document provides a comprehensive acceptance checklist for human testers an
 cargo build --release
 
 # 2. Run
-.\target\release\Re-CraftLaunch.exe
+.\target\release\KeyStar.exe
 ```
 
 ---
@@ -20,7 +20,7 @@ cargo build --release
 
 | No. | Test Item             | Procedure                                            | Expected Outcome                                            | Done |
 | :-- | :-------------------- | :--------------------------------------------------- | :---------------------------------------------------------- | :--: |
-| 1-1 | Taskbar Suppression   | Launch `Re-CraftLaunch.exe`                          | Window opens without a taskbar button, leaving screen clean | [ ]  |
+| 1-1 | Taskbar Suppression   | Launch `KeyStar.exe`                                 | Window opens without a taskbar button, leaving screen clean | [ ]  |
 | 1-2 | System Tray Residency | Inspect the Windows notification area (system tray)  | Embedded icon (`>_`) appears with tooltip on mouse hover    | [ ]  |
 | 1-3 | Folder Initialization | Check `%USERPROFILE%\commands` in File Explorer      | Folder is automatically created on startup if absent        | [ ]  |
 | 1-4 | Safe Multi-Launch     | Launch another instance while one is already running | Runs smoothly without socket collision or panic             | [ ]  |
@@ -35,7 +35,7 @@ cargo build --release
 | 2-2 | Automatic Input Focus | Type characters immediately after `Alt + Space`  | Keystrokes register immediately without mouse clicking      | [ ]  |
 | 2-3 | Tray Click Toggle     | Left-click the system tray icon                  | Launcher toggles between visible and hidden states          | [ ]  |
 | 2-4 | Hotkey Dismiss Toggle | Press `Alt + Space` while launcher is visible    | Input resets and window hides immediately                   | [ ]  |
-| 2-5 | Idle CPU Load         | Inspect `Re-CraftLaunch.exe` CPU in Task Manager | CPU usage remains steadily at 0.0% during background sleep  | [ ]  |
+| 2-5 | Idle CPU Load         | Inspect `KeyStar.exe` CPU in Task Manager        | CPU usage remains steadily at 0.0% during background sleep  | [ ]  |
 
 ---
 

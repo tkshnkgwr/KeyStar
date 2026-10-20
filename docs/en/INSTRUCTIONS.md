@@ -1,6 +1,6 @@
-# Re:CraftLaunch: Developer & Agent Instructions (INSTRUCTIONS)
+# KeyStar: Developer & Agent Instructions (INSTRUCTIONS)
 
-This document provides operational guidelines, architectural tenets, and working instructions for developers and AI agents working on `Re:CraftLaunch`.
+This document provides operational guidelines, architectural tenets, and working instructions for developers and AI agents working on `KeyStar`.
 
 ---
 

@@ -1,8 +1,8 @@
-# Re:CraftLaunch: Development Roadmap & Checklist (TODO)
+# KeyStar: Development Roadmap & Checklist (TODO)
 
 ## 0. Development Philosophy
 
-`Re:CraftLaunch` revives the core essence of the legendary "CraftLaunch 2" (single-line, instant response, keyboard-driven, registered shortcuts execution) in modern **Rust (Edition 2024)**.
+`KeyStar` revives the core essence of the legendary "CraftLaunch 2" (single-line, instant response, keyboard-driven, registered shortcuts execution) in modern **Rust (Edition 2024)**.
 
 ---
 
@@ -66,7 +66,7 @@
 - [ ] **【Settings Window】 GUI Configuration Dialog (`src/settings.rs` / `src/ui.rs`)**:
   - [ ] **Tray Menu Wiring**: Open independent settings dialog upon selecting "Settings" from system tray menu
   - [ ] **Configuration Persistence (`config.toml`)**:
-    - [ ] `serde` / `toml` loading and serialization (prefers portable `./config.toml`, fallbacks to `%APPDATA%\Re-CraftLaunch\config.toml`)
+    - [ ] `serde` / `toml` loading and serialization (prefers portable `./config.toml`, fallbacks to `%APPDATA%\KeyStar\config.toml`)
     - [ ] Schema definition (hotkey bindings, monitored directories, max candidates, window dimensions, calculator formatting)
   - [ ] **Settings Dialog UI Design (egui)**:
     - [ ] Window size: 480 × 420 px (with title bar, Esc/close button support, dark theme)
@@ -99,7 +99,7 @@
 
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  Re:CraftLaunch Settings                                  ✕  │
+│  KeyStar Settings                                         ✕  │
 ├──────────────────────────────────────────────────────────────┤
 │ ┌─ General ────────────────────────────────────────────────┐ │
 │ │ Global Hotkey:          [ Alt + Space             ▼ ]    │ │

@@ -1,7 +1,7 @@
 ---
 name: git-commit
 description: >-
-  Use this skill when the boss (user) explicitly instructs to commit or push changes to Git in the Re-CraftLaunch project.
+  Use this skill when the boss (user) explicitly instructs to commit or push changes to Git in the KeyStar project.
   Guides commit preparation, Japanese message formatting, and safe git execution.
 ---
 
@@ -42,7 +42,7 @@ description: >-
 
 ### 記入例
 - `feat: eguiを用いた1行テキスト入力ウィンドウとホットキー呼び出しの実装`
-- `docs: Re:CraftLaunch設計方針およびアーキテクチャ仕様書の作成`
+- `docs: KeyStar設計方針およびアーキテクチャ仕様書の作成`
 - `fix: evalexprによる数式パースエラー時の候補非表示バグを修正`
 
 ## 3. コミット & Push 手順

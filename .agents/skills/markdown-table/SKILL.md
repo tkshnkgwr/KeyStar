@@ -1,7 +1,7 @@
 ---
 name: markdown-table
 description: >-
-  Use this skill when creating or editing Markdown tables in documents or notes for the Re-CraftLaunch project,
+  Use this skill when creating or editing Markdown tables in documents or notes for the KeyStar project,
   ensuring strict vertical alignment of pipes and hyphens for plain-text editors like gVim.
 ---
 

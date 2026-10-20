@@ -1,4 +1,4 @@
-﻿//! ショートカット・コマンド監視フォルダ走査モジュール。
+//! ショートカット・コマンド監視フォルダ走査モジュール。
 //!
 //! `%USERPROFILE%\commands` やアプリケーションローカルの `shortcuts/` フォルダを走査し、
 //! 起動対象となるショートカット（`.lnk`）やバッチ（`.bat`）、URLファイル（`.url`）等の
@@ -234,7 +234,7 @@ mod tests {
 
     #[test]
     fn test_shortcut_item_from_path() {
-        let temp_dir = std::env::temp_dir().join("recraftlaunch_test_indexer");
+        let temp_dir = std::env::temp_dir().join("keystar_test_indexer");
         let _ = fs::create_dir_all(&temp_dir);
 
         let lnk_path = temp_dir.join("Chrome.lnk");
@@ -262,7 +262,7 @@ mod tests {
 
     #[test]
     fn test_indexer_scan_and_dedup() {
-        let temp_dir = std::env::temp_dir().join("recraftlaunch_test_scan");
+        let temp_dir = std::env::temp_dir().join("keystar_test_scan");
         let _ = fs::create_dir_all(&temp_dir);
 
         File::create(temp_dir.join("App1.bat")).unwrap();
@@ -285,7 +285,7 @@ mod tests {
 
     #[test]
     fn test_indexer_non_existent_dir() {
-        let non_existent = std::env::temp_dir().join("non_existent_dir_recraftlaunch_12345");
+        let non_existent = std::env::temp_dir().join("non_existent_dir_keystar_12345");
         let mut indexer = ShortcutIndexer::new(vec![non_existent]);
         assert_eq!(indexer.scan(), 0);
         assert!(indexer.items().is_empty());

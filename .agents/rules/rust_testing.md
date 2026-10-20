@@ -1,7 +1,7 @@
 # Rust テスト設計・分離規約 (Rust Testing Architecture & Separation Rules)
 
 > [!IMPORTANT]
-> 本規約は、`Re-CraftLaunch` プロジェクトにおけるテストコードの配置、責務分離、および公開API/内部プライベートテストの使い分けを規定する恒久ルールです。
+> 本規約は、`KeyStar` プロジェクトにおけるテストコードの配置、責務分離、および公開API/内部プライベートテストの使い分けを規定する恒久ルールです。
 > ソースコードの肥大化を防ぎ、公開APIのエルゴノミクス（使いやすさ）と内部アルゴリズムの健全性を両立させることを目的とします。
 
 ---
@@ -21,7 +21,7 @@
      ・配置: tests/*.rs (tests/ ディレクトリ)        ・配置: src/ 内 (#[cfg(test)] mod tests)
      ・視点: 外部利用者 (ブラックボックス)           ・視点: モジュール内部 (ホワイトボックス)
      ・対象: 公開API (pub)                           ・対象: 非公開関数・内部状態・低レイヤ詳細
-     ・インポート: use re_craftlaunch::...;          ・インポート: use super::*;
+     ・インポート: use KeyStar::...;                 ・インポート: use super::*;
 ```
 
 ---
@@ -75,7 +75,7 @@ flowchart TD
 ## 4. ディレクトリ構成パターン
 
 ```text
-Re-CraftLaunch/
+KeyStar/
 ├── Cargo.toml
 ├── src/
 │   ├── main.rs

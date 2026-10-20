@@ -1,6 +1,6 @@
-# Re:CraftLaunch: Developer Guide (DEVELOPMENT)
+# KeyStar: Developer Guide (DEVELOPMENT)
 
-This document provides developer guidelines for building, testing, and maintaining code quality in `Re:CraftLaunch`.
+This document provides developer guidelines for building, testing, and maintaining code quality in `KeyStar`.
 
 ---
 
@@ -20,8 +20,8 @@ This document provides developer guidelines for building, testing, and maintaini
 
 ```powershell
 # 1. Clone repository
-git clone https://github.com/tkshnkgwr/KeyStar.git Re-CraftLaunch
-cd Re-CraftLaunch
+git clone https://github.com/tkshnkgwr/KeyStar.git KeyStar
+cd KeyStar
 
 # 2. Check compilation
 cargo check --all-targets

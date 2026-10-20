@@ -1,6 +1,6 @@
-﻿#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-//! Re:CraftLaunch メインエントリポイント
+//! KeyStar メインエントリポイント
 //!
 //! `eframe` / `egui` を用いた 1 行極小キーボードランチャー GUI を起動し、
 //! グローバルホットキー（`Alt + Space`）およびシステムトレイ常駐を有効化します。

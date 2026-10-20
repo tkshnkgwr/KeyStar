@@ -1,6 +1,6 @@
-# Re:CraftLaunch: Release Procedure (RELEASE)
+# KeyStar: Release Procedure (RELEASE)
 
-This document establishes the release pipeline, version tagging, optimized binary build, and packaging process for `Re:CraftLaunch`.
+This document establishes the release pipeline, version tagging, optimized binary build, and packaging process for `KeyStar`.
 
 ---
 
@@ -28,7 +28,7 @@ Build the standalone single-binary executable for Windows:
 cargo build --release
 
 # 2. Inspect generated binary
-ls target/release/Re-CraftLaunch.exe
+ls target/release/KeyStar.exe
 ```
 
 ---
@@ -57,5 +57,5 @@ git push origin --tags
 
 ```powershell
 # Create standalone release ZIP archive
-Compress-Archive -Path target/release/Re-CraftLaunch.exe, LICENSE, README.md -DestinationPath target/release/Re-CraftLaunch-vX.Y.Z-windows-x64.zip
+Compress-Archive -Path target/release/KeyStar.exe, LICENSE, README.md -DestinationPath target/release/KeyStar-vX.Y.Z-windows-x64.zip
 ```

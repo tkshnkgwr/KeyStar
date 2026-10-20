@@ -7,7 +7,7 @@ description: >-
 
 # Vault 一時メモ保存スキル (vault-memo)
 
-Re-CraftLaunch プロジェクトでの対話において、有益な知見・設計アイデア・検討ログが出た際に、Obsidian Vault の受信箱（`01.FleetingNote`）へ一時メモとして自動保存するためのスキルです。
+KeyStar プロジェクトでの対話において、有益な知見・設計アイデア・検討ログが出た際に、Obsidian Vault の受信箱（`01.FleetingNote`）へ一時メモとして自動保存するためのスキルです。
 
 ---
 

@@ -1,6 +1,6 @@
-# Re:CraftLaunch: Resource Metrics & Footprints (FOOTPRINTS)
+# KeyStar: Resource Metrics & Footprints (FOOTPRINTS)
 
-This document defines the resource consumption metrics (RAM, CPU, cold start, keyboard responsiveness, and hotkey wakeup latency) and benchmark baselines for `Re:CraftLaunch`.
+This document defines the resource consumption metrics (RAM, CPU, cold start, keyboard responsiveness, and hotkey wakeup latency) and benchmark baselines for `KeyStar`.
 
 ---
 
@@ -36,7 +36,7 @@ This document defines the resource consumption metrics (RAM, CPU, cold start, ke
 
 ```text
 +-----------------------------------------------------------+
-| Re:CraftLaunch Process Space                        |
+| KeyStar Process Space                                      |
 | :-------------------------------------------------- |
 | [Background Resident (Hidden)]                      |
 | - Winit / Win32 event loop sleep (0.0% CPU)         |
@@ -51,7 +51,7 @@ This document defines the resource consumption metrics (RAM, CPU, cold start, ke
 
 1. **Fundamental Architectural Contrast with CraftLaunch 3**:
    - Python-embedded launchers (e.g. CraftLaunch 3) load the CPython runtime and standard libraries into the process, constantly consuming 40–80 MB of RAM.
-   - `Re:CraftLaunch` is a pure Rust standalone binary without garbage collection or interpreter runtimes, achieving a steady resident footprint of only a few megabytes.
+   - `KeyStar` is a pure Rust standalone binary without garbage collection or interpreter runtimes, achieving a steady resident footprint of only a few megabytes.
 2. **Minimal Index Memory Overhead**:
    - Only file basenames, canonical paths, and extensions are cached in RAM (~150–200 bytes per entry). Even a 1,000-shortcut directory requires under 200 KB.
 

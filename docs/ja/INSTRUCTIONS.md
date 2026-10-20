@@ -1,6 +1,6 @@
-# Re:CraftLaunch: 開発者・AI指示書 (INSTRUCTIONS)
+# KeyStar: 開発者・AI指示書 (INSTRUCTIONS)
 
-本書は、`Re:CraftLaunch` プロジェクトにおける開発者およびAIエージェント向けの行動ガイドライン、アーキテクチャ規約、および作業指示書です。
+本書は、`KeyStar` プロジェクトにおける開発者およびAIエージェント向けの行動ガイドライン、アーキテクチャ規約、および作業指示書です。
 
 ---
 

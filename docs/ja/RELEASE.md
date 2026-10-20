@@ -1,6 +1,6 @@
-# Re:CraftLaunch: リリース手順書 (RELEASE)
+# KeyStar: リリース手順書 (RELEASE)
 
-本書は、`Re:CraftLaunch` の公式リリース手順、バージョンタグ付与、最適化バイナリビルド、およびパッケージング手順を定めます。
+本書は、`KeyStar` の公式リリース手順、バージョンタグ付与、最適化バイナリビルド、およびパッケージング手順を定めます。
 
 ---
 
@@ -28,7 +28,7 @@ Windows 向け単一スタンドアロン実行ファイルをビルドします
 cargo build --release
 
 # 2. 生成バイナリの確認
-ls target/release/Re-CraftLaunch.exe
+ls target/release/KeyStar.exe
 ```
 
 ---
@@ -57,5 +57,5 @@ git push origin --tags
 
 ```powershell
 # リリース用 ZIP アーカイブの生成
-Compress-Archive -Path target/release/Re-CraftLaunch.exe, LICENSE, README_JA.md -DestinationPath target/release/Re-CraftLaunch-vX.Y.Z-windows-x64.zip
+Compress-Archive -Path target/release/KeyStar.exe, LICENSE, README_JA.md -DestinationPath target/release/KeyStar-vX.Y.Z-windows-x64.zip
 ```

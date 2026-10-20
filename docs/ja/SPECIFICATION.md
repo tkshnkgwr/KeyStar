@@ -1,10 +1,10 @@
-# Re:CraftLaunch 基本仕様書 (Specification)
+# KeyStar 基本仕様書 (Specification)
 
 ## 1. アプリケーション概要
 
 | 項目         | 内容                                                                       |
 | :----------- | :------------------------------------------------------------------------- |
-| **アプリ名** | Re:CraftLaunch                                                             |
+| **アプリ名** | KeyStar                                                                    |
 | **種別**     | Windowsデスクトップ向け 超軽量1行キーボードランチャー                      |
 | **開発言語** | Rust (Edition 2024)                                                        |
 | **GUI基盤**  | `eframe` / `egui`                                                          |
@@ -72,7 +72,7 @@ flowchart TD
         Shell["open::that (アプリ起動)"]
     end
 
-    subgraph App ["Re:CraftLaunch"]
+    subgraph App ["KeyStar"]
         Tray["システムトレイ常駐 (tray-icon)"]
         Window["egui/eframe 1行ウィンドウ"]
         

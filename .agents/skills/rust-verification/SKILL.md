@@ -1,13 +1,13 @@
 ---
 name: rust-verification
 description: >-
-  Use this skill when verifying changes to Rust source code in the Re-CraftLaunch project,
+  Use this skill when verifying changes to Rust source code in the KeyStar project,
   running cargo check/test/clippy/fmt, or determining whether verification can be skipped for markdown/documentation-only edits.
 ---
 
 # Rust Verification & Quality Check Workflow
 
-本スキルは、`Re-CraftLaunch` におけるコード変更時の品質検証（ビルド、単体テスト、静的解析）およびドキュメント変更時の事前検証省略基準を定めた手順書です。
+本スキルは、`KeyStar` におけるコード変更時の品質検証（ビルド、単体テスト、静的解析）およびドキュメント変更時の事前検証省略基準を定めた手順書です。
 
 ## 1. 検証省略の判断基準（迅速対応）
 

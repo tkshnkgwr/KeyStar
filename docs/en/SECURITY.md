@@ -1,13 +1,13 @@
-# Re:CraftLaunch: Security Policy (SECURITY)
+# KeyStar: Security Policy (SECURITY)
 
-This document establishes the security guidelines, architectural privilege boundaries, and vulnerability disclosure procedures for `Re:CraftLaunch`.
+This document establishes the security guidelines, architectural privilege boundaries, and vulnerability disclosure procedures for `KeyStar`.
 
 ---
 
 ## 1. Security Architecture & Privilege Boundaries
 
 ### 1.1 Process Execution & Shell Detach
-- `Re:CraftLaunch` is designed to run under standard user privileges (non-elevated).
+- `KeyStar` is designed to run under standard user privileges (non-elevated).
 - Launching shortcuts and scripts relies on `open::that_detached`, which invokes standard Windows shell associations (`ShellExecuteEx`) in a detached process context.
 - The launcher never auto-executes unrecognized network commands or arbitrary remote payloads. It activates only items explicitly placed by the user in designated folders or explicitly confirmed via the `Enter` key.
 
@@ -27,5 +27,5 @@ This document establishes the security guidelines, architectural privilege bound
 
 ## 3. Reporting Security Vulnerabilities
 
-If you discover a security vulnerability or critical issue in `Re:CraftLaunch`, please do not open a public issue.
+If you discover a security vulnerability or critical issue in `KeyStar`, please do not open a public issue.
 Instead, privately notify the repository maintainers. We will investigate promptly and release remediation patches.
