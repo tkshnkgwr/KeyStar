@@ -14,7 +14,8 @@
 | **Phase 1: Core Logic**     | Math engine, shortcut indexer, completion engine      | `evalexpr`, `std::fs`        | **Completed** |
 | **Phase 2: GUI Prototype**  | Single-line input frame, candidate dropdown rendering | `eframe`, `egui`             | **Completed** |
 | **Phase 3: OS Integration** | Global hotkeys, clipboard copy, system tray           | `global-hotkey`, `tray-icon` | **Completed** |
-| **Phase 4: Optimization**   | Single-binary LTO optimization, Scoop package         | Cargo Release, Scoop         |    Pending    |
+| **Phase 4: Settings GUI**   | Settings dialog, config persistence (`config.toml`)   | `egui`, `serde`, `toml`      |    Pending    |
+| **Phase 5: Optimization**   | Single-binary LTO optimization, Scoop package         | Cargo Release, Scoop         |    Pending    |
 
 ---
 
@@ -61,10 +62,62 @@
 - [x] System tray resident via `tray-icon` (`src/tray.rs`)
 - [x] Clipboard copy integration via `arboard` (`src/clipboard.rs`)
 
-### Phase 4: Distribution & Optimization (Beta Phase)
+### Phase 4: GUI Settings Dialog (Beta Phase)
+- [ ] **【Settings Window】 GUI Configuration Dialog (`src/settings.rs` / `src/ui.rs`)**:
+  - [ ] **Tray Menu Wiring**: Open independent settings dialog upon selecting "Settings" from system tray menu
+  - [ ] **Configuration Persistence (`config.toml`)**:
+    - [ ] `serde` / `toml` loading and serialization (prefers portable `./config.toml`, fallbacks to `%APPDATA%\Re-CraftLaunch\config.toml`)
+    - [ ] Schema definition (hotkey bindings, monitored directories, max candidates, window dimensions, calculator formatting)
+  - [ ] **Settings Dialog UI Design (egui)**:
+    - [ ] Window size: 480 × 420 px (with title bar, Esc/close button support, dark theme)
+    - [ ] Section 1 "General":
+      - Global hotkey modification (`Alt + Space`, `Ctrl + Space`, `Win + Space`, or custom key capture)
+      - Auto-start with Windows (`HKCU\...\Run` startup registry toggle)
+    - [ ] Section 2 "Shortcuts & Search":
+      - Monitored directory list (list view, Add/Remove buttons, folder picker dialog via `rfd`)
+      - Max visible candidates slider (3–15 items, default: 8)
+      - Target extension toggles (`.lnk`, `.url`, `.bat`, `.cmd`, `.exe`, `.ps1`)
+    - [ ] Section 3 "Appearance & Calculator":
+      - Launcher window width slider (400px–800px, default: 500px)
+      - Font size selector (12px–20px, default: 15px)
+      - Calculator clipboard format (Plain raw number `1408` vs Comma-separated `1,408`)
+    - [ ] Bottom action buttons: "Save & Apply", "Cancel", "Reset to Defaults"
+
+---
+
+### Phase 5: Optimization & Distribution (Official Release Phase)
 - [ ] **Release Binary Optimization**:
   - [ ] Configure `profile.release` in `Cargo.toml`: `lto = true`, `codegen-units = 1`, `panic = "abort"`, `strip = true`
   - [ ] Sub-millisecond cold start (<50ms) and minimal resident RAM (<10MB)
 - [ ] **Package Distribution (Scoop / Winget / ZIP)**:
   - [ ] Standalone portable ZIP distribution
   - [ ] Custom Scoop bucket manifest configuration
+
+---
+
+## 🎨 GUI Settings Dialog Specification & Wireframe
+
+```text
+┌──────────────────────────────────────────────────────────────┐
+│  Re:CraftLaunch Settings                                  ✕  │
+├──────────────────────────────────────────────────────────────┤
+│ ┌─ General ────────────────────────────────────────────────┐ │
+│ │ Global Hotkey:          [ Alt + Space             ▼ ]    │ │
+│ │ [x] Launch automatically on Windows startup              │ │
+│ └──────────────────────────────────────────────────────────┘ │
+│ ┌─ Shortcuts & Search ─────────────────────────────────────┐ │
+│ │ Monitored Directories:                                   │ │
+│ │  • %USERPROFILE%\commands                                │ │
+│ │  • ./shortcuts                                           │ │
+│ │  [ + Add Folder... ]  [ Remove Selected ]                │ │
+│ │ Max Candidates:   [=======●=============]  8 items       │ │
+│ └──────────────────────────────────────────────────────────┘ │
+│ ┌─ Appearance & Calculator ────────────────────────────────┐ │
+│ │ Window Width:     [============●========]  500 px        │ │
+│ │ Font Size:        [========●============]  15 pt         │ │
+│ │ Calc Copy Format: (●) Raw Number (1408)  ( ) Comma-sep   │ │
+│ └──────────────────────────────────────────────────────────┘ │
+│                                                              │
+│              [ Reset ]          [ Cancel ]    [ Save & Apply ] │
+└──────────────────────────────────────────────────────────────┘
+```
