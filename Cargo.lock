@@ -3,7 +3,7 @@
 version = 4
 
 [[package]]
-name = "Re-CraftLaunch"
+name = "KeyStar"
 version = "0.1.0-beta.1"
 dependencies = [
  "arboard",

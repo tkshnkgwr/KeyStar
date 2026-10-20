@@ -1,18 +1,18 @@
-#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+﻿#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 //! Re:CraftLaunch メインエントリポイント
 //!
 //! `eframe` / `egui` を用いた 1 行極小キーボードランチャー GUI を起動し、
 //! グローバルホットキー（`Alt + Space`）およびシステムトレイ常駐を有効化します。
 
-use Re_CraftLaunch::indexer::ShortcutIndexer;
-use Re_CraftLaunch::ui::{LauncherApp, build_native_options};
+use KeyStar::indexer::ShortcutIndexer;
+use KeyStar::ui::{LauncherApp, build_native_options};
 
 fn main() -> eframe::Result<()> {
     let options = build_native_options();
 
     eframe::run_native(
-        "Re:CraftLaunch",
+        "KeyStar",
         options,
         Box::new(|cc| {
             LauncherApp::configure_style(&cc.egui_ctx);

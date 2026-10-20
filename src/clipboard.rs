@@ -1,4 +1,4 @@
-//! OS クリップボード連携モジュール。
+﻿//! OS クリップボード連携モジュール。
 //!
 //! `arboard` クレートを用いて、電卓の計算結果テキストを Windows 等の OS クリップボードへ
 //! 確実かつ即座に格納する機能を提供します。また、単体・統合テスト時に開発環境のクリップボードを
@@ -39,7 +39,7 @@ impl SystemClipboard {
     /// # Examples
     ///
     /// ```
-    /// use Re_CraftLaunch::clipboard::{ClipboardProvider, SystemClipboard};
+    /// use KeyStar::clipboard::{ClipboardProvider, SystemClipboard};
     ///
     /// let cb = SystemClipboard::new();
     /// assert_eq!(cb.last_copied_text(), None);
@@ -81,7 +81,7 @@ impl MemoryClipboard {
     /// # Examples
     ///
     /// ```
-    /// use Re_CraftLaunch::clipboard::{ClipboardProvider, MemoryClipboard};
+    /// use KeyStar::clipboard::{ClipboardProvider, MemoryClipboard};
     ///
     /// let mut cb = MemoryClipboard::new();
     /// cb.copy_text("1408").unwrap();

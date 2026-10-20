@@ -1,4 +1,4 @@
-//! グローバルホットキー監視・制御モジュール。
+﻿//! グローバルホットキー監視・制御モジュール。
 //!
 //! `global-hotkey` クレートを用いて OS 全体での `Alt + Space`（または任意のキーバインド）の
 //! 押下を監視し、バックグラウンド待機中のランチャーウィンドウを即座にウェイクアップ・トグルします。
@@ -46,7 +46,7 @@ impl HotKeyBinding {
     /// # Examples
     ///
     /// ```
-    /// use Re_CraftLaunch::hotkey::HotKeyBinding;
+    /// use KeyStar::hotkey::HotKeyBinding;
     /// use global_hotkey::hotkey::{Code, Modifiers};
     ///
     /// let binding = HotKeyBinding::new(Some(Modifiers::ALT), Code::Space);
@@ -66,7 +66,7 @@ impl HotKeyBinding {
     /// # Examples
     ///
     /// ```
-    /// use Re_CraftLaunch::hotkey::HotKeyBinding;
+    /// use KeyStar::hotkey::HotKeyBinding;
     ///
     /// let binding = HotKeyBinding::default_alt_space();
     /// assert!(binding.hotkey_id() > 0);
@@ -104,7 +104,7 @@ impl HotKeyBinding {
 /// # Examples
 ///
 /// ```
-/// use Re_CraftLaunch::hotkey::should_trigger_hotkey;
+/// use KeyStar::hotkey::should_trigger_hotkey;
 /// use global_hotkey::HotKeyState;
 ///
 /// assert!(should_trigger_hotkey(42, 42, HotKeyState::Pressed));

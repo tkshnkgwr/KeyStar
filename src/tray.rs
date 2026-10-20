@@ -1,4 +1,4 @@
-//! システムトレイ常駐・コンテキストメニュー管理モジュール。
+﻿//! システムトレイ常駐・コンテキストメニュー管理モジュール。
 //!
 //! `tray-icon` クレートを用いて Windows システムトレイ（通知領域）への常駐アイコン表示と、
 //! 右クリックメニュー（「設定」「コマンドフォルダを開く」「終了」）および左クリックによる
@@ -25,7 +25,7 @@ pub const MENU_ID_OPEN_COMMANDS: &str = "open_commands";
 pub const MENU_ID_EXIT: &str = "exit";
 
 /// システムトレイアイコンの標準ツールチップ文字列。
-pub const DEFAULT_TRAY_TOOLTIP: &str = "Re:CraftLaunch (Alt + Space)";
+pub const DEFAULT_TRAY_TOOLTIP: &str = "KeyStar (Alt + Space)";
 
 /// メニューイベントを保持する内部キュー。
 static TRAY_MENU_QUEUE: LazyLock<Mutex<VecDeque<MenuEvent>>> =
@@ -63,7 +63,7 @@ pub enum TrayCommand {
 /// # Examples
 ///
 /// ```
-/// use Re_CraftLaunch::tray::{
+/// use KeyStar::tray::{
 ///     MENU_ID_EXIT, MENU_ID_OPEN_COMMANDS, MENU_ID_SETTINGS, TrayCommand, resolve_menu_command,
 /// };
 ///
@@ -107,7 +107,7 @@ pub fn is_tray_left_click_release(event: &TrayIconEvent) -> bool {
 /// # Examples
 ///
 /// ```
-/// use Re_CraftLaunch::tray::{DEFAULT_ICON_SIZE, generate_default_icon_rgba};
+/// use KeyStar::tray::{DEFAULT_ICON_SIZE, generate_default_icon_rgba};
 ///
 /// let rgba = generate_default_icon_rgba(DEFAULT_ICON_SIZE, DEFAULT_ICON_SIZE);
 /// assert_eq!(rgba.len(), (DEFAULT_ICON_SIZE * DEFAULT_ICON_SIZE * 4) as usize);

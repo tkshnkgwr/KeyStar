@@ -1,4 +1,4 @@
-//! ショートカット・コマンド監視フォルダ走査モジュール。
+﻿//! ショートカット・コマンド監視フォルダ走査モジュール。
 //!
 //! `%USERPROFILE%\commands` やアプリケーションローカルの `shortcuts/` フォルダを走査し、
 //! 起動対象となるショートカット（`.lnk`）やバッチ（`.bat`）、URLファイル（`.url`）等の
@@ -35,7 +35,7 @@ impl ShortcutItem {
     ///
     /// ```
     /// use std::path::Path;
-    /// use Re_CraftLaunch::indexer::ShortcutItem;
+    /// use KeyStar::indexer::ShortcutItem;
     ///
     /// // 実在しないファイルパスでは None
     /// assert!(ShortcutItem::from_path(Path::new("not_exist.lnk")).is_none());
@@ -85,7 +85,7 @@ impl ShortcutIndexer {
     ///
     /// ```
     /// use std::path::PathBuf;
-    /// use Re_CraftLaunch::indexer::ShortcutIndexer;
+    /// use KeyStar::indexer::ShortcutIndexer;
     ///
     /// let indexer = ShortcutIndexer::new(vec![PathBuf::from("shortcuts")]);
     /// assert_eq!(indexer.directories().len(), 1);
@@ -105,7 +105,7 @@ impl ShortcutIndexer {
     /// # Examples
     ///
     /// ```
-    /// use Re_CraftLaunch::indexer::ShortcutIndexer;
+    /// use KeyStar::indexer::ShortcutIndexer;
     ///
     /// let indexer = ShortcutIndexer::with_default_directories();
     /// assert!(!indexer.directories().is_empty());

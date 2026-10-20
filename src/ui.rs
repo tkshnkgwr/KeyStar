@@ -1,4 +1,4 @@
-//! `egui` / `eframe` による 1 行極小入力ウィンドウおよびキーボード操作モジュール。
+﻿//! `egui` / `eframe` による 1 行極小入力ウィンドウおよびキーボード操作モジュール。
 //!
 //! 名作「CraftLaunch 2」の佇まい（タイトルバーなし・常時最前面・極小1行入力枠・動的候補ドロップダウン）と、
 //! キーボード完結の操作体系（`Enter`, `Esc`, `Tab`/`Shift+Tab`, `Ctrl+n`/`Ctrl+p`, `Up`/`Down`）を提供します。
@@ -102,7 +102,7 @@ impl LauncherState {
     /// # Examples
     ///
     /// ```
-    /// use Re_CraftLaunch::ui::LauncherState;
+    /// use KeyStar::ui::LauncherState;
     ///
     /// let state = LauncherState::new(8);
     /// assert_eq!(state.query(), "");
@@ -156,7 +156,7 @@ impl LauncherState {
     /// # Examples
     ///
     /// ```
-    /// use Re_CraftLaunch::ui::LauncherState;
+    /// use KeyStar::ui::LauncherState;
     ///
     /// let mut state = LauncherState::new(8);
     /// assert!(state.is_window_visible());
@@ -232,7 +232,7 @@ impl LauncherState {
     /// # Examples
     ///
     /// ```
-    /// use Re_CraftLaunch::ui::{BASE_WINDOW_HEIGHT, LauncherState};
+    /// use KeyStar::ui::{BASE_WINDOW_HEIGHT, LauncherState};
     ///
     /// let state = LauncherState::default();
     /// assert_eq!(state.window_height(), BASE_WINDOW_HEIGHT);
@@ -358,7 +358,7 @@ impl LauncherState {
 #[must_use]
 pub fn build_native_options() -> eframe::NativeOptions {
     let viewport = egui::ViewportBuilder::default()
-        .with_title("Re:CraftLaunch")
+        .with_title("KeyStar")
         .with_inner_size([WINDOW_WIDTH, BASE_WINDOW_HEIGHT])
         .with_decorations(false)
         .with_always_on_top()

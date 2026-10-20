@@ -1,13 +1,13 @@
-//! Phase 3 OS連携・常駐機能（グローバルホットキー・システムトレイ・クリップボード連携）の統合テスト。
+﻿//! Phase 3 OS連携・常駐機能（グローバルホットキー・システムトレイ・クリップボード連携）の統合テスト。
 
-use Re_CraftLaunch::clipboard::{ClipboardProvider, MemoryClipboard};
-use Re_CraftLaunch::hotkey::{HotKeyBinding, should_trigger_hotkey};
-use Re_CraftLaunch::indexer::ShortcutItem;
-use Re_CraftLaunch::tray::{
+use KeyStar::clipboard::{ClipboardProvider, MemoryClipboard};
+use KeyStar::hotkey::{HotKeyBinding, should_trigger_hotkey};
+use KeyStar::indexer::ShortcutItem;
+use KeyStar::tray::{
     DEFAULT_ICON_SIZE, MENU_ID_EXIT, MENU_ID_OPEN_COMMANDS, MENU_ID_SETTINGS, TrayCommand,
     build_default_tray_icon, generate_default_icon_rgba, resolve_menu_command,
 };
-use Re_CraftLaunch::ui::{KeyCommand, LauncherAction, LauncherState};
+use KeyStar::ui::{KeyCommand, LauncherAction, LauncherState};
 use global_hotkey::{
     HotKeyState,
     hotkey::{Code, Modifiers},

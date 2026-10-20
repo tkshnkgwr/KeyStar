@@ -1,4 +1,4 @@
-//! 入力欄での即時四則演算・数式評価モジュール。
+﻿//! 入力欄での即時四則演算・数式評価モジュール。
 //!
 //! `evalexpr` クレートを利用して、入力文字列から安全に計算式を評価し、
 //! 整形された計算結果を生成します。
@@ -30,7 +30,7 @@ pub struct CalcResult {
 /// # Examples
 ///
 /// ```
-/// use Re_CraftLaunch::calc::is_evaluable;
+/// use KeyStar::calc::is_evaluable;
 ///
 /// assert!(is_evaluable("1 + 2"));
 /// assert!(is_evaluable("1280 * 1.1"));
@@ -82,7 +82,7 @@ pub fn is_evaluable(query: &str) -> bool {
 /// # Examples
 ///
 /// ```
-/// use Re_CraftLaunch::calc::evaluate;
+/// use KeyStar::calc::evaluate;
 ///
 /// let res = evaluate("1280 * 1.1").unwrap();
 /// assert_eq!(res.formatted_result, "1,408");

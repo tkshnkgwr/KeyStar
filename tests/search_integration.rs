@@ -1,8 +1,8 @@
-//! 補完・検索エンジンの公開API統合テスト。
+﻿//! 補完・検索エンジンの公開API統合テスト。
 
-use Re_CraftLaunch::calc::evaluate;
-use Re_CraftLaunch::indexer::ShortcutItem;
-use Re_CraftLaunch::search::{CandidateKind, filter_candidates};
+use KeyStar::calc::evaluate;
+use KeyStar::indexer::ShortcutItem;
+use KeyStar::search::{CandidateKind, filter_candidates};
 use std::path::PathBuf;
 
 fn create_sample_shortcuts() -> Vec<ShortcutItem> {

@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
 
 # 🚀 Re:CraftLaunch
 
@@ -107,8 +107,8 @@ PC全体をインデックス検索する現代の巨大なランチャーとは
 ### ローカルビルド & 実行
 ```powershell
 # リポジトリのクローン
-git clone https://github.com/tkshnkgwr/KeyStar.git Re-CraftLaunch
-cd Re-CraftLaunch
+git clone https://github.com/tkshnkgwr/KeyStar.git KeyStar
+cd KeyStar
 
 # 依存クレートのビルド & 実行
 cargo run
@@ -146,7 +146,7 @@ cargo build --release
 ## 📂 ディレクトリ構成
 
 ```text
-Re-CraftLaunch/
+KeyStar/
 ├── .agents/
 │   ├── rules/                  # Git規約、テスト規約、Rustdoc規約
 │   └── skills/                 # 検証・コミット・Markdown整形・Vault連携スキル
@@ -223,4 +223,4 @@ Re-CraftLaunch/
 本プロジェクトは **[MIT License](LICENSE)** の下で公開されています。
 
 Copyright (c) 2026 tkshnkgwr  
-Re-CraftLaunch is an independent tribute project inspired by the design and UI concepts of CraftLaunch by craftware.
+KeyStar is an independent tribute project inspired by the design and UI concepts of CraftLaunch by craftware.

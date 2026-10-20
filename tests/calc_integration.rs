@@ -1,6 +1,6 @@
-//! 四則演算エンジンの公開API統合テスト。
+﻿//! 四則演算エンジンの公開API統合テスト。
 
-use Re_CraftLaunch::calc::{evaluate, is_evaluable};
+use KeyStar::calc::{evaluate, is_evaluable};
 
 #[test]
 fn test_calc_basic_operations() {

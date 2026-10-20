@@ -1,4 +1,4 @@
-//! インクリメンタル補完・検索エンジンモジュール。
+﻿//! インクリメンタル補完・検索エンジンモジュール。
 //!
 //! ユーザーの入力文字列をもとに、ショートカット一覧から前方一致および部分一致で候補を絞り込み、
 //! 電卓の計算結果が存在する場合は最優先候補として統合します。
@@ -36,8 +36,8 @@ impl Candidate {
     /// # Examples
     ///
     /// ```
-    /// use Re_CraftLaunch::calc::CalcResult;
-    /// use Re_CraftLaunch::search::Candidate;
+    /// use KeyStar::calc::CalcResult;
+    /// use KeyStar::search::Candidate;
     ///
     /// let calc = CalcResult {
     ///     raw_value: 42.0,
@@ -90,9 +90,9 @@ impl Candidate {
 ///
 /// ```
 /// use std::path::PathBuf;
-/// use Re_CraftLaunch::calc::evaluate;
-/// use Re_CraftLaunch::indexer::ShortcutItem;
-/// use Re_CraftLaunch::search::filter_candidates;
+/// use KeyStar::calc::evaluate;
+/// use KeyStar::indexer::ShortcutItem;
+/// use KeyStar::search::filter_candidates;
 ///
 /// let shortcuts = vec![
 ///     ShortcutItem {

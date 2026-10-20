@@ -1,7 +1,7 @@
-//! UI状態機械・キーボード操作系の公開API統合テスト。
+﻿//! UI状態機械・キーボード操作系の公開API統合テスト。
 
-use Re_CraftLaunch::indexer::ShortcutItem;
-use Re_CraftLaunch::ui::{
+use KeyStar::indexer::ShortcutItem;
+use KeyStar::ui::{
     BASE_WINDOW_HEIGHT, KeyCommand, LauncherAction, LauncherState, WINDOW_WIDTH,
     build_native_options,
 };

@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
 
 # 🚀 Re:CraftLaunch
 
@@ -107,8 +107,8 @@ We express our deepest appreciation to craftware for creating such an exceptiona
 ### Local Build & Execution
 ```powershell
 # Clone the repository
-git clone https://github.com/tkshnkgwr/KeyStar.git Re-CraftLaunch
-cd Re-CraftLaunch
+git clone https://github.com/tkshnkgwr/KeyStar.git KeyStar
+cd KeyStar
 
 # Run development build
 cargo run
@@ -146,7 +146,7 @@ Comprehensive specifications, architectural guidelines, manual testing checklist
 ## 📂 Project Structure
 
 ```text
-Re-CraftLaunch/
+KeyStar/
 ├── .agents/
 │   ├── rules/                  # Git, Rust testing, and Rustdoc specifications
 │   └── skills/                 # Verification, commit, table format, and memo skills
@@ -223,4 +223,4 @@ Re-CraftLaunch/
 This project is open-sourced under the **[MIT License](LICENSE)**.
 
 Copyright (c) 2026 tkshnkgwr  
-Re-CraftLaunch is an independent tribute project inspired by the design and UI concepts of CraftLaunch by craftware.
+KeyStar is an independent tribute project inspired by the design and UI concepts of CraftLaunch by craftware.

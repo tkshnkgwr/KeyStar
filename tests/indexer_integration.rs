@@ -1,6 +1,6 @@
-//! ショートカットインデクサの公開API統合テスト。
+﻿//! ショートカットインデクサの公開API統合テスト。
 
-use Re_CraftLaunch::indexer::{ShortcutIndexer, ShortcutItem};
+use KeyStar::indexer::{ShortcutIndexer, ShortcutItem};
 use std::fs::{self, File};
 
 #[test]
