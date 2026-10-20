@@ -6,7 +6,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Rust 2024](https://img.shields.io/badge/Rust-2024%20Edition-orange.svg)](https://www.rust-lang.org)
-[![Version](https://img.shields.io/badge/version-v0.1.0--alpha.1-brightgreen.svg)](Cargo.toml)
+[![Version](https://img.shields.io/badge/version-v0.1.0--alpha.2-brightgreen.svg)](Cargo.toml)
 [![Platform](https://img.shields.io/badge/Platform-Windows-blue.svg)](https://github.com/tkshnkgwr/KeyStar)
 
 [English](./README.md) | [日本語](./README_JA.md)
@@ -36,7 +36,7 @@ Having relied on CraftLaunch for many years, the author wanted to create an ever
 * **Development Approach**:  
   Implemented in Rust in collaborative pair programming with AI (Gemini).
 * **Current Status**:  
-  Currently at `v0.1.0-alpha.1`. The immediate focus is stabilizing the incremental completion engine and the minimal single-line GUI.
+  Currently at `v0.1.0-alpha.2`. Phase 1 (Core Logic: calculator, indexer, and search completion) is complete, ready for Phase 2 (egui minimal 1-line GUI).
 
 ---
 

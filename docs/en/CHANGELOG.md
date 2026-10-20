@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.0-alpha.2] - 2026-10-20
+
+### Added
+- **Phase 1 Core Logic Implementation**:
+  - **Calculator Engine (`src/calc.rs`)**:
+    - Real-time arithmetic evaluation using `evalexpr`.
+    - Automatic promotion to real division (`10 / 4 = 2.5`).
+    - Thousands separator comma formatting (`1,408`) and clean clipboard numeric string (`1408`).
+    - `is_evaluable` guard preventing unintended evaluations on plain numbers or words.
+  - **Shortcut Indexer (`src/indexer.rs`)**:
+    - Automatic resolution and creation of `%USERPROFILE%\commands` and `./shortcuts`.
+    - Case-insensitive scanning for `.lnk`, `.url`, `.bat`, `.cmd`, `.exe`, `.ps1`.
+    - Low-overhead directory timestamp comparison (`needs_rescan`).
+  - **Completion Engine (`src/search.rs`)**:
+    - Dynamic scoring favoring prefix matches over substring matches.
+    - Highest priority placement (index 0) for active calculator results.
+  - **3-Layer Test Suite & Quality Verification (`tests/`)**:
+    - 15 unit tests, 12 public API integration tests, and 7 doc tests (34 tests 100% passing).
+    - Verified line count limits (max 316 lines, well below 1000 lines).
+- **Comprehensive Bilingual Documentation Suite (`docs/`)**:
+  - `ARCHITECTURE.md` (System design & data flow)
+  - `SPECIFICATION.md` (Functional requirements)
+  - `GUI_DESIGN.md` (Single-line window & candidate dropdown design)
+  - `DEVELOPMENT.md` (Developer guidelines & verification commands)
+  - `USER_GUIDE.md` (User manual & shortcut registration guide)
+  - `TESTING.md` & `TEST_REPORT.md` (Testing architecture & official test report)
+  - `CONTRIBUTING.md` & `SECURITY.md` (Contribution scope & security boundaries)
+
+---
+
 ## [0.1.0-alpha.1] - 2026-10-20
 
 ### Added
