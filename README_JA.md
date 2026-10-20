@@ -6,7 +6,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Rust 2024](https://img.shields.io/badge/Rust-2024%20Edition-orange.svg)](https://www.rust-lang.org)
-[![Version](https://img.shields.io/badge/version-v0.1.0--alpha.2-brightgreen.svg)](Cargo.toml)
+[![Version](https://img.shields.io/badge/version-v0.1.0--alpha.3-brightgreen.svg)](Cargo.toml)
 [![Platform](https://img.shields.io/badge/Platform-Windows-blue.svg)](https://github.com/tkshnkgwr/KeyStar)
 
 [English](./README.md) | [日本語](./README_JA.md)
@@ -36,7 +36,7 @@ PC全体をインデックス検索する現代の巨大なランチャーとは
 * **開発体制**:  
   Rustによるコード実装は、AI（Gemini / 大賢者）と相談しながら進めています。
 * **現在のステータス**:  
-  現在は `v0.1.0-alpha.2` です。Phase 1（コアロジック：電卓評価・ショートカット走査・補完検索）が完了し、次はPhase 2（egui 1行GUIウィンドウ）に進みます。
+  現在は `v0.1.0-alpha.3` です。Phase 1（コアロジック：電卓評価・ショートカット走査・補完検索）およびPhase 2（egui 1行GUIウィンドウ・キーボード操作体系）が完了し、次はPhase 3（グローバルホットキー登録・常駐タスク・多重起動防止）に進みます。
 
 ---
 

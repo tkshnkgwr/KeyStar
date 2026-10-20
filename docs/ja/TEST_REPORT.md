@@ -4,25 +4,25 @@
 
 ---
 
-## 📋 検証実施サマリー (v0.1.0-alpha.1 Phase 1 完了時点)
+## 📋 検証実施サマリー (Phase 2 GUI・キー操作完了時点)
 
-| 検証項目                   | 対象スコープ                  | 実行コマンド                       | 結果ステータス  |
-| :------------------------- | :---------------------------- | :--------------------------------- | :-------------: |
-| **型チェック & 構文検証**  | 全ターゲット (`--all-targets`) | `cargo check --all-targets`        | **合格 (PASS)** |
-| **内部単体テスト**         | `src/*.rs` (`#[cfg(test)]`)   | `cargo test --lib`                 | **15/15 PASS**  |
-| **公開API統合テスト**      | `tests/*.rs`                  | `cargo test --test *`              | **12/12 PASS**  |
-| **Docテスト**              | `/// # Examples`              | `cargo test --doc`                 | **7/7 PASS**    |
-| **静的リント解析**         | Clippy 警告ゼロ検査           | `cargo clippy -- -D warnings`      | **0警告 (PASS)**|
-| **コードフォーマット**     | Rust標準コードスタイル        | `cargo fmt --check`                | **0差分 (PASS)**|
-| **コード規模 (1000行制限)** | 全 `.rs` ファイル             | 行数計測スクリプト                 | **最大316行 (適合)** |
+| 検証項目                   | 対象スコープ                  | 実行コマンド                       | 結果ステータス       |
+| :------------------------- | :---------------------------- | :--------------------------------- | :------------------: |
+| **型チェック & 構文検証**  | 全ターゲット (`--all-targets`) | `cargo check --all-targets`        | **合格 (PASS)**      |
+| **内部単体テスト**         | `src/*.rs` (`#[cfg(test)]`)   | `cargo test --lib`                 | **20/20 PASS**       |
+| **公開API統合テスト**      | `tests/*.rs`                  | `cargo test --test *`              | **16/16 PASS**       |
+| **Docテスト**              | `/// # Examples`              | `cargo test --doc`                 | **9/9 PASS**         |
+| **静的リント解析**         | Clippy 警告ゼロ検査           | `cargo clippy -- -D warnings`      | **0警告 (PASS)**     |
+| **コードフォーマット**     | Rust標準コードスタイル        | `cargo fmt --check`                | **0差分 (PASS)**     |
+| **コード規模 (1000行制限)** | 全 `.rs` ファイル             | 行数計測スクリプト                 | **最大620行 (適合)** |
 
 ---
 
-## 🧪 詳細テスト実行結果
+## 🧪 詳細テスト実行結果 (全 45 テスト完全合格)
 
-### 1. 内部単体テスト (`src/lib.rs`) — 15 passed / 0 failed
+### 1. 内部単体テスト (`src/lib.rs`) — 20 passed / 0 failed
 ```text
-running 15 tests
+running 20 tests
 test calc::tests::test_is_evaluable ... ok
 test calc::tests::test_format_integer_with_commas ... ok
 test calc::tests::test_evaluate_large_numbers_and_decimals ... ok
@@ -30,19 +30,24 @@ test calc::tests::test_evaluate_basic_arithmetic ... ok
 test calc::tests::test_evaluate_invalid_cases ... ok
 test calc::tests::test_evaluate_negative_numbers ... ok
 test calc::tests::test_evaluate_nested_parentheses ... ok
+test indexer::tests::test_shortcut_item_from_path ... ok
+test indexer::tests::test_indexer_scan_and_dedup ... ok
+test indexer::tests::test_indexer_non_existent_dir ... ok
 test search::tests::test_filter_substring_matching ... ok
 test search::tests::test_filter_prefix_matching ... ok
 test search::tests::test_filter_with_calc_result ... ok
 test search::tests::test_filter_empty_query_and_limit ... ok
 test search::tests::test_filter_no_match ... ok
-test indexer::tests::test_shortcut_item_from_path ... ok
-test indexer::tests::test_indexer_scan_and_dedup ... ok
-test indexer::tests::test_indexer_non_existent_dir ... ok
+test ui::tests::test_initial_state_dropdown_hidden ... ok
+test ui::tests::test_query_expands_dropdown_and_height ... ok
+test ui::tests::test_navigation_cycle_next_and_prev ... ok
+test ui::tests::test_confirm_shortcut_and_calc ... ok
+test ui::tests::test_cancel_resets_and_dismisses ... ok
 
-test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
 ```
 
-### 2. 公開API統合テスト (`tests/`) — 12 passed / 0 failed
+### 2. 公開API統合テスト (`tests/`) — 16 passed / 0 failed
 ```text
 running 5 tests (tests/calc_integration.rs)
 test test_calc_basic_operations ... ok
@@ -64,11 +69,18 @@ test test_search_prefix_vs_substring ... ok
 test test_search_case_insensitivity ... ok
 test test_search_max_results_limit ... ok
 test result: ok. 4 passed; 0 failed; finished in 0.00s
+
+running 4 tests (tests/ui_integration.rs)
+test test_ui_incremental_completion_and_launch_scenario ... ok
+test test_ui_calculator_evaluation_and_copy_scenario ... ok
+test test_ui_empty_query_explicit_dropdown_and_escape ... ok
+test test_native_options_frameless_configuration ... ok
+test result: ok. 4 passed; 0 failed; finished in 0.00s
 ```
 
-### 3. ドキュメンテーションテスト (`cargo test --doc`) — 7 passed / 0 failed
+### 3. ドキュメンテーションテスト (`cargo test --doc`) — 9 passed / 0 failed
 ```text
-running 7 tests
+running 9 tests
 test src/calc.rs - calc::is_evaluable (line 32) ... ok
 test src/calc.rs - calc::evaluate (line 84) ... ok
 test src/indexer.rs - indexer::ShortcutItem::from_path (line 36) ... ok
@@ -76,5 +88,7 @@ test src/indexer.rs - indexer::ShortcutIndexer::new (line 86) ... ok
 test src/indexer.rs - indexer::ShortcutIndexer::with_default_directories (line 107) ... ok
 test src/search.rs - search::Candidate::from_calc (line 38) ... ok
 test src/search.rs - search::filter_candidates (line 91) ... ok
-test result: ok. 7 passed; 0 failed; finished in 0.08s
+test src/ui.rs - ui::LauncherState::new (line 97) ... ok
+test src/ui.rs - ui::LauncherState::window_height (line 169) ... ok
+test result: ok. 9 passed; 0 failed; finished in 0.09s
 ```

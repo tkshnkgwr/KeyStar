@@ -12,7 +12,7 @@
 | :------------------------ | :--------------------------------------------------- | :-------------------------- | :-------------: |
 | **Phase 0: Environment**  | Agent rules, skills, CI & formatting baselines       | Rust 2024, `.agents`        | **Completed**   |
 | **Phase 1: Core Logic**   | Math engine, shortcut indexer, completion engine     | `evalexpr`, `std::fs`       | **Completed**   |
-| **Phase 2: GUI Prototype**| Single-line input frame, candidate dropdown rendering| `eframe`, `egui`            | Pending         |
+| **Phase 2: GUI Prototype**| Single-line input frame, candidate dropdown rendering| `eframe`, `egui`            | **Completed**   |
 | **Phase 3: OS Integration**| Global hotkeys, clipboard copy, system tray         | `global-hotkey`, `tray-icon`| Pending         |
 | **Phase 4: Optimization** | Single-binary LTO optimization, Scoop package        | Cargo Release, Scoop        | Pending         |
 
@@ -45,15 +45,16 @@
   - [x] Case-insensitive filtering
   - [x] Calculator result prioritized to index 0
 
-### Phase 2: GUI Window & Keyboard Handling (Pending)
-- [ ] **Minimal 1-Line Input Window (`src/ui.rs`)**:
-  - [ ] Borderless frameless window with `egui`
-  - [ ] Automatic focus on single-line TextEdit
-  - [ ] Dynamic candidate dropdown (shows 5–10 items only when query exists)
-- [ ] **Keyboard Interaction Handling**:
-  - [ ] `Enter`: Launch shortcut or copy math result
-  - [ ] `Esc`: Dismiss window immediately
-  - [ ] `Tab` / `Shift+Tab` & `Ctrl+n` / `Ctrl+p`: Candidate navigation
+### Phase 2: GUI Window & Keyboard Handling (Completed)
+- [x] **Minimal 1-Line Input Window (`src/ui.rs`)**:
+  - [x] Borderless frameless window with `egui`
+  - [x] Automatic focus on single-line TextEdit
+  - [x] Dynamic candidate dropdown (shows 5–10 items only when query exists)
+  - [x] Visual highlighting for calculator evaluation rows (`= 1,408`)
+- [x] **Keyboard Interaction Handling**:
+  - [x] `Enter`: Launch shortcut or copy math result
+  - [x] `Esc`: Dismiss window immediately
+  - [x] `Tab` / `Shift+Tab` & `Ctrl+n` / `Ctrl+p` & `Down` / `Up`: Candidate navigation
 
 ### Phase 3: OS Integration & Tray Resident (Pending)
 - [ ] Global hotkey `Alt + Space` via `global-hotkey`

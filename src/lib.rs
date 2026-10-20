@@ -8,3 +8,4 @@
 pub mod calc;
 pub mod indexer;
 pub mod search;
+pub mod ui;

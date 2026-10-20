@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.0-alpha.3] - 2026-10-20
+
+### Added
+- **Phase 2 Minimal 1-Line GUI & Keyboard Navigation**:
+  - **GUI Window & State Architecture (`src/ui.rs`)**:
+    - `LauncherApp`: Minimal frameless, borderless single-line input bar (`eframe` / `egui`).
+    - `LauncherState`: Decoupled state machine managing input buffer, candidate list, selected index, and action queue.
+    - `KeyCommand` & `LauncherAction`: Type-safe command and execution intent decoupling (`LaunchShortcut`, `CopyCalculation`, `Close`, `Hide`).
+  - **Keyboard Navigation System**:
+    - `Tab` / `Shift+Tab`: Forward/backward candidate selection and incremental text completion while preserving argument strings.
+    - `Down` / `Up` & `Ctrl+n` / `Ctrl+p`: Bidirectional cyclic candidate navigation.
+    - `Enter`: Execute selected shortcut (`open::that_detached`) or copy arithmetic result to clipboard.
+    - `Esc`: Clear input buffer on first press, dismiss/hide window on second press (faithful CraftLaunch 2 ergonomics).
+    - Single-line `TextEdit` focus locking (`lock_focus(true)`) and preemptive key consumption preventing focus escape.
+  - **Dynamic Dropdown Panel**:
+    - Automatically displays up to 8 matching candidates below the single-line input box.
+    - Visual indicator prefix (`=`) and distinct styling for instant calculation results.
+    - Dark mode color scheme inspired by CraftLaunch 2 palette.
+  - **Comprehensive UI Integration Tests (`tests/ui_integration.rs`)**:
+    - 4 state-machine scenario integration tests covering incremental completion, calculation execution, empty query dropdown, and frameless native window options.
+    - Total test suite expanded to 45 tests (20 unit, 16 integration, 9 doc tests, 100% PASS).
+
 ## [0.1.0-alpha.2] - 2026-10-20
 
 ### Added
