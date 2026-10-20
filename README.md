@@ -6,7 +6,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Rust 2024](https://img.shields.io/badge/Rust-2024%20Edition-orange.svg)](https://www.rust-lang.org)
-[![Version](https://img.shields.io/badge/version-v0.1.0--alpha.4-brightgreen.svg)](Cargo.toml)
+[![Version](https://img.shields.io/badge/version-v0.1.0--alpha.5-brightgreen.svg)](Cargo.toml)
 [![Platform](https://img.shields.io/badge/Platform-Windows-blue.svg)](https://github.com/tkshnkgwr/KeyStar)
 
 [English](./README.md) | [日本語](./README_JA.md)
@@ -19,9 +19,9 @@
 +-------------------------------------------------------+
 | > [ Type here (Minimal single-line input box)       ] |
 +-------------------------------------------------------+
-|  = 1,408 (Instant arithmetic evaluation result)       |
-|  * Obsidian.lnk                                       |
-|  * Chrome.lnk                                         |
+| = 1,408 (Instant arithmetic evaluation result) |
+| :--------------------------------------------- |
+| * Chrome.lnk                                   |
 +-------------------------------------------------------+
 ```
 
@@ -36,7 +36,7 @@ Having relied on CraftLaunch for many years, the author wanted to create an ever
 * **Development Approach**:  
   Implemented in Rust in collaborative pair programming with AI (Gemini).
 * **Current Status**:  
-  Currently at `v0.1.0-alpha.4`. Phase 1 (Core Logic), Phase 2 (egui minimal 1-line GUI & keyboard navigation), and Phase 3 (OS integration: Alt+Space global hotkey, system tray daemon, and arboard clipboard copy) are complete, ready for Phase 4 (release binary optimization and Scoop packaging).
+  Currently at `v0.1.0-alpha.5` (Alpha Milestone Completed). Phase 0 (Setup & Specs), Phase 1 (Core Logic), Phase 2 (egui minimal 1-line GUI), Phase 3 (OS integration: Alt+Space global hotkey, system tray daemon, and arboard clipboard copy), and the complete 15-document bilingual specification suite are fully delivered. All subsequent enhancements and packaging (Phase 4) transition into the **Beta** phase.
 
 ---
 
@@ -87,14 +87,14 @@ We express our deepest appreciation to craftware for creating such an exceptiona
 
 ## ⌨️ Keyboard Operations
 
-| Key Combination      | Action Description                                              |
-| :------------------- | :-------------------------------------------------------------- |
-| `Alt + Space`        | Toggle launcher visibility (Global Hotkey)                      |
-| `Enter`              | Execute selected shortcut or copy math result to clipboard      |
-| `Esc`                | Dismiss launcher window immediately                             |
-| `Tab` / `Shift+Tab`  | Select next / previous candidate in dropdown list               |
-| `Ctrl+n` / `Ctrl+p`  | Vim-friendly next / previous candidate selection                |
-| `Down` / `Up`        | Arrow key navigation for candidate list                         |
+| Key Combination     | Action Description                                         |
+| :------------------ | :--------------------------------------------------------- |
+| `Alt + Space`       | Toggle launcher visibility (Global Hotkey)                 |
+| `Enter`             | Execute selected shortcut or copy math result to clipboard |
+| `Esc`               | Dismiss launcher window immediately                        |
+| `Tab` / `Shift+Tab` | Select next / previous candidate in dropdown list          |
+| `Ctrl+n` / `Ctrl+p` | Vim-friendly next / previous candidate selection           |
+| `Down` / `Up`       | Arrow key navigation for candidate list                    |
 
 ---
 
@@ -116,6 +116,30 @@ cargo run
 # Build optimized release binary
 cargo build --release
 ```
+
+---
+
+## 📚 Documentation Suite
+
+Comprehensive specifications, architectural guidelines, manual testing checklists, and footprints are documented under `docs/`:
+
+| Document                                                   | Description & Scope                                            |
+| :--------------------------------------------------------- | :------------------------------------------------------------- |
+| [**ARCHITECTURE.md**](./docs/en/ARCHITECTURE.md)           | System components, data flows, and module responsibilities     |
+| [**SPECIFICATION.md**](./docs/en/SPECIFICATION.md)         | Core requirements, search ranking, and math engine specs       |
+| [**GUI_DESIGN.md**](./docs/en/GUI_DESIGN.md)               | CraftLaunch 2 aesthetics, dimensions, palette, and keybindings |
+| [**DEVELOPMENT.md**](./docs/en/DEVELOPMENT.md)             | Prerequisites, build instructions, and verification commands   |
+| [**USER_GUIDE.md**](./docs/en/USER_GUIDE.md)               | Quick start, shortcut folder setup, and complete cheat sheet   |
+| [**INSTRUCTIONS.md**](./docs/en/INSTRUCTIONS.md)           | Developer and AI agent directives linked with RULES.md         |
+| [**FOOTPRINTS.md**](./docs/en/FOOTPRINTS.md)               | Memory footprint, CPU usage, and cold start benchmarks         |
+| [**MANUAL_TEST_GUIDE.md**](./docs/en/MANUAL_TEST_GUIDE.md) | Manual acceptance testing checklist across 8 core sections     |
+| [**TESTING.md**](./docs/en/TESTING.md)                     | 3-layer testing architecture (unit, integration, doc tests)    |
+| [**TEST_REPORT.md**](./docs/en/TEST_REPORT.md)             | Official test execution report covering 64 passing tests       |
+| [**RELEASE.md**](./docs/en/RELEASE.md)                     | Release checklist, optimization build, and packaging steps     |
+| [**CONTRIBUTING.md**](./docs/en/CONTRIBUTING.md)           | Contribution policy, clean-room rules, and PR checklist        |
+| [**SECURITY.md**](./docs/en/SECURITY.md)                   | Privilege boundaries, process isolation, and input safety      |
+| [**TODO.md**](./docs/en/TODO.md)                           | Development roadmap and implementation milestones              |
+| [**CHANGELOG.md**](./docs/en/CHANGELOG.md)                 | Version release history (Keep a Changelog standard)            |
 
 ---
 

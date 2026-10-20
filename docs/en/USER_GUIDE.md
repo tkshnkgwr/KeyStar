@@ -42,24 +42,24 @@ There are no complex configuration GUIs or fragile scripting setups.
 
 Type any arithmetic expression directly into the input box to evaluate it in real-time.
 
-| Input Example      | Display Result | Action on `Enter`                                    |
-| :----------------- | :------------- | :--------------------------------------------------- |
-| `1280 * 1.1`       | `= 1,408`      | Copies `1408` to clipboard and hides launcher        |
-| `10 / 4`           | `= 2.5`        | Copies `2.5` to clipboard and hides launcher         |
-| `(100 + 200) * 3`  | `= 900`        | Copies `900` to clipboard and hides launcher         |
-| `10 % 3`           | `= 1`          | Copies `1` to clipboard and hides launcher           |
+| Input Example     | Display Result | Action on `Enter`                             |
+| :---------------- | :------------- | :-------------------------------------------- |
+| `1280 * 1.1`      | `= 1,408`      | Copies `1408` to clipboard and hides launcher |
+| `10 / 4`          | `= 2.5`        | Copies `2.5` to clipboard and hides launcher  |
+| `(100 + 200) * 3` | `= 900`        | Copies `900` to clipboard and hides launcher  |
+| `10 % 3`          | `= 1`          | Copies `1` to clipboard and hides launcher    |
 
 ---
 
 ## 4. Keyboard Shortcuts
 
-| Keystroke            | Action Description                                     |
-| :------------------- | :----------------------------------------------------- |
-| **`Alt + Space`**    | Toggle launcher visibility (Global Hotkey)              |
-| **`Enter`**          | Launch selected item or copy math result to clipboard  |
-| **`Esc`**            | Dismiss launcher immediately without executing         |
-| **`Tab`**            | Select next candidate                                  |
-| **`Shift + Tab`**    | Select previous candidate                              |
-| **`Ctrl + n`**       | Select next candidate (Vim-style navigation)           |
-| **`Ctrl + p`**       | Select previous candidate (Vim-style navigation)       |
-| **`Down` / `Up`**    | Arrow key candidate navigation                         |
+| Keystroke         | Action Description                                    |
+| :---------------- | :---------------------------------------------------- |
+| **`Alt + Space`** | Toggle launcher visibility (Global Hotkey)            |
+| **`Enter`**       | Launch selected item or copy math result to clipboard |
+| **`Esc`**         | Dismiss launcher immediately without executing        |
+| **`Tab`**         | Select next candidate                                 |
+| **`Shift + Tab`** | Select previous candidate                             |
+| **`Ctrl + n`**    | Select next candidate (Vim-style navigation)          |
+| **`Ctrl + p`**    | Select previous candidate (Vim-style navigation)      |
+| **`Down` / `Up`** | Arrow key candidate navigation                        |

@@ -54,13 +54,13 @@ flowchart TD
 
 ## 3. Module Responsibilities
 
-| Module Name  | Responsibilities & Roles                                                     | Key Tech               |
-| :----------- | :--------------------------------------------------------------------------- | :--------------------- |
-| `calc`       | Parses expressions, evaluates math, handles decimal division, comma formats   | `evalexpr`             |
-| `indexer`    | Scans `%USERPROFILE%\commands` and `./shortcuts`, checks timestamps           | `std::fs`, `PathBuf`   |
-| `search`     | Scores prefix/substring matches against shortcut names, prioritizes math     | In-memory scoring      |
-| `ui` (Phase 2)| Renders single-line text input, candidate dropdown, handles keystrokes       | `eframe`, `egui`       |
-| `main`       | Application lifecycle, hotkey management, system tray resident control       | `global-hotkey`, `open`|
+| Module Name    | Responsibilities & Roles                                                    | Key Tech                |
+| :------------- | :-------------------------------------------------------------------------- | :---------------------- |
+| `calc`         | Parses expressions, evaluates math, handles decimal division, comma formats | `evalexpr`              |
+| `indexer`      | Scans `%USERPROFILE%\commands` and `./shortcuts`, checks timestamps         | `std::fs`, `PathBuf`    |
+| `search`       | Scores prefix/substring matches against shortcut names, prioritizes math    | In-memory scoring       |
+| `ui` (Phase 2) | Renders single-line text input, candidate dropdown, handles keystrokes      | `eframe`, `egui`        |
+| `main`         | Application lifecycle, hotkey management, system tray resident control      | `global-hotkey`, `open` |
 
 ---
 

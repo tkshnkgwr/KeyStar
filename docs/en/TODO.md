@@ -8,13 +8,13 @@
 
 ## 📊 Phase Matrix Table
 
-| Phase                     | Core Focus & Deliverables                            | Key Tech Stack              | Status          |
-| :------------------------ | :--------------------------------------------------- | :-------------------------- | :-------------: |
-| **Phase 0: Environment**  | Agent rules, skills, CI & formatting baselines       | Rust 2024, `.agents`        | **Completed**   |
-| **Phase 1: Core Logic**   | Math engine, shortcut indexer, completion engine     | `evalexpr`, `std::fs`       | **Completed**   |
-| **Phase 2: GUI Prototype**| Single-line input frame, candidate dropdown rendering| `eframe`, `egui`            | **Completed**   |
-| **Phase 3: OS Integration**| Global hotkeys, clipboard copy, system tray         | `global-hotkey`, `tray-icon`| **Completed**   |
-| **Phase 4: Optimization** | Single-binary LTO optimization, Scoop package        | Cargo Release, Scoop        | Pending         |
+| Phase                       | Core Focus & Deliverables                             | Key Tech Stack               |    Status     |
+| :-------------------------- | :---------------------------------------------------- | :--------------------------- | :-----------: |
+| **Phase 0: Environment**    | Agent rules, skills, CI & formatting baselines        | Rust 2024, `.agents`         | **Completed** |
+| **Phase 1: Core Logic**     | Math engine, shortcut indexer, completion engine      | `evalexpr`, `std::fs`        | **Completed** |
+| **Phase 2: GUI Prototype**  | Single-line input frame, candidate dropdown rendering | `eframe`, `egui`             | **Completed** |
+| **Phase 3: OS Integration** | Global hotkeys, clipboard copy, system tray           | `global-hotkey`, `tray-icon` | **Completed** |
+| **Phase 4: Optimization**   | Single-binary LTO optimization, Scoop package         | Cargo Release, Scoop         |    Pending    |
 
 ---
 
@@ -60,3 +60,11 @@
 - [x] Global hotkey `Alt + Space` via `global-hotkey` (`src/hotkey.rs`)
 - [x] System tray resident via `tray-icon` (`src/tray.rs`)
 - [x] Clipboard copy integration via `arboard` (`src/clipboard.rs`)
+
+### Phase 4: Distribution & Optimization (Beta Phase)
+- [ ] **Release Binary Optimization**:
+  - [ ] Configure `profile.release` in `Cargo.toml`: `lto = true`, `codegen-units = 1`, `panic = "abort"`, `strip = true`
+  - [ ] Sub-millisecond cold start (<50ms) and minimal resident RAM (<10MB)
+- [ ] **Package Distribution (Scoop / Winget / ZIP)**:
+  - [ ] Standalone portable ZIP distribution
+  - [ ] Custom Scoop bucket manifest configuration

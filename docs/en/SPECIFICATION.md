@@ -2,14 +2,14 @@
 
 ## 1. Application Overview
 
-| Item                | Details                                                                  |
-| :------------------ | :----------------------------------------------------------------------- |
-| **Name**            | Re:CraftLaunch                                                           |
-| **Category**        | Ultra-Lightweight Single-Line Windows Keyboard Launcher                  |
-| **Language**        | Rust (Edition 2024)                                                      |
-| **GUI Framework**   | `eframe` / `egui`                                                        |
-| **Target OS**       | Windows 11 (x86_64)                                                      |
-| **Design Spirit**   | Revival of "CraftLaunch 2" (Single-line, blazing fast, keyboard-centric) |
+| Item              | Details                                                                  |
+| :---------------- | :----------------------------------------------------------------------- |
+| **Name**          | Re:CraftLaunch                                                           |
+| **Category**      | Ultra-Lightweight Single-Line Windows Keyboard Launcher                  |
+| **Language**      | Rust (Edition 2024)                                                      |
+| **GUI Framework** | `eframe` / `egui`                                                        |
+| **Target OS**     | Windows 11 (x86_64)                                                      |
+| **Design Spirit** | Revival of "CraftLaunch 2" (Single-line, blazing fast, keyboard-centric) |
 
 ---
 
@@ -49,11 +49,11 @@
 
 ### 3.2 Keyboard Keybindings
 
-| Keystroke            | Behavior                                               |
-| :------------------- | :----------------------------------------------------- |
-| `Alt + Space`        | Toggle launcher visibility (Global Hotkey)              |
-| `Enter`              | Execute selected item or copy math result to clipboard |
-| `Esc`                | Dismiss launcher window immediately                    |
-| `Tab` / `Shift+Tab`  | Cycle through candidate list                           |
-| `Ctrl+n` / `Ctrl+p`  | Vim-friendly candidate navigation                      |
-| `Down` / `Up`        | Arrow key candidate navigation                         |
+| Keystroke           | Behavior                                               |
+| :------------------ | :----------------------------------------------------- |
+| `Alt + Space`       | Toggle launcher visibility (Global Hotkey)             |
+| `Enter`             | Execute selected item or copy math result to clipboard |
+| `Esc`               | Dismiss launcher window immediately                    |
+| `Tab` / `Shift+Tab` | Cycle through candidate list                           |
+| `Ctrl+n` / `Ctrl+p` | Vim-friendly candidate navigation                      |
+| `Down` / `Up`       | Arrow key candidate navigation                         |

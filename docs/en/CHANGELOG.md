@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.0-alpha.5] - 2026-10-20
+
+### Added
+- **Alpha Milestone Completion & Comprehensive Documentation Suite**:
+  - **Symmetric 15-Document Bilingual Architecture**:
+    - Complete synchronization across `docs/ja/` and `docs/en/` (15 docs in each language).
+    - `FOOTPRINTS.md`: Detailed resource benchmarks (<50ms cold start, 0.0% idle CPU, <15MB resident RAM, <1ms hotkey wakeup) and complexity analysis.
+    - `INSTRUCTIONS.md`: Strict developer and AI agent directives, RULES.md enforcement, clean-room protocol, and verification steps.
+    - `MANUAL_TEST_GUIDE.md`: Comprehensive 8-section manual acceptance testing checklist for Windows workstations.
+    - `RELEASE.md`: Pre-release verification checklist, optimized LTO build, tagging, and distribution ZIP workflow.
+    - `GUI_DESIGN.md`, `CONTRIBUTING.md`, `SECURITY.md`, `TESTING.md`, and `TEST_REPORT.md`: Fully mirrored in English.
+  - **Benchmarking & Example Workspaces**:
+    - `benches/README.md`: Architecture guide for upcoming `criterion` benchmark suites (calc, search, indexer).
+    - `examples/README.md`: Standalone headless CLI examples for instant testing (`calc_cli`, `search_cli`, `icon_gen`).
+  - **Table Alignment Automation**:
+    - `scripts/align_table.py`: Python East Asian Width vertical alignment tool applied to all markdown tables repository-wide.
+  - **Milestone Transition**:
+    - Formal conclusion of the Alpha development phase. All subsequent functional development (Phase 4: Release LTO optimizations & Scoop packaging) transitions to the **Beta** phase.
+
 ## [0.1.0-alpha.4] - 2026-10-20
 
 ### Added

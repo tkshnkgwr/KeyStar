@@ -6,13 +6,13 @@ This document provides developer guidelines for building, testing, and maintaini
 
 ## 1. Prerequisites
 
-| Component       | Requirements & Recommendations                              |
-| :-------------- | :---------------------------------------------------------- |
-| **OS**          | Windows 11 (x86_64)                                         |
-| **Rust**        | Rust 1.85+ (**Edition 2024** support)                       |
-| **Cargo**       | Latest bundled version                                      |
-| **CLI Tools**   | `ripgrep` (`rg`), `fd`, `bat`, `jq` (Recommended)           |
-| **Editor**      | VS Code (rust-analyzer) or gVim                             |
+| Component     | Requirements & Recommendations                    |
+| :------------ | :------------------------------------------------ |
+| **OS**        | Windows 11 (x86_64)                               |
+| **Rust**      | Rust 1.85+ (**Edition 2024** support)             |
+| **Cargo**     | Latest bundled version                            |
+| **CLI Tools** | `ripgrep` (`rg`), `fd`, `bat`, `jq` (Recommended) |
+| **Editor**    | VS Code (rust-analyzer) or gVim                   |
 
 ---
 
