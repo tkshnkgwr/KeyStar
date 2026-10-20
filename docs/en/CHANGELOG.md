@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.0-beta.1] - 2026-10-20
+
+### Changed
+- **Transition to Beta Phase & Directory Structure Tree Modernization**:
+  - Upgraded project version from `v0.1.0-alpha.5` to `v0.1.0-beta.1`.
+  - Modernized repository folder structure tree in `README.md` and `README_JA.md` to fully reflect all source modules, tests, bilingual documentation, helper scripts, benchmarks, and examples.
+  - Completed comprehensive codebase verification auditing all modules (`calc`, `indexer`, `search`, `clipboard`, `hotkey`, `tray`, `ui`, `main`), confirming zero stub/mock implementations and 100% real production logic across all 64 tests (27 unit, 20 integration, 17 doc-tests).
+
 ## [0.1.0-alpha.5] - 2026-10-20
 
 ### Added

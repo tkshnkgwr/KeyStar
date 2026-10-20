@@ -36,7 +36,7 @@ Having relied on CraftLaunch for many years, the author wanted to create an ever
 * **Development Approach**:  
   Implemented in Rust in collaborative pair programming with AI (Gemini).
 * **Current Status**:  
-  Currently at `v0.1.0-alpha.5` (Alpha Milestone Completed). Phase 0 (Setup & Specs), Phase 1 (Core Logic), Phase 2 (egui minimal 1-line GUI), Phase 3 (OS integration: Alt+Space global hotkey, system tray daemon, and arboard clipboard copy), and the complete 15-document bilingual specification suite are fully delivered. All subsequent enhancements and packaging (Phase 4) transition into the **Beta** phase.
+  Currently at `v0.1.0-beta.1` (Beta Phase Initial Release). Phase 0 (Setup & Specs), Phase 1 (Core Logic), Phase 2 (egui minimal 1-line GUI), Phase 3 (OS integration: Alt+Space global hotkey, system tray daemon, and arboard clipboard copy), and the complete 15-document bilingual specification suite are fully delivered and verified. All stub implementations have been audited and confirmed zero. Subsequent packaging and optimizations (Phase 4) are conducted under the **Beta** phase.
 
 ---
 
@@ -148,24 +148,72 @@ Comprehensive specifications, architectural guidelines, manual testing checklist
 ```text
 Re-CraftLaunch/
 ├── .agents/
-│   ├── rules/              # Git, Rust testing, and Rustdoc specifications
-│   └── skills/             # Verification, commit, table format, and memo skills
-├── docs/                   # Specifications and development roadmap
-│   ├── en/                 # English documentation
-│   └── ja/                 # Japanese documentation
-│       ├── SPECIFICATION.md# Detailed feature specification
-│       └── TODO.md         # Development roadmap & task checklist
-├── src/                    # Rust source code
-│   └── main.rs
-├── tests/                  # Integration & scenario tests
-├── Cargo.toml              # Rust crate manifest
-├── CHANGELOG.md            # Changelog (English)
-├── GEMINI.md               # AI assistant master directives
-├── LICENSE                 # MIT License
-├── README.md               # English documentation
-├── README_JA.md            # Japanese documentation
-├── RULES.md                # Workspace common absolute rules
-└── rustfmt.toml            # Formatter configuration
+│   ├── rules/                  # Git, Rust testing, and Rustdoc specifications
+│   └── skills/                 # Verification, commit, table format, and memo skills
+├── benches/                    # Benchmarking design workspace (Criterion)
+│   └── README.md
+├── docs/                       # Comprehensive bilingual documentation suite (15 each)
+│   ├── en/                     # English documentation (15 docs)
+│   │   ├── ARCHITECTURE.md     # System architecture and data flow
+│   │   ├── CHANGELOG.md        # Release history (Keep a Changelog)
+│   │   ├── CONTRIBUTING.md     # Contribution guidelines & PR checklist
+│   │   ├── DEVELOPMENT.md      # Development setup & build commands
+│   │   ├── FOOTPRINTS.md       # Resource consumption metrics & benchmarks
+│   │   ├── GUI_DESIGN.md       # GUI design specs & UI/UX layout
+│   │   ├── INSTRUCTIONS.md     # Developer and AI agent directives
+│   │   ├── MANUAL_TEST_GUIDE.md# Manual acceptance testing checklist
+│   │   ├── RELEASE.md          # Release checklist & packaging steps
+│   │   ├── SECURITY.md         # Privilege boundaries & security policy
+│   │   ├── SPECIFICATION.md    # Detailed functional specification
+│   │   ├── TESTING.md          # 3-layer test architecture & guidelines
+│   │   ├── TEST_REPORT.md      # Official test execution report
+│   │   ├── TODO.md             # Development roadmap & task matrix
+│   │   └── USER_GUIDE.md       # Complete user operation manual
+│   └── ja/                     # Japanese documentation (15 docs)
+│       ├── ARCHITECTURE.md
+│       ├── CHANGELOG.md
+│       ├── CONTRIBUTING.md
+│       ├── DEVELOPMENT.md
+│       ├── FOOTPRINTS.md
+│       ├── GUI_DESIGN.md
+│       ├── INSTRUCTIONS.md
+│       ├── MANUAL_TEST_GUIDE.md
+│       ├── RELEASE.md
+│       ├── SECURITY.md
+│       ├── SPECIFICATION.md
+│       ├── TESTING.md
+│       ├── TEST_REPORT.md
+│       ├── TODO.md
+│       └── USER_GUIDE.md
+├── examples/                   # Headless standalone CLI examples
+│   └── README.md
+├── scripts/                    # Automation scripts
+│   └── align_table.py          # East Asian Width markdown table aligner
+├── src/                        # Rust source code (all < 1,000 lines)
+│   ├── main.rs                 # Main entrypoint (resident daemon & window subsystem)
+│   ├── lib.rs                  # Library root & public module exports
+│   ├── calc.rs                 # Real-time arithmetic math engine (evalexpr)
+│   ├── indexer.rs              # Shortcut directory scanner & cache
+│   ├── search.rs               # Incremental search & dynamic scoring
+│   ├── ui.rs                   # Minimal 1-line window & state machine (egui)
+│   ├── hotkey.rs               # Global hotkey daemon for Alt+Space (global-hotkey)
+│   ├── tray.rs                 # System tray resident & context menu (tray-icon)
+│   └── clipboard.rs            # OS clipboard provider (arboard)
+├── tests/                      # Public API integration test suite (20 tests)
+│   ├── calc_integration.rs    # Arithmetic & edge-case integration tests
+│   ├── indexer_integration.rs # Real filesystem scan & cache tests
+│   ├── search_integration.rs  # Case-insensitivity & ranking tests
+│   ├── ui_integration.rs      # Completion & window state transition tests
+│   └── os_integration.rs      # Hotkey, tray, and clipboard integration tests
+├── Cargo.lock                  # Dependency lockfile
+├── Cargo.toml                  # Rust crate manifest
+├── CHANGELOG.md                # Changelog root
+├── GEMINI.md                   # AI assistant master directives
+├── LICENSE                     # MIT License
+├── README.md                   # English project documentation
+├── README_JA.md                # Japanese project documentation
+├── RULES.md                    # Workspace common absolute rules
+└── rustfmt.toml                # Formatter configuration
 ```
 
 ---

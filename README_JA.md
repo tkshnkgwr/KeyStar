@@ -36,7 +36,7 @@ PC全体をインデックス検索する現代の巨大なランチャーとは
 * **開発体制**:  
   Rustによるコード実装は、AI（Gemini / 大賢者）と相談しながら進めています。
 * **現在のステータス**:  
-  現在は `v0.1.0-alpha.5`（α版完結マイルストーン）です。Phase 0（環境・規約）、Phase 1（コアロジック）、Phase 2（egui 1行GUI）、Phase 3（OS連携常駐：Alt+Spaceホットキー・トレイ・クリップボード）、および全15種の日英完全対称ドキュメント体系がすべて整備完了しました。ここから先の機能追加・修正（Phase 4: バイナリ最適化・Scoopパッケージング等）は **β版（Beta）** フェーズへ移行します。
+  現在は `v0.1.0-beta.1`（β版初回リリース）です。Phase 0（環境・規約）、Phase 1（コアロジック）、Phase 2（egui 1行GUI）、Phase 3（OS連携常駐：Alt+Spaceホットキー・トレイ・クリップボード）、および全15種の日英完全対称ドキュメント体系がすべて整備完了・実動検証済みです。スタブ・仮置きコードが存在しないことを完全精査済みであり、ここから先のパッケージングや最適化（Phase 4: バイナリ最適化・Scoop対応等）は **β版（Beta）** フェーズとして進行します。
 
 ---
 
@@ -58,7 +58,7 @@ PC全体をインデックス検索する現代の巨大なランチャーとは
 ## 🎯 コンセプト & 開発動機
 
 - **「CraftLaunch 2」の魂を受け継ぐ現代リメイク**:
-  - 過剰に多機能化・Python埋め込みで肥大化した「CraftLaunch 3」ではなく、全ユーザーが熱狂した **Ver2の原点（1行・爆速・キーボード特化・登録ショートカット即起動）** をRustで蘇らせます。
+  - 過剰に多機能化・Python埋め込みで肥大化した「CraftLaunch 3」ではなく、 **Ver2の原点（1行・爆速・キーボード特化・登録ショートカット即起動）** をRustで蘇らせます。
   - PC全体を無駄に検索せず、**「自分が決めたショートカットだけを、最短キーストロークで即座に呼び出す」** という原点にして頂点の使い勝手を提供します。
 - **研ぎ澄まされた2大機能**:
   1. **特定フォルダのファイル名インクリメンタル補完起動**:
@@ -148,24 +148,72 @@ cargo build --release
 ```text
 Re-CraftLaunch/
 ├── .agents/
-│   ├── rules/              # Git規約、テスト規約、Rustdoc規約
-│   └── skills/             # 検証・コミット・Markdown整形・Vault連携スキル
-├── docs/                   # 仕様書・設計書・TODO
-│   ├── en/                 # 英語版ドキュメント
-│   └── ja/                 # 日本語版ドキュメント
-│       ├── SPECIFICATION.md# 詳細機能仕様書
-│       └── TODO.md         # 開発ロードマップ & タスク一覧
-├── src/                    # ソースコード
-│   └── main.rs
-├── tests/                  # 統合・シナリオテスト
-├── Cargo.toml              # クレート設定
-├── CHANGELOG.md            # 変更履歴 (英語)
-├── GEMINI.md               # AI秘書最優先ルール
-├── LICENSE                 # MIT License
-├── README.md               # 英語ドキュメント
-├── README_JA.md            # 日本語ドキュメント
-├── RULES.md                # 開発共通絶対遵守指令
-└── rustfmt.toml            # フォーマッター設定
+│   ├── rules/                  # Git規約、テスト規約、Rustdoc規約
+│   └── skills/                 # 検証・コミット・Markdown整形・Vault連携スキル
+├── benches/                    # 将来の性能ベンチマーク設計置き場 (Criterion)
+│   └── README.md
+├── docs/                       # 日英完全対称・詳細設計ドキュメント一式 (各15種)
+│   ├── en/                     # 英語版ドキュメント (15種)
+│   │   ├── ARCHITECTURE.md     # システムアーキテクチャ設計書
+│   │   ├── CHANGELOG.md        # 変更履歴 (英語)
+│   │   ├── CONTRIBUTING.md     # コントリビューション規約
+│   │   ├── DEVELOPMENT.md      # 開発・ビルド環境ガイド
+│   │   ├── FOOTPRINTS.md       # リソース消費指標 & ベンチマーク
+│   │   ├── GUI_DESIGN.md       # GUI設計方針 & UI/UX仕様
+│   │   ├── INSTRUCTIONS.md     # 開発者・AI指示書
+│   │   ├── MANUAL_TEST_GUIDE.md# 手動受入テストチェックリスト
+│   │   ├── RELEASE.md          # リリース手順書
+│   │   ├── SECURITY.md         # セキュリティポリシー
+│   │   ├── SPECIFICATION.md    # 詳細基本仕様書
+│   │   ├── TESTING.md          # テスト設計 & 品質方針
+│   │   ├── TEST_REPORT.md      # 公式テスト結果報告書
+│   │   ├── TODO.md             # 開発ロードマップ & タスク一覧
+│   │   └── USER_GUIDE.md       # ユーザー操作マニュアル
+│   └── ja/                     # 日本語版ドキュメント (15種)
+│       ├── ARCHITECTURE.md
+│       ├── CHANGELOG.md
+│       ├── CONTRIBUTING.md
+│       ├── DEVELOPMENT.md
+│       ├── FOOTPRINTS.md
+│       ├── GUI_DESIGN.md
+│       ├── INSTRUCTIONS.md
+│       ├── MANUAL_TEST_GUIDE.md
+│       ├── RELEASE.md
+│       ├── SECURITY.md
+│       ├── SPECIFICATION.md
+│       ├── TESTING.md
+│       ├── TEST_REPORT.md
+│       ├── TODO.md
+│       └── USER_GUIDE.md
+├── examples/                   # 単体CLI動作確認用サンプル置き場
+│   └── README.md
+├── scripts/                    # 開発・整形自動化スクリプト
+│   └── align_table.py          # 全角幅対応 Markdown テーブル垂直整列ツール
+├── src/                        # Rust ソースコード (全ファイル 1000行以内)
+│   ├── main.rs                 # エントリポイント (常駐起動・コンソール非表示)
+│   ├── lib.rs                  # ライブラリルート (公開モジュール定義)
+│   ├── calc.rs                 # リアルタイム四則演算・電卓エンジン (evalexpr)
+│   ├── indexer.rs              # ショートカット走査・監視インデクサ
+│   ├── search.rs               # インクリメンタル補完・動的スコアリング
+│   ├── ui.rs                   # 1行極小ウィンドウ・キーボード操作・状態マシン (egui)
+│   ├── hotkey.rs               # グローバルホットキー (Alt+Space) 監視 (global-hotkey)
+│   ├── tray.rs                 # システムトレイ常駐・右クリックメニュー (tray-icon)
+│   └── clipboard.rs            # OS クリップボード同期書き込み (arboard)
+├── tests/                      # 公開 API 統合・シナリオテストスイート (20件)
+│   ├── calc_integration.rs    # 電卓演算・実数除算・ゼロ除算統合テスト
+│   ├── indexer_integration.rs # 実ディレクトリ走査・更新検知統合テスト
+│   ├── search_integration.rs  # 大文字小文字透過・スコアリング統合テスト
+│   ├── ui_integration.rs      # 補完入力・ウィンドウ状態遷移統合テスト
+│   └── os_integration.rs      # ホットキー・トレイ・クリップボード統合テスト
+├── Cargo.lock                  # 依存関係ロックファイル
+├── Cargo.toml                  # クレート構成マニフェスト
+├── CHANGELOG.md                # 変更履歴ルート
+├── GEMINI.md                   # AI秘書最優先ルール (RULES.md連動)
+├── LICENSE                     # MIT License
+├── README.md                   # 英語プロジェクト概要
+├── README_JA.md                # 日本語プロジェクト概要
+├── RULES.md                    # 開発共通絶対遵守指令
+└── rustfmt.toml                # Rust 標準フォーマッター設定
 ```
 
 ---
