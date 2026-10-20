@@ -4,8 +4,11 @@
 //! キーボード完結の操作体系（`Enter`, `Esc`, `Tab`/`Shift+Tab`, `Ctrl+n`/`Ctrl+p`, `Up`/`Down`）を提供します。
 
 use crate::calc::evaluate;
+use crate::clipboard::{ClipboardProvider, SystemClipboard};
+use crate::hotkey::{HotKeyService, install_hotkey_wakeup_hook};
 use crate::indexer::{ShortcutIndexer, ShortcutItem};
 use crate::search::{Candidate, CandidateKind, filter_candidates};
+use crate::tray::{TrayCommand, TrayService, install_tray_wakeup_hook};
 use eframe::egui;
 use std::path::PathBuf;
 
@@ -62,7 +65,7 @@ pub enum LauncherAction {
     Dismiss,
 }
 
-/// ランチャーのUI状態（入力クエリ・候補リスト・選択インデックス）を管理する構造体。
+/// ランチャーのUI状態（入力クエリ・候補リスト・選択インデックス・表示状態）を管理する構造体。
 ///
 /// GUI描画フレームワーク（`egui`）から独立して状態遷移とキーバインドを検証可能にします。
 #[derive(Debug, Clone)]
@@ -77,6 +80,10 @@ pub struct LauncherState {
     max_candidates: usize,
     /// クエリが空の際にも明示的にドロップダウンを展開しているかどうか
     force_dropdown_open: bool,
+    /// ランチャーウィンドウが現在表示状態かどうか（ホットキートグル制御用）
+    window_visible: bool,
+    /// 入力欄へのフォーカス強制が要求されているかどうか
+    focus_requested: bool,
 }
 
 impl Default for LauncherState {
@@ -100,6 +107,7 @@ impl LauncherState {
     /// let state = LauncherState::new(8);
     /// assert_eq!(state.query(), "");
     /// assert!(!state.is_dropdown_visible());
+    /// assert!(state.is_window_visible());
     /// ```
     #[must_use]
     pub fn new(max_candidates: usize) -> Self {
@@ -109,7 +117,64 @@ impl LauncherState {
             selected_index: 0,
             max_candidates: max_candidates.max(1),
             force_dropdown_open: false,
+            window_visible: true,
+            focus_requested: true,
         }
+    }
+
+    /// ランチャーウィンドウが現在表示状態であるかを返します。
+    #[must_use]
+    pub fn is_window_visible(&self) -> bool {
+        self.window_visible
+    }
+
+    /// ランチャーウィンドウの表示状態を更新します。
+    ///
+    /// `visible == true` に遷移する際は、入力テキストボックスへのフォーカス強制フラグも自動的に有効化されます。
+    pub fn set_window_visible(&mut self, visible: bool) {
+        self.window_visible = visible;
+        self.focus_requested = visible;
+    }
+
+    /// 入力欄へのフォーカス強制が要求されているかを返します。
+    #[must_use]
+    pub fn is_focus_requested(&self) -> bool {
+        self.focus_requested
+    }
+
+    /// フォーカス強制要求フラグを取得し、同時にフラグを消費（`false` にリセット）します。
+    pub fn take_focus_request(&mut self) -> bool {
+        let req = self.focus_requested;
+        self.focus_requested = false;
+        req
+    }
+
+    /// グローバルホットキー（`Alt + Space`）やトレイクリックによるウィンドウ表示 / 非表示をトグルします。
+    ///
+    /// トグル後の新しい表示状態（`true` = 表示、`false` = 非表示）を返します。
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use Re_CraftLaunch::ui::LauncherState;
+    ///
+    /// let mut state = LauncherState::new(8);
+    /// assert!(state.is_window_visible());
+    ///
+    /// // 非表示へトグル
+    /// assert!(!state.toggle_visibility(&[]));
+    /// assert!(!state.is_window_visible());
+    ///
+    /// // 表示へトグル（フォーカス要求も復活）
+    /// assert!(state.toggle_visibility(&[]));
+    /// assert!(state.is_window_visible());
+    /// assert!(state.is_focus_requested());
+    /// ```
+    pub fn toggle_visibility(&mut self, shortcuts: &[ShortcutItem]) -> bool {
+        self.reset(shortcuts);
+        let next_visible = !self.window_visible;
+        self.set_window_visible(next_visible);
+        next_visible
     }
 
     /// 現在の入力文字列を返します。
@@ -317,6 +382,12 @@ pub struct LauncherApp {
     last_window_height: f32,
     /// 非表示化時にプロセスを終了せずウィンドウのみ隠すか（Phase 3 常駐連携用）
     hide_only_on_dismiss: bool,
+    /// OS グローバルホットキー監視サービス（`Alt + Space`）
+    hotkey_service: Option<HotKeyService>,
+    /// OS システムトレイ常駐サービス
+    tray_service: Option<TrayService>,
+    /// クリップボード書き込みプロバイダ（`arboard` OS連携 / テスト用モック）
+    clipboard: Box<dyn ClipboardProvider>,
 }
 
 impl LauncherApp {
@@ -334,7 +405,47 @@ impl LauncherApp {
             indexer,
             last_window_height: BASE_WINDOW_HEIGHT,
             hide_only_on_dismiss,
+            hotkey_service: None,
+            tray_service: None,
+            clipboard: Box::new(SystemClipboard::new()),
         }
+    }
+
+    /// グローバルホットキー（`Alt + Space`）およびシステムトレイ常駐を有効化した
+    /// 常駐モードの [`LauncherApp`] を生成します。
+    #[must_use]
+    pub fn new_resident(indexer: ShortcutIndexer, ctx: &egui::Context) -> Self {
+        install_hotkey_wakeup_hook(ctx.clone());
+        install_tray_wakeup_hook(ctx.clone());
+
+        let mut app = Self::new(indexer, true);
+        app.hotkey_service = HotKeyService::new_default().ok();
+        app.tray_service = TrayService::new_default().ok();
+        app
+    }
+
+    /// カスタムの [`ClipboardProvider`] を差し替えます（単体・統合テスト用）。
+    #[must_use]
+    pub fn with_clipboard(mut self, clipboard: Box<dyn ClipboardProvider>) -> Self {
+        self.clipboard = clipboard;
+        self
+    }
+
+    /// 内部の [`LauncherState`] への不変参照を返します。
+    #[must_use]
+    pub fn state(&self) -> &LauncherState {
+        &self.state
+    }
+
+    /// 内部の [`LauncherState`] への可変参照を返します。
+    pub fn state_mut(&mut self) -> &mut LauncherState {
+        &mut self.state
+    }
+
+    /// 直近にクリップボードプロバイダへコピーされた文字列を返します。
+    #[must_use]
+    pub fn last_copied_text(&self) -> Option<&str> {
+        self.clipboard.last_copied_text()
     }
 
     /// ダークテーマおよび余白を極小化したカスタムビジュアルスタイルを適用します。
@@ -376,8 +487,62 @@ impl LauncherApp {
         })
     }
 
+    /// グローバルホットキーおよびシステムトレイからの OS イベントをポーリングして処理します。
+    fn poll_os_events(&mut self, ctx: &egui::Context) {
+        // 1. グローバルホットキー (Alt + Space) による表示 / 非表示トグル
+        let hotkey_pressed = self
+            .hotkey_service
+            .as_ref()
+            .is_some_and(HotKeyService::poll_pressed);
+        if hotkey_pressed {
+            let now_visible = self.state.toggle_visibility(self.indexer.items());
+            if now_visible {
+                self.show_window(ctx);
+            } else {
+                self.dismiss_window(ctx);
+            }
+        }
+
+        // 2. システムトレイのメニュー選択およびクリックイベント処理
+        while let Some(cmd) = self
+            .tray_service
+            .as_ref()
+            .and_then(TrayService::poll_command)
+        {
+            match cmd {
+                TrayCommand::ToggleWindow => {
+                    let now_visible = self.state.toggle_visibility(self.indexer.items());
+                    if now_visible {
+                        self.show_window(ctx);
+                    } else {
+                        self.dismiss_window(ctx);
+                    }
+                }
+                TrayCommand::OpenCommandsFolder => {
+                    if let Some(primary_dir) = self.indexer.directories().first() {
+                        let _ = open::that_detached(primary_dir);
+                    }
+                }
+                TrayCommand::OpenSettings => {
+                    if let Some(settings_dir) = self
+                        .indexer
+                        .directories()
+                        .get(1)
+                        .or_else(|| self.indexer.directories().first())
+                    {
+                        let _ = open::that_detached(settings_dir);
+                    }
+                    self.show_window(ctx);
+                }
+                TrayCommand::Exit => {
+                    ctx.send_viewport_cmd(egui::ViewportCommand::Close);
+                }
+            }
+        }
+    }
+
     /// 確定された [`LauncherAction`] をOS/ウィンドウシステムに対して実行します。
-    fn execute_action(&self, ctx: &egui::Context, action: LauncherAction) {
+    fn execute_action(&mut self, ctx: &egui::Context, action: LauncherAction) {
         match action {
             LauncherAction::None => {}
             LauncherAction::ExecuteShortcut(path) => {
@@ -385,6 +550,8 @@ impl LauncherApp {
                 self.dismiss_window(ctx);
             }
             LauncherAction::CopyCalcResult(text) => {
+                // arboard による OS クリップボードへの同期的書き込み + egui フォールバック
+                let _ = self.clipboard.copy_text(&text);
                 ctx.copy_text(text);
                 self.dismiss_window(ctx);
             }
@@ -394,8 +561,25 @@ impl LauncherApp {
         }
     }
 
+    /// バックグラウンド待機状態からランチャーウィンドウを最前面に復帰・アクティブ化します。
+    fn show_window(&mut self, ctx: &egui::Context) {
+        if self.indexer.needs_rescan() {
+            self.indexer.scan();
+        }
+        self.state.reset(self.indexer.items());
+        self.state.set_window_visible(true);
+
+        ctx.send_viewport_cmd(egui::ViewportCommand::Visible(true));
+        ctx.send_viewport_cmd(egui::ViewportCommand::Minimized(false));
+        ctx.send_viewport_cmd(egui::ViewportCommand::WindowLevel(
+            egui::WindowLevel::AlwaysOnTop,
+        ));
+        ctx.send_viewport_cmd(egui::ViewportCommand::Focus);
+    }
+
     /// ウィンドウを非表示化（または終了）します。
-    fn dismiss_window(&self, ctx: &egui::Context) {
+    fn dismiss_window(&mut self, ctx: &egui::Context) {
+        self.state.set_window_visible(false);
         if self.hide_only_on_dismiss {
             ctx.send_viewport_cmd(egui::ViewportCommand::Visible(false));
         } else {
@@ -407,6 +591,9 @@ impl LauncherApp {
 impl eframe::App for LauncherApp {
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
         let ctx = ui.ctx().clone();
+
+        // 0. グローバルホットキー・システムトレイ等の OS 常駐イベント処理
+        self.poll_os_events(&ctx);
 
         // 監視フォルダの更新があれば軽量再スキャン
         if self.indexer.needs_rescan() {
@@ -450,8 +637,8 @@ impl eframe::App for LauncherApp {
                         .frame(egui::Frame::NONE);
 
                     let response = ui.add(text_edit);
-                    // 常に1行テキストボックスにフォーカスを維持
-                    if !response.has_focus() {
+                    // ホットキー復帰時または非フォーカス時は1行テキストボックスへフォーカス強制
+                    if self.state.take_focus_request() || !response.has_focus() {
                         response.request_focus();
                     }
 
@@ -647,5 +834,26 @@ mod tests {
         assert_eq!(action, LauncherAction::Dismiss);
         assert_eq!(state.query(), "");
         assert!(!state.is_dropdown_visible());
+    }
+
+    #[test]
+    fn test_toggle_visibility_and_focus_request() {
+        let shortcuts = sample_shortcuts();
+        let mut state = LauncherState::new(8);
+        assert!(state.is_window_visible());
+        assert!(state.take_focus_request());
+        assert!(!state.is_focus_requested());
+
+        // 入力途中にホットキーで非表示へトグル ➔ 入力はリセットされ非表示になる
+        state.update_query("obs", &shortcuts);
+        assert!(!state.toggle_visibility(&shortcuts));
+        assert!(!state.is_window_visible());
+        assert!(!state.is_focus_requested());
+        assert_eq!(state.query(), "");
+
+        // 再度ホットキーで表示へトグル ➔ 表示状態になりフォーカス強制フラグが立つ
+        assert!(state.toggle_visibility(&shortcuts));
+        assert!(state.is_window_visible());
+        assert!(state.is_focus_requested());
     }
 }

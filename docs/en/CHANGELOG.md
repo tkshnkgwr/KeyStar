@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.0-alpha.4] - 2026-10-20
+
+### Added
+- **Phase 3 OS Integration & Background Resident Daemon**:
+  - **Global Hotkey Daemon (`src/hotkey.rs`)**:
+    - System-wide `Alt + Space` hotkey registration and monitoring via `global-hotkey`.
+    - Key-release filtering (`should_trigger_hotkey`) preventing duplicate toggling on `HotKeyState::Released`.
+    - `install_hotkey_wakeup_hook`: Wakes up the sleeping `egui` event loop (`request_repaint()`) from background with zero input latency while maintaining 0% CPU usage.
+  - **System Tray Integration & Embedded Icon (`src/tray.rs`)**:
+    - Notification area resident icon with left-click toggle via `tray-icon`.
+    - Context menu with 3 options: "Settings" (open shortcuts/settings folder & activate), "Open Commands Folder" (`%USERPROFILE%\commands`), and "Exit" (clean application shutdown).
+    - `generate_default_icon_rgba`: Procedural in-memory 32x32 RGBA icon (dark charcoal `#1e1e1e` with teal green `#4ec9b0` `>_` prompt glyph), eliminating external `.ico` assets.
+  - **OS Synchronous Clipboard Provider (`src/clipboard.rs`)**:
+    - Immediate and reliable OS clipboard writing via `arboard` upon math calculation confirmation (`Enter`).
+    - Decoupled `ClipboardProvider` trait with `SystemClipboard` and headless `MemoryClipboard` for deterministic testing.
+  - **Resident Window Lifecycle & Focus Forcing (`src/ui.rs` & `src/main.rs`)**:
+    - `LauncherState::toggle_visibility`: Seamless toggle between foreground active and hidden background states.
+    - Automatic focus restoration (`take_focus_request`) and `ViewportCommand::Visible(true)` / `Focus` on hotkey activation.
+    - Windows subsystem configuration (`windows_subsystem = "windows"`) preventing console window flash.
+  - **OS Integration Test Suite (`tests/os_integration.rs`)**:
+    - 4 end-to-end integration tests covering global hotkey filtering, tray menu commands, clipboard copy pipeline, and visibility/focus lifecycle.
+    - Total test suite expanded to 64 tests (27 unit, 20 integration, 17 doc tests, 100% PASS).
+
 ## [0.1.0-alpha.3] - 2026-10-20
 
 ### Added

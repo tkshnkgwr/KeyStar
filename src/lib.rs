@@ -6,6 +6,9 @@
 //! Rust製の超軽量キーボードランチャーのコアライブラリ。
 
 pub mod calc;
+pub mod clipboard;
+pub mod hotkey;
 pub mod indexer;
 pub mod search;
+pub mod tray;
 pub mod ui;

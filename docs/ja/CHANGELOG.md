@@ -4,6 +4,29 @@
 
 ---
 
+## [0.1.0-alpha.4] - 2026-10-20
+
+### Added
+- **Phase 3 OS連携 & バックグラウンド常駐デーモンの実装**:
+  - **グローバルホットキー監視基盤 (`src/hotkey.rs`)**:
+    - `global-hotkey` クレートによる OS 全体での **`Alt + Space`** キー押下検知とウィンドウ表示トグル。
+    - キー離脱イベント（`HotKeyState::Released`）を除外する `should_trigger_hotkey` 判定による二重発火防止。
+    - `install_hotkey_wakeup_hook`: バックグラウンド待機（CPU負荷 0%）から `egui::Context::request_repaint()` による遅延ゼロの即時ウェイクアップ。
+  - **システムトレイ常駐 & 内蔵プロシージャルアイコン (`src/tray.rs`)**:
+    - `tray-icon` クレートによる Windows 通知領域常駐、および左クリックでのウィンドウ表示トグル。
+    - 右クリックコンテキストメニュー（「設定」「コマンドフォルダを開く」「終了」）の完全装備。
+    - `generate_default_icon_rgba`: 外部画像ファイル不要の 32x32 プロシージャル RGBA アイコン生成（ダークチャコール `#1e1e1e` 背景にティールグリーン `#4ec9b0` の `>_` プロンプト）。
+  - **OS クリップボード同期書き込み (`src/clipboard.rs`)**:
+    - `arboard` による電卓結果（`Enter` 確定）の OS クリップボードへの即時・確実な同期書き込み。
+    - テスト検証用 `MemoryClipboard` と実環境用 `SystemClipboard` を抽象化する `ClipboardProvider` トレイトの設計。
+  - **常駐ライフサイクル & フォーカス強制統合 (`src/ui.rs` & `src/main.rs`)**:
+    - `LauncherState::toggle_visibility`: 表示状態と非表示待機状態のスムーズな相互トグル。
+    - ホットキー復帰時の最前面化（`AlwaysOnTop`）、アクティブ化（`Focus`）、および 1 行テキストボックスへのフォーカス強制（`take_focus_request`）。
+    - `#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]` によるリリースビルド時のコンソール非表示化。
+  - **OS連携統合テストスイートの配備 (`tests/os_integration.rs`)**:
+    - ホットキー判定、トレイメニュー解決、クリップボード同期コピー、トグル＆フォーカス遷移の4統合テストを追加。
+    - テスト総数 64件（内部単体27件、公開API統合20件、Doc17件）100%合格達成。
+
 ## [0.1.0-alpha.3] - 2026-10-20
 
 ### Added

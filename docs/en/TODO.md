@@ -13,7 +13,7 @@
 | **Phase 0: Environment**  | Agent rules, skills, CI & formatting baselines       | Rust 2024, `.agents`        | **Completed**   |
 | **Phase 1: Core Logic**   | Math engine, shortcut indexer, completion engine     | `evalexpr`, `std::fs`       | **Completed**   |
 | **Phase 2: GUI Prototype**| Single-line input frame, candidate dropdown rendering| `eframe`, `egui`            | **Completed**   |
-| **Phase 3: OS Integration**| Global hotkeys, clipboard copy, system tray         | `global-hotkey`, `tray-icon`| Pending         |
+| **Phase 3: OS Integration**| Global hotkeys, clipboard copy, system tray         | `global-hotkey`, `tray-icon`| **Completed**   |
 | **Phase 4: Optimization** | Single-binary LTO optimization, Scoop package        | Cargo Release, Scoop        | Pending         |
 
 ---
@@ -56,7 +56,7 @@
   - [x] `Esc`: Dismiss window immediately
   - [x] `Tab` / `Shift+Tab` & `Ctrl+n` / `Ctrl+p` & `Down` / `Up`: Candidate navigation
 
-### Phase 3: OS Integration & Tray Resident (Pending)
-- [ ] Global hotkey `Alt + Space` via `global-hotkey`
-- [ ] System tray resident via `tray-icon`
-- [ ] Clipboard copy integration
+### Phase 3: OS Integration & Tray Resident (Completed)
+- [x] Global hotkey `Alt + Space` via `global-hotkey` (`src/hotkey.rs`)
+- [x] System tray resident via `tray-icon` (`src/tray.rs`)
+- [x] Clipboard copy integration via `arboard` (`src/clipboard.rs`)
