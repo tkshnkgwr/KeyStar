@@ -4,6 +4,38 @@
 
 ---
 
+## [0.1.0-beta.4] - 2026-10-21
+
+### Added
+- **スラッシュコマンド（ビルトインコマンド）機能 (`src/command.rs`)**:
+  - 入力欄に `/` を入力した際の専用インクリメンタル補完モードを新設。
+  - `/task`: タスクマネージャー（`taskmgr.exe`）の即座非同期起動。
+  - `/config`: ショートカット・設定フォルダをエクスプローラーで展開。
+  - `/cmd`: コマンド置き場フォルダ（`%USERPROFILE%\commands`）を開く。
+  - `/reload`: 監視フォルダ内のショートカットを即座に再スキャン・インデックス更新。
+  - `/restart`: 多重起動ガードと衝突しない遅延非同期キックによる KeyStar クリーン再起動。
+  - `/date` / `/today`: 今日の日付（`YYYY-MM-DD`）をクリップボードにコピー。
+  - `/time`: 現在時刻（`HH:MM:SS`）をクリップボードにコピー。
+  - `/ip`: パケット送信なしのOSルーティング解決によるローカルIPアドレスの取得＆コピー。
+  - `/lock`: Windows 画面を即座にロック（`Win + L` 相当）。
+  - `/sleep`: Windows をスリープ状態に移行。
+  - `/shutdown`: Windows を即座にシャットダウン。
+  - `/help`: 利用可能なスラッシュコマンド一覧をドロップダウンに表示。
+  - `/exit`: KeyStar プロセスの完全終了。
+- **多重起動防止 & プロセス制御 (`src/single_instance.rs`)**:
+  - Windows 名前付きミューテックス `Local\KeyStar_SingleInstance_Mutex` による2重起動防止。
+  - `#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]` によるエクスプローラー起動時のDOS黒窓の完全非表示化。
+- **引数付き起動 & シェル連携 (`src/search.rs` / `src/ui.rs`)**:
+  - `split_command_and_args`: コマンド単語と引数のスマート分割。引数入力中も候補リストの先頭マッチを維持。
+  - `ShellExecuteW`: ショートカット（`.lnk`）、バッチ（`.bat`）、実行可能ファイル（`.exe`）への引数引き渡し実行。
+  - PowerShell スクリプト（`.ps1`）の ExecutionPolicy 自動バイパス直接実行対応。
+- **手動受入テストガイド更新 (`docs/ja/MANUAL_TEST_GUIDE.md`)**:
+  - セクション9「スラッシュコマンド（ビルトインコマンド）」テスト項目（9-1 ～ 9-12）を追加し、垂直整列済み。
+
+### Changed
+- **エスケープキー操作感の洗練**:
+  - 文字入力中・空クエリ問わず、`Esc` 1打で即座にウィンドウを非表示にし、次回呼び出し時にクリーンな空入力枠で復帰する仕様へ確定。
+
 ## [0.1.0-beta.2] - 2026-10-20
 
 ### Changed

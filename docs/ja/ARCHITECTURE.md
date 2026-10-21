@@ -22,45 +22,57 @@ flowchart TD
         HotKey["グローバルホットキー (Alt+Space)"]
         FS["監視フォルダ (%USERPROFILE%\\commands)"]
         Clipboard["OS クリップボード"]
-        ShellExecute["open::that_detached (関連付け起動)"]
+        ShellExecute["ShellExecuteW / open::that_detached"]
+        TaskMgr["taskmgr.exe (タスクマネージャ)"]
     end
 
     subgraph App ["KeyStar アプリケーション本体"]
+        Guard["二重起動防止 (SingleInstanceGuard)"]
         Tray["システムトレイ常駐 (tray-icon)"]
         GUI["1行極小ウィンドウ (eframe / egui)"]
         
-        subgraph Core ["Phase 1 コアエンジン群"]
+        subgraph Core ["コアエンジン & モジュール群"]
             Indexer["ショートカットインデクサ (src/indexer.rs)"]
             Calc["数式評価器 (src/calc.rs)"]
+            Cmd["ビルトインコマンド (src/command.rs)"]
             Search["インクリメンタル補完 (src/search.rs)"]
         end
     end
 
+    Guard -->|多重起動抑止| App
     HotKey -->|トグルシグナル| GUI
     Tray -->|終了 / フォルダ開く| App
     FS -->|起動時 / タイムスタンプ検知| Indexer
     
     GUI -->|入力文字列| Search
     GUI -->|入力文字列| Calc
+    GUI -->|/ で始まるクエリ| Cmd
     Indexer -->|キャッシュデータ| Search
     Calc -->|計算結果| Search
+    Cmd -->|コマンド候補| Search
     
-    Search -->|候補リスト (最上位=計算)| GUI
-    GUI -->|Enter (ショートカット)| ShellExecute
-    GUI -->|Enter (計算結果)| Clipboard
+    Search -->|候補リスト| GUI
+    GUI -->|Enter (ショートカット/引数)| ShellExecute
+    GUI -->|Enter (計算/日付/IP)| Clipboard
+    GUI -->|Enter (/task)| TaskMgr
 ```
 
 ---
 
 ## 3. モジュール構成と責務分離
 
-| モジュール名 | 役割・責務                                                                    | 主要採用技術            |
-| :----------- | :---------------------------------------------------------------------------- | :---------------------- |
-| `calc`       | 数式パース、四則演算・実数除算評価、3桁カンマ区切り整形、クリップボード用変換 | `evalexpr`              |
-| `indexer`    | `%USERPROFILE%\commands` および `./shortcuts` の走査、更新タイムスタンプ検知  | `std::fs`, `PathBuf`    |
-| `search`     | 入力文字列とショートカット名の前方/部分一致スコアリング、電卓結果最上位マージ | 自前スコアリング        |
-| `ui` (予定)  | 1行極小入力テキストボックス、候補ドロップダウン描画、キーストローク処理       | `eframe`, `egui`        |
-| `main`       | アプリケーションライフサイクル、ホットキー監視、システムトレイ常駐制御        | `global-hotkey`, `open` |
+| モジュール名      | 役割・責務                                                                    | 主要採用技術                  |
+| :---------------- | :---------------------------------------------------------------------------- | :---------------------------- |
+| `calc`            | 数式パース、四則演算・実数除算評価、3桁カンマ区切り整形、クリップボード用変換 | `evalexpr`                    |
+| `indexer`         | `%USERPROFILE%\commands` および `./shortcuts` の走査、更新タイムスタンプ検知  | `std::fs`, `PathBuf`          |
+| `search`          | 入力文字列とショートカット名の前方/部分一致スコアリング、電卓・コマンドマージ | 自前スコアリング              |
+| `command`         | スラッシュコマンド定義、インクリメンタル検索、Windows APIシステム制御         | `windows-sys`, Win32 API      |
+| `single_instance` | Windows名前付きミューテックスによる多重起動防止ガード                         | Win32 Named Mutex             |
+| `hotkey`          | `global-hotkey` によるOS全体ショートカット監視、省電力ウェイクアップフック    | `global-hotkey`               |
+| `tray`            | `tray-icon` によるトレイ常駐、プロシージャルRGBAアイコン生成、メニュー制御    | `tray-icon`                   |
+| `clipboard`       | `arboard` によるOSクリップボードへの確実な同期書き込み                        | `arboard`                     |
+| `ui`              | 1行極小入力テキストボックス、候補ドロップダウン描画、キーストローク状態機械   | `eframe`, `egui`              |
+| `main`            | アプリケーションライフサイクル、ホットキー監視、システムトレイ常駐制御        | `eframe`, Windowsサブシステム |
 
 ---
 
@@ -88,11 +100,27 @@ flowchart TD
 
 ### 4.3 補完・検索エンジン (`src/search.rs`)
 - **優先度制御**:
+  - クエリが `/` で始まる場合、専用のスラッシュコマンド検索モードへ切り替え。
   - 電卓の計算結果が存在する場合、スコア `10,000` を付与して候補リストの index 0 に固定配置。
   - 前方一致（スコア `1000 - 文字数差`）を最優先。
   - 部分一致（スコア `500 - 出現位置 - 文字数差`）を次点優先。
 - **大文字・小文字透過**:
   - クエリとファイル名の双方を小文字化してマッチング。
+- **コマンドと引数の分離**:
+  - `split_command_and_args` により、`cmd /k dir` などの引数入力中も先頭コマンド単語で候補リストを展開維持。
+
+### 4.4 ビルトインコマンド (`src/command.rs`)
+- **スラッシュコマンド群**:
+  - `/task`, `/config`, `/cmd`, `/reload`, `/restart`, `/date`, `/today`, `/time`, `/ip`, `/lock`, `/sleep`, `/shutdown`, `/help`, `/exit` の全14種を静的テーブル定義。
+- **Windows API 直接連携**:
+  - 画面ロック: `LockWorkStation`
+  - 日時取得: `GetLocalTime`
+  - IPアドレス解決: パケット送信なしのOSルーティングテーブル直接参照
+
+### 4.5 多重起動抑止 (`src/single_instance.rs`)
+- **名前付きミューテックス**:
+  - `CreateMutexW` による `Local\KeyStar_SingleInstance_Mutex` の排他獲得。
+  - 多重起動検知時は即座にプロセスをクリーン終了し、二重常駐を完全防止。
 
 ---
 
@@ -103,5 +131,5 @@ flowchart TD
    - 1行の入力欄と数行の候補リストという極小UIに最適。
 2. **`evalexpr`**:
    - 外部ランタイム（PythonやLua）を埋め込むことなく、Rust単体バイナリ内で数式評価を完結。
-3. **`open`**:
-   - Windowsシェル（ShellExecuteEx相当）の標準関連付けに従い、`.lnk` や `.url`、`.bat` を安全かつ確実に非同期起動。
+3. **`open` & `ShellExecuteW`**:
+   - Windowsシェルの標準関連付けに従い、`.lnk` や `.url`、引数付きスクリプトを安全かつ確実に非同期起動。

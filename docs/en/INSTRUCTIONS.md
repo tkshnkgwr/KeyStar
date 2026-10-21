@@ -62,5 +62,5 @@ fd -e rs --exec-batch wc -l
 ## 4. Versioning & CHANGELOG Guidelines
 
 - Adhere strictly to [Semantic Versioning (SemVer)](https://semver.org/). Bump `Cargo.toml`, `README.md`, and `README_JA.md` version badges upon milestone completion.
-- Keep `CHANGELOG.md`, `docs/ja/CHANGELOG.md`, and `docs/en/CHANGELOG.md` synchronized across all releases.
+- Keep `docs/ja/CHANGELOG.md` and `docs/en/CHANGELOG.md` synchronized across all releases.
 - Always create annotated git tags (`git tag -a vX.Y.Z -m "..."`).

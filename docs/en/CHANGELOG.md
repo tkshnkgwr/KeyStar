@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.0-beta.4] - 2026-10-21
+
+### Added
+- **Built-in Slash Commands Module (`src/command.rs`)**:
+  - Introduced dedicated incremental matching mode triggered when input query starts with `/`.
+  - `/task`: Asynchronously launches Windows Task Manager (`taskmgr.exe`).
+  - `/config`: Opens shortcut configuration directory in Windows Explorer.
+  - `/cmd`: Opens shortcut commands repository (`%USERPROFILE%\commands`).
+  - `/reload`: Immediately rescans monitored directories and refreshes memory index.
+  - `/restart`: Performs clean self-restart via delayed async kick avoiding Named Mutex collision.
+  - `/date` / `/today`: Copies current date (`YYYY-MM-DD`) to system clipboard.
+  - `/time`: Copies current time (`HH:MM:SS`) to system clipboard.
+  - `/ip`: Resolves and copies primary local IP address to clipboard without sending network packets.
+  - `/lock`: Instantly locks workstation screen (equivalent to `Win + L`).
+  - `/sleep`: Puts Windows system into sleep mode.
+  - `/shutdown`: Initiates Windows system shutdown.
+  - `/help`: Displays all available slash commands in candidate dropdown.
+  - `/exit`: Completely shuts down KeyStar application.
+- **Single Instance Guard & Process Control (`src/single_instance.rs`)**:
+  - Implemented Windows Named Mutex `Local\KeyStar_SingleInstance_Mutex` to prevent duplicate processes.
+  - Added `#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]` to completely suppress DOS console window on Explorer execution.
+- **Launch Arguments & Shell Integration (`src/search.rs` / `src/ui.rs`)**:
+  - Added `split_command_and_args` for splitting command word and parameters while preserving candidate suggestions.
+  - Integrated `ShellExecuteW` passing command-line arguments to `.lnk`, `.bat`, and `.exe` files.
+  - Enabled direct execution of PowerShell scripts (`.ps1`) with automatic execution policy bypass.
+- **Acceptance Test Guide Extension (`docs/ja/MANUAL_TEST_GUIDE.md`)**:
+  - Added Section 9 "Slash Commands (Built-in Commands)" checklist (tests 9-1 to 9-12) with vertical table alignment.
+
+### Changed
+- **Refined Escape Key Dismissal**:
+  - Confirmed single-stroke `Esc` behavior: always dismisses launcher window immediately regardless of query state, restoring a clean empty input box on next invocation.
+
 ## [0.1.0-beta.2] - 2026-10-20
 
 ### Changed

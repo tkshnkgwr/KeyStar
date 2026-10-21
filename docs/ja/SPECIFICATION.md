@@ -36,6 +36,40 @@
 2. **計算結果のクリップボード格納**:
    - 数式入力状態で `Enter` を押した場合、計算結果の数値を OS クリップボードにコピーし、ウィンドウを即座に非表示化。
 
+### 2.3 ビルトイン（スラッシュ）コマンド（機能③）
+1. **スラッシュ入力による専用補完モード**:
+   - 入力文字列の先頭が `/` の場合、登録ショートカット検索からビルトインコマンド検索へと専用切り替え。
+   - `/` 単体で全コマンド一覧を表示し、文字の入力によりインクリメンタル絞り込み。
+2. **搭載コマンド一覧**:
+   - `/task`: タスクマネージャー（`taskmgr.exe`）の即時起動。
+   - `/config`: ショートカット・設定フォルダを展開。
+   - `/cmd`: コマンド置き場フォルダ（`%USERPROFILE%\commands`）を展開。
+   - `/reload`: ショートカット一覧を即座に再スキャンしてキャッシュ更新。
+   - `/restart`: KeyStar の遅延自動再起動。
+   - `/date` / `/today`: 今日の日付（`YYYY-MM-DD`）をクリップボードにコピー。
+   - `/time`: 現在時刻（`HH:MM:SS`）をクリップボードにコピー。
+   - `/ip`: 端末のローカルIPアドレスを取得してクリップボードにコピー。
+   - `/lock`: Windows 画面を即座にロック（`Win + L` 相当）。
+   - `/sleep`: Windows をスリープ状態に移行。
+   - `/shutdown`: Windows を即座に電源OFF（シャットダウン）。
+   - `/help`: コマンド一覧の再表示。
+   - `/exit`: KeyStar の完全終了。
+
+### 2.4 コマンド引数付き起動（機能④）
+1. **コマンドと引数の分離**:
+   - 入力文字列を「コマンド単語」と「後続の引数文字列」に分割（`split_command_and_args`）。
+   - 引数入力中も先頭コマンド単語に基づき補完候補リストを表示維持。
+2. **引数付き実行処理**:
+   - `ShellExecuteW` により、`.lnk`（ショートカット）、`.bat`（バッチ）、`.exe` へ引数を確実に引き渡し。
+   - `.ps1`（PowerShellスクリプト）は `-ExecutionPolicy Bypass -File` オプションを付与して直接起動。
+
+### 2.5 プロセス常駐・多重起動抑止（機能⑤）
+1. **2重起動防止**:
+   - Windows 名前付きミューテックス（`Local\KeyStar_SingleInstance_Mutex`）を確保。
+   - 既に別プロセスが常駐している場合、2つ目のプロセスは何も行わず即座に終了。
+2. **DOS窓非表示化**:
+   - リリースビルド時に `#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]` を適用し、エクスプローラー等からの起動時に黒いコンソール窓を一切表示させない。
+
 ---
 
 ## 3. UI / UX 仕様
@@ -54,7 +88,7 @@
 | :------------------ | :------------------------------------------------------ |
 | `Alt + Space`       | ランチャーの表示 / 非表示トグル（グローバルホットキー） |
 | `Enter`             | 選択候補の実行、または計算結果をコピーして閉じる        |
-| `Esc`               | 何もせずウィンドウを非表示にする                        |
+| `Esc`               | 何もせずウィンドウを即座に非表示にする（クリーン復帰）  |
 | `Tab` / `Shift+Tab` | 候補リストの次 / 前の項目を選択                         |
 | `Ctrl+n` / `Ctrl+p` | Vim風の次 / 前の候補選択                                |
 | `Down` / `Up`       | 矢印キーによる次 / 前の候補選択                         |
@@ -69,31 +103,38 @@ flowchart TD
         HotKey["グローバルホットキー (Alt+Space)"]
         FS["ショートカットフォルダ (%USERPROFILE%\\commands)"]
         Clip["OS クリップボード"]
-        Shell["open::that (アプリ起動)"]
+        Shell["ShellExecuteW (引数付き起動)"]
+        TaskMgr["taskmgr.exe (タスクマネージャ)"]
     end
 
     subgraph App ["KeyStar"]
         Tray["システムトレイ常駐 (tray-icon)"]
         Window["egui/eframe 1行ウィンドウ"]
+        Guard["二重起動抑止 (SingleInstanceGuard)"]
         
         subgraph Logic ["内部ロジック"]
-            Index["ショートカットインデクサ (メモリキャッシュ)"]
-            Calc["数式評価器 (evalexpr)"]
-            Filter["インクリメンタル検索エンジン"]
+            Index["ショートカットインデクサ (src/indexer.rs)"]
+            Calc["数式評価器 (src/calc.rs)"]
+            Cmd["ビルトインコマンド (src/command.rs)"]
+            Filter["インクリメンタル検索 (src/search.rs)"]
         end
     end
 
+    Guard -->|多重起動検知時| App
     HotKey -->|呼出シグナル| Window
     Tray -->|メニュー/終了| App
     FS -->|起動時/定期読込| Index
     
     Window -->|入力文字列| Filter
     Window -->|入力文字列| Calc
+    Window -->|/入力| Cmd
     Index -->|キャッシュデータ| Filter
+    Cmd -->|コマンド候補| Filter
     
     Filter -->|候補リスト| Window
     Calc -->|計算結果| Window
     
-    Window -->|Enter (アプリ)| Shell
-    Window -->|Enter (計算)| Clip
+    Window -->|Enter (アプリ/引数)| Shell
+    Window -->|Enter (計算/日付/IP)| Clip
+    Window -->|Enter (/task)| TaskMgr
 ```

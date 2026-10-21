@@ -14,6 +14,7 @@
 | **Phase 1: Core Logic**     | Math engine, shortcut indexer, completion engine      | `evalexpr`, `std::fs`        | **Completed** |
 | **Phase 2: GUI Prototype**  | Single-line input frame, candidate dropdown rendering | `eframe`, `egui`             | **Completed** |
 | **Phase 3: OS Integration** | Global hotkeys, clipboard copy, system tray           | `global-hotkey`, `tray-icon` | **Completed** |
+| **Phase 3.5: Command Ext**  | Slash commands (/task), launch arguments, mutex guard | `windows-sys`, `open`        | **Completed** |
 | **Phase 4: Settings GUI**   | Settings dialog, config persistence (`config.toml`)   | `egui`, `serde`, `toml`      |    Pending    |
 | **Phase 5: Optimization**   | Single-binary LTO optimization, Scoop package         | Cargo Release, Scoop         |    Pending    |
 
@@ -61,6 +62,27 @@
 - [x] Global hotkey `Alt + Space` via `global-hotkey` (`src/hotkey.rs`)
 - [x] System tray resident via `tray-icon` (`src/tray.rs`)
 - [x] Clipboard copy integration via `arboard` (`src/clipboard.rs`)
+
+### Phase 3.5: Command Extensions & Shell Integration (Completed)
+- [x] **Single Instance Mutex Guard (`src/single_instance.rs`)**:
+  - [x] Windows Named Mutex `Local\KeyStar_SingleInstance_Mutex` prevention of duplicate processes
+- [x] **Subsystem Windows Suppression**:
+  - [x] `#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]` suppresses console window on Explorer launch
+- [x] **Launch Arguments & ShellExecuteW (`src/search.rs` / `src/ui.rs`)**:
+  - [x] Separation of command word and arguments (`split_command_and_args`)
+  - [x] Preserve matching candidates while typing arguments
+  - [x] Native `ShellExecuteW` passing arguments to `.lnk`, `.bat`, `.exe`
+  - [x] PowerShell script (`.ps1`) execution policy bypass launch
+- [x] **Built-in Slash Commands (`src/command.rs`)**:
+  - [x] Dedicated incremental matching when query starts with `/`
+  - [x] Task Manager launch (`/task`)
+  - [x] Open configuration / commands directories (`/config`, `/cmd`)
+  - [x] Rescan shortcuts (`/reload`), restart KeyStar (`/restart`)
+  - [x] Clipboard utilities: date, time, local IP (`/date`, `/today`, `/time`, `/ip`)
+  - [x] System control: lock workstation (`/lock`), sleep (`/sleep`), shutdown (`/shutdown`)
+  - [x] Help list (`/help`), quit application (`/exit`)
+- [x] **Single-Stroke Escape Dismissal**:
+  - [x] `Esc` immediately hides window cleanly under all input conditions
 
 ### Phase 4: GUI Settings Dialog (Beta Phase)
 - [ ] **【Settings Window】 GUI Configuration Dialog (`src/settings.rs` / `src/ui.rs`)**:

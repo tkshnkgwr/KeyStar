@@ -62,5 +62,5 @@ fd -e rs --exec-batch wc -l
 ## 4. バージョニング ＆ CHANGELOG 規約
 
 - バージョン番号は [セマンティックバージョニング (SemVer)](https://semver.org/) を採用し、各フェーズ完了ごとに `Cargo.toml`、`README.md`、`README_JA.md` のバッジおよびステータス記述を引き上げる。
-- `CHANGELOG.md`、`docs/ja/CHANGELOG.md`、`docs/en/CHANGELOG.md` の3ファイルすべてに同一内容の更新履歴（追加・変更・修正）を日本語および英語で正確に追記する。
+- `docs/ja/CHANGELOG.md` および `docs/en/CHANGELOG.md` の2ファイルに同一内容の更新履歴（追加・変更・修正）を日本語および英語で正確に追記する。
 - Gitタグは注釈付きタグ（Annotated Tag: `git tag -a vX.Y.Z -m "..."`）として作成する。

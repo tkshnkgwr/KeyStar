@@ -5,6 +5,7 @@
 //! 引数付き入力（例: `code .` や `chrome https://...`）のコマンド単語検出にも対応しています。
 
 use crate::calc::CalcResult;
+use crate::command::{BuiltinCommand, BuiltinCommandDef, match_builtin_commands};
 use crate::indexer::ShortcutItem;
 
 /// 候補アイテムの種類。
@@ -14,6 +15,8 @@ pub enum CandidateKind {
     Calc(CalcResult),
     /// ショートカット・実行可能アイテム
     Shortcut(ShortcutItem),
+    /// ビルトイン（スラッシュ）コマンド
+    Builtin(BuiltinCommand),
 }
 
 /// ランチャーの候補リストに表示される個別アイテム。
@@ -72,6 +75,21 @@ impl Candidate {
             label,
             kind: CandidateKind::Shortcut(item),
             score,
+        }
+    }
+
+    /// ビルトイン（スラッシュ）コマンド定義から候補アイテムを生成します。
+    ///
+    /// # Panics
+    ///
+    /// パニックは発生しません。
+    #[must_use]
+    pub fn from_builtin(def: BuiltinCommandDef) -> Self {
+        let label = format!("{} — {}", def.name, def.description);
+        Self {
+            label,
+            kind: CandidateKind::Builtin(def.command),
+            score: 10_000,
         }
     }
 }
@@ -153,14 +171,24 @@ pub fn filter_candidates(
     calc_result: Option<CalcResult>,
     max_results: usize,
 ) -> Vec<Candidate> {
+    let trimmed = query.trim();
+
+    // 0. スラッシュコマンド判定（クエリが "/" で始まる場合は専用モード）
+    if trimmed.starts_with('/') {
+        let matched_commands = match_builtin_commands(trimmed);
+        return matched_commands
+            .into_iter()
+            .take(max_results)
+            .map(Candidate::from_builtin)
+            .collect();
+    }
+
     let mut candidates = Vec::new();
 
     // 1. 電卓結果があれば最優先で先頭に追加
     if let Some(calc) = calc_result {
         candidates.push(Candidate::from_calc(calc));
     }
-
-    let trimmed = query.trim();
 
     // 2. クエリが空の場合のデフォルト表示
     if trimmed.is_empty() {
@@ -352,5 +380,23 @@ mod tests {
         let shortcuts = vec![make_item("Chrome", "lnk")];
         let results = filter_candidates("xyz_no_match", &shortcuts, None, 10);
         assert!(results.is_empty());
+    }
+
+    #[test]
+    fn test_filter_slash_commands() {
+        let shortcuts = vec![make_item("Chrome", "lnk")];
+
+        // "/" 単体で全スラッシュコマンドが展開される
+        let results_all = filter_candidates("/", &shortcuts, None, 20);
+        assert!(!results_all.is_empty());
+        assert!(results_all.iter().any(|c| c.label.contains("/task")));
+
+        // "/ta" でタスクマネージャーが最上位
+        let results_task = filter_candidates("/ta", &shortcuts, None, 10);
+        assert!(!results_task.is_empty());
+        assert_eq!(
+            results_task[0].kind,
+            CandidateKind::Builtin(BuiltinCommand::Task)
+        );
     }
 }

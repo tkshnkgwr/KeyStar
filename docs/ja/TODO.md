@@ -18,6 +18,7 @@
 | **Phase 1: コアロジック**    | 数式評価、ショートカット走査、補完フィルタエンジンの構築 | `evalexpr`, `std::fs`        |    **完了**    |
 | **Phase 2: GUIプロトタイプ** | 1行極小入力枠、候補ドロップダウン描画                    | `eframe`, `egui`             |    **完了**    |
 | **Phase 3: OS連携 & 常駐**   | グローバルホットキー、クリップボード、トレイ常駐         | `global-hotkey`, `tray-icon` |    **完了**    |
+| **Phase 3.5: コマンド拡張**  | スラッシュコマンド(/task等)、引数付き起動、多重起動抑止  | `windows-sys`, `open`        |    **完了**    |
 | **Phase 4: 設定画面**        | GUI環境設定ダイアログ、設定永続化 (`config.toml`)        | `egui`, `serde`, `toml`      |     未着手     |
 | **Phase 5: 最適化 & 配布**   | 単一バイナリ最適化、インストーラ/Scoop対応               | Cargo Release, Scoop         |     未着手     |
 
@@ -82,6 +83,30 @@
   - [x] システムトレイアイコン表示、右クリックメニュー（「設定」「コマンドフォルダを開く」「終了」）
 - [x] **【クリップボード連携】 OSクリップボードへの計算結果自動コピー (`src/clipboard.rs`)**:
   - [x] `arboard` または `eframe` 内蔵クリップボード機構による確実なテキストコピー
+
+---
+
+### Phase 3.5: コマンド拡張 & OS親和性向上（完了）
+- [x] **【多重起動抑止】 Windows 名前付きミューテックス (`src/single_instance.rs`)**:
+  - [x] `CreateMutexW` による `Local\KeyStar_SingleInstance_Mutex` の排他制御
+  - [x] 2重起動検知時の即時終了ガード
+- [x] **【GUIプロセス化】 DOS窓の完全非表示**:
+  - [x] `#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]` によるエクスプローラー起動時の黒窓非表示
+- [x] **【引数付き起動】 コマンドとパラメータの分離 & ShellExecuteW 連携 (`src/search.rs` / `src/ui.rs`)**:
+  - [x] 入力文字列からのコマンドプレフィックスと引数の分離 (`split_command_and_args`)
+  - [x] 引数入力時も先頭単語で候補リストを維持する検索エンジン拡張
+  - [x] `ShellExecuteW` によるショートカット（`.lnk`）・バッチ（`.bat`）・EXE への引数引き渡し実行
+  - [x] PowerShell スクリプト（`.ps1`）の ExecutionPolicy 自動バイパス直接実行
+- [x] **【ビルトインコマンド】 `/` スラッシュコマンド機能 (`src/command.rs`)**:
+  - [x] 入力欄が `/` で始まる場合の専用インクリメンタル補完モード
+  - [x] タスクマネージャー起動 (`/task`)
+  - [x] 設定フォルダ開く (`/config`)、コマンド置き場開く (`/cmd`)
+  - [x] ショートカット即時再スキャン (`/reload`)、KeyStar 再起動 (`/restart`)
+  - [x] 日付・時刻・IPコピー (`/date`, `/today`, `/time`, `/ip`)
+  - [x] システム制御（画面ロック `/lock`、スリープ `/sleep`、電源OFF `/shutdown`）
+  - [x] コマンド一覧ヘルプ (`/help`)、アプリ終了 (`/exit`)
+- [x] **【操作感ブラッシュアップ】 エスケープキー仕様の最適化**:
+  - [x] 文字入力中・空クエリ問わず `Esc` 1打で即座にウィンドウ非表示（即退避・クリーン復帰）
 
 ---
 

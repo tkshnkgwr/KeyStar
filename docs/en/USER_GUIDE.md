@@ -63,3 +63,40 @@ Type any arithmetic expression directly into the input box to evaluate it in rea
 | **`Ctrl + n`**    | Select next candidate (Vim-style navigation)          |
 | **`Ctrl + p`**    | Select previous candidate (Vim-style navigation)      |
 | **`Down` / `Up`** | Arrow key candidate navigation                        |
+
+---
+
+## 5. Launch Arguments (Command Execution)
+
+Type an executable or shortcut name followed by a space and parameters to pass arguments directly to the target program.
+
+| Example Input               | Behavior                                                    |
+| :-------------------------- | :---------------------------------------------------------- |
+| `cmd /k ipconfig`           | Opens command prompt and executes `/k ipconfig` immediately |
+| `code .`                    | Launches VS Code in current directory                       |
+| `chrome https://github.com` | Opens designated URL directly in Google Chrome              |
+
+> 💡 **Tip**:
+> As you type arguments, the candidate dropdown keeps matching the first command word (e.g. `cmd` or `code`).
+
+---
+
+## 6. Built-in Slash Commands
+
+Type **`/`** into the input box to access built-in system utilities, launcher controls, and productivity tools with incremental filtering.
+
+| Command                    | Feature            | Description                                                   |
+| :------------------------- | :----------------- | :------------------------------------------------------------ |
+| **`/task`**                | Task Manager       | Launches Windows `taskmgr.exe` asynchronously                 |
+| **`/config`**              | Settings Directory | Opens shortcut settings folder in Windows Explorer            |
+| **`/cmd`**                 | Commands Directory | Opens `%USERPROFILE%\commands` in Windows Explorer            |
+| **`/reload`**              | Rescan Shortcuts   | Immediately scans directories and updates in-memory index     |
+| **`/restart`**             | Restart KeyStar    | Gracefully terminates and relaunches KeyStar                  |
+| **`/date`** / **`/today`** | Copy Current Date  | Copies `YYYY-MM-DD` (e.g. `2026-10-21`) to OS clipboard       |
+| **`/time`**                | Copy Current Time  | Copies `HH:MM:SS` (e.g. `17:30:00`) to OS clipboard           |
+| **`/ip`**                  | Copy Local IP      | Resolves and copies primary local IP address to clipboard     |
+| **`/lock`**                | Lock Workstation   | Instantly locks Windows workstation (equivalent to `Win + L`) |
+| **`/sleep`**               | Sleep Mode         | Puts PC into sleep mode                                       |
+| **`/shutdown`**            | Shutdown PC        | Powers off Windows system                                     |
+| **`/help`**                | Command List       | Shows all available slash commands in candidate list          |
+| **`/exit`**                | Exit KeyStar       | Completely shuts down KeyStar process                         |

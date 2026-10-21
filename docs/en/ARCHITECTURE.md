@@ -22,45 +22,57 @@ flowchart TD
         HotKey["Global Hotkey (Alt+Space)"]
         FS["Monitored Folder (%USERPROFILE%\\commands)"]
         Clipboard["OS Clipboard"]
-        ShellExecute["open::that_detached (Shell Association)"]
+        ShellExecute["ShellExecuteW / open::that_detached"]
+        TaskMgr["taskmgr.exe (Task Manager)"]
     end
 
     subgraph App ["KeyStar Application"]
+        Guard["Single Instance Guard (Named Mutex)"]
         Tray["System Tray Resident (tray-icon)"]
         GUI["Single-Line Minimal Window (eframe / egui)"]
         
-        subgraph Core ["Phase 1 Core Engines"]
+        subgraph Core ["Core Engines & Modules"]
             Indexer["Shortcut Indexer (src/indexer.rs)"]
             Calc["Arithmetic Evaluator (src/calc.rs)"]
+            Cmd["Built-in Commands (src/command.rs)"]
             Search["Incremental Completion (src/search.rs)"]
         end
     end
 
+    Guard -->|Duplicate Check| App
     HotKey -->|Toggle Signal| GUI
     Tray -->|Exit / Open Folder| App
     FS -->|Startup / Timestamp Detection| Indexer
     
     GUI -->|Input Query| Search
     GUI -->|Input Query| Calc
+    GUI -->|Starts with /| Cmd
     Indexer -->|Cached Items| Search
     Calc -->|Math Result| Search
+    Cmd -->|Built-in Candidates| Search
     
-    Search -->|Candidate List (Top = Math)| GUI
-    GUI -->|Enter (Shortcut)| ShellExecute
-    GUI -->|Enter (Math Result)| Clipboard
+    Search -->|Candidate List| GUI
+    GUI -->|Enter (Shortcut/Args)| ShellExecute
+    GUI -->|Enter (Math/Date/IP)| Clipboard
+    GUI -->|Enter (/task)| TaskMgr
 ```
 
 ---
 
 ## 3. Module Responsibilities
 
-| Module Name    | Responsibilities & Roles                                                    | Key Tech                |
-| :------------- | :-------------------------------------------------------------------------- | :---------------------- |
-| `calc`         | Parses expressions, evaluates math, handles decimal division, comma formats | `evalexpr`              |
-| `indexer`      | Scans `%USERPROFILE%\commands` and `./shortcuts`, checks timestamps         | `std::fs`, `PathBuf`    |
-| `search`       | Scores prefix/substring matches against shortcut names, prioritizes math    | In-memory scoring       |
-| `ui` (Phase 2) | Renders single-line text input, candidate dropdown, handles keystrokes      | `eframe`, `egui`        |
-| `main`         | Application lifecycle, hotkey management, system tray resident control      | `global-hotkey`, `open` |
+| Module Name       | Responsibilities & Roles                                                     | Key Tech                    |
+| :---------------- | :--------------------------------------------------------------------------- | :-------------------------- |
+| `calc`            | Parses expressions, evaluates math, handles decimal division, comma formats  | `evalexpr`                  |
+| `indexer`         | Scans `%USERPROFILE%\commands` and `./shortcuts`, checks timestamps          | `std::fs`, `PathBuf`        |
+| `search`          | Scores prefix/substring matches against shortcut names, prioritizes math/cmd | Custom scoring engine       |
+| `command`         | Defines built-in slash commands, incremental matching, Win32 API controls    | `windows-sys`, Win32 API    |
+| `single_instance` | Prevents duplicate processes via Windows Named Mutex                         | Win32 Named Mutex           |
+| `hotkey`          | Listens to system-wide hotkeys, wakes up GUI repaint thread                  | `global-hotkey`             |
+| `tray`            | Controls system tray icon, procedural RGBA generation, right-click context   | `tray-icon`                 |
+| `clipboard`       | Synchronously writes evaluation results or utility text to OS clipboard      | `arboard`                   |
+| `ui`              | Renders single-line text input, candidate dropdown, handles keystrokes       | `eframe`, `egui`            |
+| `main`            | Application lifecycle, process entry point, Windows subsystem controls       | `eframe`, Windows subsystem |
 
 ---
 
@@ -79,5 +91,27 @@ flowchart TD
 
 ### 4.3 Completion Engine (`src/search.rs`)
 - Merges calculator results to the top position (index 0) with top priority score (10,000).
+- Switches to dedicated slash command search mode when input begins with `/`.
+- Splits queries into command stems and arguments via `split_command_and_args`.
 - Scores prefix matches higher than substring matches.
 - Case-insensitive filtering.
+
+### 4.4 Built-in Slash Commands (`src/command.rs`)
+- Provides 14 built-in slash commands: `/task`, `/config`, `/cmd`, `/reload`, `/restart`, `/date`, `/today`, `/time`, `/ip`, `/lock`, `/sleep`, `/shutdown`, `/help`, `/exit`.
+- Directly interfaces with Windows native APIs for screen locking (`LockWorkStation`), local time (`GetLocalTime`), and network routing resolution.
+
+### 4.5 Single Instance Guard (`src/single_instance.rs`)
+- Uses Windows Named Mutex `Local\KeyStar_SingleInstance_Mutex` to ensure single active instance.
+- Exits secondary processes immediately without consuming system resources.
+
+---
+
+## 5. Technology Choices & Constraints
+
+1. **`eframe` / `egui` (Immediate Mode GUI)**:
+   - Eliminates heavyweight browser engines (Tauri/Electron), achieving sub-millisecond cold start and minimal RAM consumption (<15MB).
+   - Ideal for single-line frameless text edit and dynamic candidate dropdowns.
+2. **`evalexpr`**:
+   - High-performance in-binary expression evaluator without requiring external runtime engines (Python/Lua).
+3. **`open` & `ShellExecuteW`**:
+   - Reliable async execution of Windows file associations and command-line arguments.

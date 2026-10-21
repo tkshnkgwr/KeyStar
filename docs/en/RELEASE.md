@@ -14,7 +14,7 @@ Verify all items below before cutting a release build or tagging:
 - [ ] All `.rs` files conform to the 1,000-line ceiling (`fd -e rs --exec-batch wc -l`)
 - [ ] SemVer version updated in `Cargo.toml`
 - [ ] Version badges and status text synchronized in `README.md` and `README_JA.md`
-- [ ] Release notes synchronized across `CHANGELOG.md`, `docs/ja/CHANGELOG.md`, and `docs/en/CHANGELOG.md`
+- [ ] Release notes synchronized across `docs/ja/CHANGELOG.md` and `docs/en/CHANGELOG.md`
 - [ ] Manual test guide items verified on a Windows desktop (`docs/en/MANUAL_TEST_GUIDE.md`)
 
 ---

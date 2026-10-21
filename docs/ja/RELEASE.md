@@ -14,7 +14,7 @@
 - [ ] 全ソースコードの規模が 1000 行制限に適合していること (`fd -e rs --exec-batch wc -l`)
 - [ ] `Cargo.toml` のバージョン番号（SemVer）が更新されていること
 - [ ] `README.md` および `README_JA.md` のバッジ・ステータス記述が更新されていること
-- [ ] `CHANGELOG.md`、`docs/ja/CHANGELOG.md`、`docs/en/CHANGELOG.md` の全更新履歴が同期されていること
+- [ ] `docs/ja/CHANGELOG.md` および `docs/en/CHANGELOG.md` の全更新履歴が同期されていること
 - [ ] 手動受入テスト（`docs/ja/MANUAL_TEST_GUIDE.md`）の主要項目が実機で確認されていること
 
 ---

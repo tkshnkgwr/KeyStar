@@ -29,13 +29,13 @@ cargo build --release
 
 ## 2. Global Hotkey Activation & Visibility Toggle
 
-| No. | Test Item             | Procedure                                        | Expected Outcome                                            | Done |
-| :-- | :-------------------- | :----------------------------------------------- | :---------------------------------------------------------- | :--: |
-| 2-1 | Global Hotkey Trigger | Press `Alt + Space` from any external window     | Minimal 1-line frame instantly pops up at screen center/top | [ ]  |
-| 2-2 | Automatic Input Focus | Type characters immediately after `Alt + Space`  | Keystrokes register immediately without mouse clicking      | [ ]  |
-| 2-3 | Tray Click Toggle     | Left-click the system tray icon                  | Launcher toggles between visible and hidden states          | [ ]  |
-| 2-4 | Hotkey Dismiss Toggle | Press `Alt + Space` while launcher is visible    | Input resets and window hides immediately                   | [ ]  |
-| 2-5 | Idle CPU Load         | Inspect `KeyStar.exe` CPU in Task Manager        | CPU usage remains steadily at 0.0% during background sleep  | [ ]  |
+| No. | Test Item             | Procedure                                       | Expected Outcome                                            | Done |
+| :-- | :-------------------- | :---------------------------------------------- | :---------------------------------------------------------- | :--: |
+| 2-1 | Global Hotkey Trigger | Press `Alt + Space` from any external window    | Minimal 1-line frame instantly pops up at screen center/top | [ ]  |
+| 2-2 | Automatic Input Focus | Type characters immediately after `Alt + Space` | Keystrokes register immediately without mouse clicking      | [ ]  |
+| 2-3 | Tray Click Toggle     | Left-click the system tray icon                 | Launcher toggles between visible and hidden states          | [ ]  |
+| 2-4 | Hotkey Dismiss Toggle | Press `Alt + Space` while launcher is visible   | Input resets and window hides immediately                   | [ ]  |
+| 2-5 | Idle CPU Load         | Inspect `KeyStar.exe` CPU in Task Manager       | CPU usage remains steadily at 0.0% during background sleep  | [ ]  |
 
 ---
 
@@ -106,3 +106,22 @@ cargo build --release
 | 8-3 | Open Commands Folder | Select "Open Commands Folder" from tray menu    | File Explorer immediately opens `%USERPROFILE%\commands`  | [ ]  |
 | 8-4 | Open Settings        | Select "Settings" from tray menu                | Opens shortcut directory and brings launcher to front     | [ ]  |
 | 8-5 | Clean Exit           | Select "Exit" from tray menu                    | Tray icon is removed and process terminates cleanly       | [ ]  |
+
+---
+
+## 9. Slash Commands (Built-in Commands)
+
+| No.  | Test Item              | Procedure                        | Expected Outcome                                          | Done |
+| :--- | :--------------------- | :------------------------------- | :-------------------------------------------------------- | :--: |
+| 9-1  | Command List (/ alone) | Type / into input box            | Shows all available slash commands (/task, /exit, etc.)   | [ ]  |
+| 9-2  | Incremental Matching   | Type /ta into input box          | Filters candidates to show /task at top                   | [ ]  |
+| 9-3  | Launch Task Manager    | Select /task and press Enter     | Windows Task Manager launches immediately                 | [ ]  |
+| 9-4  | Open Config Directory  | Select /config and press Enter   | File Explorer opens shortcut configuration directory      | [ ]  |
+| 9-5  | Open Commands Folder   | Select /cmd and press Enter      | File Explorer opens %USERPROFILE%\commands                | [ ]  |
+| 9-6  | Rescan Shortcuts       | Select /reload and press Enter   | In-memory index is rescanned and updated immediately      | [ ]  |
+| 9-7  | Copy Date              | Select /date or /today and Enter | Current date (YYYY-MM-DD) is copied to clipboard          | [ ]  |
+| 9-8  | Copy Time              | Select /time and press Enter     | Current time (HH:MM:SS) is copied to clipboard            | [ ]  |
+| 9-9  | Copy Local IP          | Select /ip and press Enter       | Local IP address is copied to clipboard                   | [ ]  |
+| 9-10 | Lock Workstation       | Select /lock and press Enter     | Windows workstation is locked immediately (Win + L)       | [ ]  |
+| 9-11 | Restart KeyStar        | Select /restart and press Enter  | KeyStar closes and automatically relaunches clean process | [ ]  |
+| 9-12 | Clean Application Exit | Select /exit and press Enter     | KeyStar process exits cleanly and terminates              | [ ]  |

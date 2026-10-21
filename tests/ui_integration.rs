@@ -1,5 +1,6 @@
 //! UI状態機械・キーボード操作系の公開API統合テスト。
 
+use KeyStar::command::BuiltinCommand;
 use KeyStar::indexer::ShortcutItem;
 use KeyStar::ui::{
     BASE_WINDOW_HEIGHT, KeyCommand, LauncherAction, LauncherState, WINDOW_WIDTH,
@@ -129,5 +130,36 @@ fn test_native_options_frameless_configuration() {
     assert_eq!(
         opts.viewport.inner_size,
         Some(eframe::egui::vec2(WINDOW_WIDTH, BASE_WINDOW_HEIGHT))
+    );
+}
+
+#[test]
+fn test_ui_slash_command_execution_scenario() {
+    let shortcuts = sample_shortcuts();
+    let mut state = LauncherState::new(8);
+
+    // "/" 入力 -> 全スラッシュコマンド候補が展開される
+    state.update_query("/", &shortcuts);
+    assert!(state.is_dropdown_visible());
+    assert!(!state.visible_candidates().is_empty());
+
+    // "/ta" 入力 -> "/task" が先頭候補になる
+    state.update_query("/ta", &shortcuts);
+    assert!(state.is_dropdown_visible());
+    let selected = state.selected_candidate().unwrap();
+    assert!(selected.label.starts_with("/task"));
+
+    // Enter 押下 -> LauncherAction::ExecuteBuiltin(BuiltinCommand::Task) が発火
+    let action = state.handle_key_command(KeyCommand::Confirm, &shortcuts);
+    assert_eq!(action, LauncherAction::ExecuteBuiltin(BuiltinCommand::Task));
+    assert_eq!(state.query(), "");
+    assert!(!state.is_dropdown_visible());
+
+    // "/ex" 入力 -> Enter で LauncherAction::ExecuteBuiltin(BuiltinCommand::Exit)
+    state.update_query("/ex", &shortcuts);
+    let exit_action = state.handle_key_command(KeyCommand::Confirm, &shortcuts);
+    assert_eq!(
+        exit_action,
+        LauncherAction::ExecuteBuiltin(BuiltinCommand::Exit)
     );
 }

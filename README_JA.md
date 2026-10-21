@@ -6,7 +6,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Rust 2024](https://img.shields.io/badge/Rust-2024%20Edition-orange.svg)](https://www.rust-lang.org)
-[![Version](https://img.shields.io/badge/version-v0.1.0--beta.2-brightgreen.svg)](Cargo.toml)
+[![Version](https://img.shields.io/badge/version-v0.1.0--beta.4-brightgreen.svg)](Cargo.toml)
 [![Platform](https://img.shields.io/badge/Platform-Windows-blue.svg)](https://github.com/tkshnkgwr/KeyStar)
 
 [English](./README.md) | [日本語](./README_JA.md)
@@ -195,7 +195,12 @@ KeyStar/
 │   ├── calc.rs                 # リアルタイム四則演算・電卓エンジン (evalexpr)
 │   ├── indexer.rs              # ショートカット走査・監視インデクサ
 │   ├── search.rs               # インクリメンタル補完・動的スコアリング
-│   ├── ui.rs                   # 1行極小ウィンドウ・キーボード操作・状態マシン (egui)
+│   ├── command.rs              # ビルトイン（スラッシュ）コマンド制御モジュール
+│   ├── single_instance.rs      # Windows名前付きミューテックス2重起動抑止
+│   ├── ui/                     # 1行極小ウィンドウ・GUI描画モジュール (egui)
+│   │   ├── mod.rs              # ランチャーApp本体・描画・イベントループ
+│   │   ├── state.rs            # 入力クエリ・候補リスト・UI状態機械
+│   │   └── executor.rs         # プロセス起動・OSシェル・ビルトイン実行
 │   ├── hotkey.rs               # グローバルホットキー (Alt+Space) 監視 (global-hotkey)
 │   ├── tray.rs                 # システムトレイ常駐・右クリックメニュー (tray-icon)
 │   └── clipboard.rs            # OS クリップボード同期書き込み (arboard)
@@ -207,7 +212,6 @@ KeyStar/
 │   └── os_integration.rs      # ホットキー・トレイ・クリップボード統合テスト
 ├── Cargo.lock                  # 依存関係ロックファイル
 ├── Cargo.toml                  # クレート構成マニフェスト
-├── CHANGELOG.md                # 変更履歴ルート
 ├── GEMINI.md                   # AI秘書最優先ルール (RULES.md連動)
 ├── LICENSE                     # MIT License
 ├── README.md                   # 英語プロジェクト概要

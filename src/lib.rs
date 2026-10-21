@@ -7,6 +7,7 @@
 
 pub mod calc;
 pub mod clipboard;
+pub mod command;
 pub mod hotkey;
 pub mod indexer;
 pub mod search;
