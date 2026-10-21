@@ -1,4 +1,4 @@
-#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+#![windows_subsystem = "windows"]
 
 //! KeyStar メインエントリポイント
 //!
@@ -6,9 +6,20 @@
 //! グローバルホットキー（`Alt + Space`）およびシステムトレイ常駐を有効化します。
 
 use KeyStar::indexer::ShortcutIndexer;
+use KeyStar::single_instance::SingleInstanceGuard;
 use KeyStar::ui::{LauncherApp, build_native_options};
 
 fn main() -> eframe::Result<()> {
+    // 多重起動防止: 同一セッション内で既に KeyStar が起動している場合は即座に終了する
+    let _instance_guard = match SingleInstanceGuard::acquire("Local\\KeyStar_SingleInstance_Mutex")
+    {
+        Some(guard) => guard,
+        None => {
+            // 既に KeyStar が起動中のため、2重起動せずに終了
+            return Ok(());
+        }
+    };
+
     let options = build_native_options();
 
     eframe::run_native(

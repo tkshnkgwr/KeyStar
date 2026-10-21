@@ -1,7 +1,8 @@
-﻿//! インクリメンタル補完・検索エンジンモジュール。
+//! インクリメンタル補完・検索エンジンモジュール。
 //!
 //! ユーザーの入力文字列をもとに、ショートカット一覧から前方一致および部分一致で候補を絞り込み、
 //! 電卓の計算結果が存在する場合は最優先候補として統合します。
+//! 引数付き入力（例: `code .` や `chrome https://...`）のコマンド単語検出にも対応しています。
 
 use crate::calc::CalcResult;
 use crate::indexer::ShortcutItem;
@@ -75,12 +76,40 @@ impl Candidate {
     }
 }
 
+/// 入力文字列をコマンド検索用プレフィックスと起動時引数に分割します。
+///
+/// 先頭の空白をトリムした後、最初の空白文字（スペース等）でコマンド部分と引数部分に分割します。
+/// 空白文字が含まれない場合は、引数部分は空文字列 `""` となります。
+///
+/// # Examples
+///
+/// ```
+/// use KeyStar::search::split_command_and_args;
+///
+/// assert_eq!(split_command_and_args("notepad"), ("notepad", ""));
+/// assert_eq!(split_command_and_args("notepad "), ("notepad", ""));
+/// assert_eq!(split_command_and_args("notepad test.txt"), ("notepad", "test.txt"));
+/// assert_eq!(split_command_and_args("  code  . "), ("code", ". "));
+/// ```
+#[must_use]
+pub fn split_command_and_args(input: &str) -> (&str, &str) {
+    let trimmed = input.trim_start();
+    if let Some(idx) = trimmed.find(|c: char| c.is_whitespace()) {
+        let cmd = &trimmed[..idx];
+        let args = trimmed[idx..].trim_start();
+        (cmd, args)
+    } else {
+        (trimmed, "")
+    }
+}
+
 /// 入力文字列とショートカット群から候補リストをフィルタリング・生成します。
 ///
 /// 1. 入力が数式として成立する場合は、最優先候補として電卓結果を先頭（index 0）に配置します。
 /// 2. ショートカット名に対して前方一致（高スコア）および部分一致（中スコア）で評価します。
-/// 3. クエリが空の場合は、ショートカット一覧の先頭から `max_results` 件を返します。
-/// 4. 結果件数は `max_results` 件以内に収まるよう切り詰められます。
+/// 3. 引数付きクエリ（例: `chrome https://...`）の場合、第1単語でのショートカット照合も行います。
+/// 4. クエリが空の場合は、ショートカット一覧の先頭から `max_results` 件を返します。
+/// 5. 結果件数は `max_results` 件以内に収まるよう切り詰められます。
 ///
 /// # Panics
 ///
@@ -106,6 +135,11 @@ impl Candidate {
 /// let candidates = filter_candidates("ch", &shortcuts, None, 10);
 /// assert_eq!(candidates.len(), 1);
 /// assert_eq!(candidates[0].label, "Chrome (.lnk)");
+///
+/// // 引数付きクエリでの検索維持
+/// let candidates_with_args = filter_candidates("ch https://google.com", &shortcuts, None, 10);
+/// assert_eq!(candidates_with_args.len(), 1);
+/// assert_eq!(candidates_with_args[0].label, "Chrome (.lnk)");
 ///
 /// // 電卓優先マージ
 /// let calc = evaluate("1 + 2");
@@ -138,20 +172,43 @@ pub fn filter_candidates(
     }
 
     // 3. ショートカットのマッチングとスコアリング
-    let lower_query = trimmed.to_lowercase();
+    // 引数対応: クエリ全体（スペース含む）および コマンド部分（先頭単語）の両方でスコアリング
+    let (cmd_part, _args_part) = split_command_and_args(trimmed);
+    let lower_full = trimmed.to_lowercase();
+    let lower_cmd = cmd_part.to_lowercase();
+    let has_args = !cmd_part.is_empty() && trimmed.len() > cmd_part.len();
+
     let mut matched_shortcuts = Vec::new();
 
     for item in shortcuts {
         let lower_name = item.name.to_lowercase();
+        let mut best_score: Option<i32> = None;
 
-        if lower_name.starts_with(&lower_query) {
-            // 前方一致: 高スコア（余計な文字数が少ないほど高得点）
-            let diff = lower_name.len().saturating_sub(lower_query.len()) as i32;
-            let score = 1000 - diff;
-            matched_shortcuts.push((item, score));
-        } else if let Some(pos) = lower_name.find(&lower_query) {
-            // 部分一致: 中スコア（前方に出現するほど、かつ余計な文字数が少ないほど高得点）
-            let score = 500 - (pos as i32 * 10) - (lower_name.len() as i32);
+        // A. クエリ全体での判定（ショートカット名自体にスペースが含まれている場合など）
+        if lower_name.starts_with(&lower_full) {
+            let diff = lower_name.len().saturating_sub(lower_full.len()) as i32;
+            best_score = Some(1000 - diff);
+        } else if let Some(pos) = lower_name.find(&lower_full) {
+            best_score = Some(500 - (pos as i32 * 10) - (lower_name.len() as i32));
+        }
+
+        // B. 引数入力中（スペースあり）の場合、コマンド部分（第1単語）での判定
+        if has_args && !lower_cmd.is_empty() {
+            let cmd_score = if lower_name.starts_with(&lower_cmd) {
+                let diff = lower_name.len().saturating_sub(lower_cmd.len()) as i32;
+                Some(900 - diff)
+            } else {
+                lower_name
+                    .find(&lower_cmd)
+                    .map(|pos| 400 - (pos as i32 * 10) - (lower_name.len() as i32))
+            };
+
+            if let Some(cs) = cmd_score {
+                best_score = Some(best_score.map_or(cs, |bs| bs.max(cs)));
+            }
+        }
+
+        if let Some(score) = best_score {
             matched_shortcuts.push((item, score));
         }
     }
@@ -186,6 +243,25 @@ mod tests {
     }
 
     #[test]
+    fn test_split_command_and_args() {
+        assert_eq!(split_command_and_args(""), ("", ""));
+        assert_eq!(split_command_and_args("notepad"), ("notepad", ""));
+        assert_eq!(split_command_and_args("notepad "), ("notepad", ""));
+        assert_eq!(
+            split_command_and_args("notepad test.txt"),
+            ("notepad", "test.txt")
+        );
+        assert_eq!(
+            split_command_and_args("code  C:\\path\\dir  "),
+            ("code", "C:\\path\\dir  ")
+        );
+        assert_eq!(
+            split_command_and_args("  cmd /k ping google.com"),
+            ("cmd", "/k ping google.com")
+        );
+    }
+
+    #[test]
     fn test_filter_prefix_matching() {
         let shortcuts = vec![
             make_item("Chrome", "lnk"),
@@ -204,11 +280,39 @@ mod tests {
     }
 
     #[test]
+    fn test_filter_with_command_and_args() {
+        let shortcuts = vec![make_item("Chrome", "lnk"), make_item("Notepad", "lnk")];
+
+        // 引数を入力しても、コマンド名に前方一致していれば候補が残り続ける
+        let results = filter_candidates("chrome https://google.com", &shortcuts, None, 10);
+        assert_eq!(results.len(), 1);
+        assert_eq!(results[0].label, "Chrome (.lnk)");
+
+        // 部分一致のコマンドでも同様
+        let results_partial = filter_candidates("pad myfile.txt", &shortcuts, None, 10);
+        assert_eq!(results_partial.len(), 1);
+        assert_eq!(results_partial[0].label, "Notepad (.lnk)");
+    }
+
+    #[test]
+    fn test_filter_with_space_in_shortcut_name() {
+        let shortcuts = vec![
+            make_item("Visual Studio Code", "lnk"),
+            make_item("Visual Studio", "lnk"),
+        ];
+
+        // ショートカット名自体に空白を含む場合、より長く一致する方が最上位になる
+        let results = filter_candidates("visual studio c", &shortcuts, None, 10);
+        assert!(!results.is_empty());
+        assert_eq!(results[0].label, "Visual Studio Code (.lnk)");
+    }
+
+    #[test]
     fn test_filter_substring_matching() {
         let shortcuts = vec![make_item("GoogleChrome", "lnk"), make_item("Chrome", "lnk")];
 
         // "Chrome" は前方一致、"GoogleChrome" は部分一致で前方一致が上位
-        let results = filter_candidates("chrome", &shortcuts, None, 10);
+        let results = filter_candidates("chrome", &shortcuts, None, 2);
         assert_eq!(results.len(), 2);
         assert_eq!(results[0].label, "Chrome (.lnk)");
         assert_eq!(results[1].label, "GoogleChrome (.lnk)");
@@ -246,7 +350,7 @@ mod tests {
     #[test]
     fn test_filter_no_match() {
         let shortcuts = vec![make_item("Chrome", "lnk")];
-        let results = filter_candidates("notepad", &shortcuts, None, 10);
+        let results = filter_candidates("xyz_no_match", &shortcuts, None, 10);
         assert!(results.is_empty());
     }
 }

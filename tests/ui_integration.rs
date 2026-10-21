@@ -1,4 +1,4 @@
-﻿//! UI状態機械・キーボード操作系の公開API統合テスト。
+//! UI状態機械・キーボード操作系の公開API統合テスト。
 
 use KeyStar::indexer::ShortcutItem;
 use KeyStar::ui::{
@@ -57,11 +57,28 @@ fn test_ui_incremental_completion_and_launch_scenario() {
     let confirm_action = state.handle_key_command(KeyCommand::Confirm, &shortcuts);
     assert_eq!(
         confirm_action,
-        LauncherAction::ExecuteShortcut(PathBuf::from("C:\\commands\\CmdPrompt.bat"))
+        LauncherAction::ExecuteShortcut {
+            path: PathBuf::from("C:\\commands\\CmdPrompt.bat"),
+            args: String::new(),
+        }
     );
     assert_eq!(state.query(), "");
     assert!(!state.is_dropdown_visible());
     assert_eq!(state.window_height(), BASE_WINDOW_HEIGHT);
+
+    // 引数付き起動シナリオ: "cmd /k dir"
+    state.update_query("cmd /k dir", &shortcuts);
+    assert!(state.is_dropdown_visible());
+    assert_eq!(state.selected_index(), 0);
+    let with_args_action = state.handle_key_command(KeyCommand::Confirm, &shortcuts);
+    assert_eq!(
+        with_args_action,
+        LauncherAction::ExecuteShortcut {
+            path: PathBuf::from("C:\\commands\\CmdPrompt.bat"),
+            args: "/k dir".to_string(),
+        }
+    );
+    assert_eq!(state.query(), "");
 }
 
 #[test]

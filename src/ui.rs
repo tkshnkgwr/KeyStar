@@ -1,4 +1,4 @@
-﻿//! `egui` / `eframe` による 1 行極小入力ウィンドウおよびキーボード操作モジュール。
+//! `egui` / `eframe` による 1 行極小入力ウィンドウおよびキーボード操作モジュール。
 //!
 //! 名作「CraftLaunch 2」の佇まい（タイトルバーなし・常時最前面・極小1行入力枠・動的候補ドロップダウン）と、
 //! キーボード完結の操作体系（`Enter`, `Esc`, `Tab`/`Shift+Tab`, `Ctrl+n`/`Ctrl+p`, `Up`/`Down`）を提供します。
@@ -7,10 +7,10 @@ use crate::calc::evaluate;
 use crate::clipboard::{ClipboardProvider, SystemClipboard};
 use crate::hotkey::{HotKeyService, install_hotkey_wakeup_hook};
 use crate::indexer::{ShortcutIndexer, ShortcutItem};
-use crate::search::{Candidate, CandidateKind, filter_candidates};
+use crate::search::{Candidate, CandidateKind, filter_candidates, split_command_and_args};
 use crate::tray::{TrayCommand, TrayService, install_tray_wakeup_hook};
 use eframe::egui;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 /// ランチャーウィンドウの標準横幅（ピクセル）。
 pub const WINDOW_WIDTH: f32 = 500.0;
@@ -57,8 +57,13 @@ pub enum KeyCommand {
 pub enum LauncherAction {
     /// アクションなし（入力継続・選択移動のみ）
     None,
-    /// ショートカット・実行ファイルを非同期起動してウィンドウを非表示にする
-    ExecuteShortcut(PathBuf),
+    /// ショートカット・実行ファイルを指定引数で非同期起動してウィンドウを非表示にする
+    ExecuteShortcut {
+        /// 実行対象のファイルパス（`.lnk`, `.bat`, `.cmd`, `.exe`, `.ps1` 等）
+        path: PathBuf,
+        /// コマンドライン引数文字列（未指定時は空文字列）
+        args: String,
+    },
     /// 電卓の計算結果テキストをクリップボードへコピーしてウィンドウを非表示にする
     CopyCalcResult(String),
     /// 何も実行せずウィンドウを非表示にする
@@ -335,7 +340,11 @@ impl LauncherState {
                             LauncherAction::CopyCalcResult(calc.copy_text.clone())
                         }
                         CandidateKind::Shortcut(item) => {
-                            LauncherAction::ExecuteShortcut(item.path.clone())
+                            let (_cmd, args) = split_command_and_args(&self.query);
+                            LauncherAction::ExecuteShortcut {
+                                path: item.path.clone(),
+                                args: args.to_string(),
+                            }
                         }
                     },
                     None => LauncherAction::Dismiss,
@@ -348,6 +357,75 @@ impl LauncherState {
                 LauncherAction::Dismiss
             }
         }
+    }
+}
+
+/// 指定されたパスのショートカット・実行ファイルを、引数を渡して非同期に実行します。
+///
+/// - `.ps1` スクリプトの場合は、Windows既定の制限（ExecutionPolicy）を回避するため
+///   `powershell.exe -ExecutionPolicy Bypass -File <path> <args...>` を直接実行します。
+/// - `.lnk` やその他の実行可能ファイルに対して引数がある場合は、Windows API `ShellExecuteW`
+///   を呼び出して引数をパラメータとして渡します。
+/// - 引数がない場合は `open::that_detached` をフォールバック利用します。
+pub fn launch_target(path: &Path, args: &str) {
+    #[cfg(windows)]
+    {
+        // 1. .ps1 スクリプトは PowerShell 経由で ExecutionPolicy をバイパスして実行
+        if path
+            .extension()
+            .is_some_and(|ext| ext.eq_ignore_ascii_case("ps1"))
+        {
+            let mut cmd = std::process::Command::new("powershell.exe");
+            cmd.arg("-ExecutionPolicy")
+                .arg("Bypass")
+                .arg("-File")
+                .arg(path);
+            if !args.is_empty() {
+                for arg in args.split_whitespace() {
+                    cmd.arg(arg);
+                }
+            }
+            let _ = cmd.spawn();
+            return;
+        }
+
+        // 2. 引数が指定されている場合、または open で起動しなかった場合は ShellExecuteW を利用
+        if !args.is_empty() {
+            use std::os::windows::ffi::OsStrExt;
+            use windows_sys::Win32::UI::Shell::ShellExecuteW;
+            use windows_sys::Win32::UI::WindowsAndMessaging::SW_SHOWNORMAL;
+
+            let wide_file: Vec<u16> = path
+                .as_os_str()
+                .encode_wide()
+                .chain(std::iter::once(0))
+                .collect();
+            let wide_args: Vec<u16> = args.encode_utf16().chain(std::iter::once(0)).collect();
+
+            let result = unsafe {
+                ShellExecuteW(
+                    std::ptr::null_mut(),
+                    std::ptr::null(), // "open"
+                    wide_file.as_ptr(),
+                    wide_args.as_ptr(),
+                    std::ptr::null(),
+                    SW_SHOWNORMAL,
+                )
+            };
+
+            if (result as isize) > 32 {
+                return;
+            }
+        }
+
+        // 3. 引数なし、またはフォールバック
+        let _ = open::that_detached(path);
+    }
+
+    #[cfg(not(windows))]
+    {
+        let _ = args;
+        let _ = open::that_detached(path);
     }
 }
 
@@ -545,8 +623,8 @@ impl LauncherApp {
     fn execute_action(&mut self, ctx: &egui::Context, action: LauncherAction) {
         match action {
             LauncherAction::None => {}
-            LauncherAction::ExecuteShortcut(path) => {
-                let _ = open::that_detached(&path);
+            LauncherAction::ExecuteShortcut { path, args } => {
+                launch_target(&path, &args);
                 self.dismiss_window(ctx);
             }
             LauncherAction::CopyCalcResult(text) => {
@@ -806,14 +884,29 @@ mod tests {
         let shortcuts = sample_shortcuts();
         let mut state = LauncherState::new(8);
 
-        // ショートカット確定
+        // ショートカット確定（引数なし）
         state.update_query("obs", &shortcuts);
         let action = state.handle_key_command(KeyCommand::Confirm, &shortcuts);
         assert_eq!(
             action,
-            LauncherAction::ExecuteShortcut(PathBuf::from("C:\\commands\\Obsidian.lnk"))
+            LauncherAction::ExecuteShortcut {
+                path: PathBuf::from("C:\\commands\\Obsidian.lnk"),
+                args: String::new(),
+            }
         );
         assert_eq!(state.query(), ""); // 確定後はリセット
+
+        // ショートカット確定（引数あり）
+        state.update_query("code C:\\project", &shortcuts);
+        let action_with_args = state.handle_key_command(KeyCommand::Confirm, &shortcuts);
+        assert_eq!(
+            action_with_args,
+            LauncherAction::ExecuteShortcut {
+                path: PathBuf::from("C:\\commands\\Code.lnk"),
+                args: "C:\\project".to_string(),
+            }
+        );
+        assert_eq!(state.query(), "");
 
         // 電卓結果確定
         state.update_query("1280 * 1.1", &shortcuts);

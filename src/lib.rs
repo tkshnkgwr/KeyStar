@@ -10,5 +10,6 @@ pub mod clipboard;
 pub mod hotkey;
 pub mod indexer;
 pub mod search;
+pub mod single_instance;
 pub mod tray;
 pub mod ui;
