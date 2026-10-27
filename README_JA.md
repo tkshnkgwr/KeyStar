@@ -6,7 +6,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Rust 2024](https://img.shields.io/badge/Rust-2024%20Edition-orange.svg)](https://www.rust-lang.org)
-[![Version](https://img.shields.io/badge/version-v0.1.0--beta.4-brightgreen.svg)](Cargo.toml)
+[![Version](https://img.shields.io/badge/version-v0.1.0--beta.5-brightgreen.svg)](Cargo.toml)
 [![Platform](https://img.shields.io/badge/Platform-Windows-blue.svg)](https://github.com/tkshnkgwr/KeyStar)
 
 [English](./README.md) | [日本語](./README_JA.md)
@@ -19,9 +19,8 @@
 +-------------------------------------------------------+
 | > [ ここに入力（1行の極小テキストボックス）         ] |
 +-------------------------------------------------------+
-| = 1,408 (四則演算の即時結果) |
-| :--------------------------- |
-| * Chrome.lnk                 |
+| = 1,408 (四則演算の即時結果)                          |
+| * Chrome.lnk                                          |
 +-------------------------------------------------------+
 ```
 

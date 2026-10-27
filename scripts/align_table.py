@@ -110,11 +110,21 @@ def process_file(filepath: Path) -> bool:
 
     new_lines = []
     in_table = False
+    in_code_block = False
     table_lines = []
 
     for line in lines:
         stripped = line.strip()
-        if stripped.startswith("|") and stripped.endswith("|"):
+        if stripped.startswith("```"):
+            if in_table:
+                new_lines.extend(align_table_block(table_lines))
+                table_lines = []
+                in_table = False
+            in_code_block = not in_code_block
+            new_lines.append(line)
+            continue
+
+        if not in_code_block and stripped.startswith("|") and stripped.endswith("|"):
             in_table = True
             table_lines.append(line)
         else:

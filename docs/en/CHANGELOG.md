@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.0-beta.5] - 2026-10-27
+
+### Added
+- **Comprehensive Project-Wide Quality Audit & Test Report Modernization (docs/en/TEST_REPORT.md)**:
+  - Updated the official quality verification report to reflect all 74 passing tests (34 unit, 21 integration, 19 doctests) following Phase 3.5 command extensions.
+  - Formally recorded line limit compliance across all source files (max 522 lines, well under the 1000-line ceiling).
+
+### Fixed
+- **Code Block Guard in Table Aligner Script (scripts/align_table.py)**:
+  - Fixed an issue where text within fenced code blocks (\\) was erroneously identified as a Markdown table.
+- **ASCII Art Border Repair Across Documentation**:
+  - Restored clean ASCII art box boundaries in README.md, README_JA.md, GUI_DESIGN.md, and FOOTPRINTS.md.
+
 ## [0.1.0-beta.4] - 2026-10-21
 
 ### Added

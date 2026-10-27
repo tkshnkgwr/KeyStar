@@ -37,7 +37,7 @@ This document defines the resource consumption metrics (RAM, CPU, cold start, ke
 ```text
 +-----------------------------------------------------------+
 | KeyStar Process Space                                      |
-| :-------------------------------------------------- |
++-----------------------------------------------------------+
 | [Background Resident (Hidden)]                      |
 | - Winit / Win32 event loop sleep (0.0% CPU)         |
 | - Shortcut cache in memory (few KB to tens of KB)   |
