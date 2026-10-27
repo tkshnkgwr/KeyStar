@@ -4,6 +4,15 @@
 
 ---
 
+## [0.1.0-beta.6] - 2026-10-27
+
+### Changed
+- **ライセンスの変更 (MIT License ➔ GPL-3.0-or-later)**:
+  - プロジェクトのオープンソースライセンスを `MIT License` から `GNU General Public License v3.0 or later (GPL-3.0-or-later)` へ移行。
+  - `Cargo.toml` の `license` フィールドに `GPL-3.0-or-later` を明記。
+  - `LICENSE` ファイルを GNU GPL v3 全文に更新。
+  - `README.md` および `README_JA.md` のライセンスバッジ、ファイルツリー、ライセンス条項セクションを同期更新。
+
 ## [0.1.0-beta.5] - 2026-10-27
 
 ### Added

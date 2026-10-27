@@ -4,9 +4,9 @@
 
 **名作「CraftLaunch 2」の原点思想を受け継ぐ、Rust製の超軽量1行キーボードランチャー**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: GPL-3.0-or-later](https://img.shields.io/badge/License-GPL--3.0--or--later-blue.svg)](LICENSE)
 [![Rust 2024](https://img.shields.io/badge/Rust-2024%20Edition-orange.svg)](https://www.rust-lang.org)
-[![Version](https://img.shields.io/badge/version-v0.1.0--beta.5-brightgreen.svg)](Cargo.toml)
+[![Version](https://img.shields.io/badge/version-v0.1.0--beta.6-brightgreen.svg)](Cargo.toml)
 [![Platform](https://img.shields.io/badge/Platform-Windows-blue.svg)](https://github.com/tkshnkgwr/KeyStar)
 
 [English](./README.md) | [日本語](./README_JA.md)
@@ -212,7 +212,7 @@ KeyStar/
 ├── Cargo.lock                  # 依存関係ロックファイル
 ├── Cargo.toml                  # クレート構成マニフェスト
 ├── GEMINI.md                   # AI秘書最優先ルール (RULES.md連動)
-├── LICENSE                     # MIT License
+├── LICENSE                     # GPL-3.0-or-later ライセンス
 ├── README.md                   # 英語プロジェクト概要
 ├── README_JA.md                # 日本語プロジェクト概要
 ├── RULES.md                    # 開発共通絶対遵守指令
@@ -223,7 +223,7 @@ KeyStar/
 
 ## 📄 ライセンス
 
-本プロジェクトは **[MIT License](LICENSE)** の下で公開されています。
+本プロジェクトは **[GNU General Public License v3.0 or later (GPL-3.0-or-later)](LICENSE)** の下で公開されています。
 
 Copyright (c) 2026 tkshnkgwr  
 KeyStar is an independent tribute project inspired by the design and UI concepts of CraftLaunch by craftware.

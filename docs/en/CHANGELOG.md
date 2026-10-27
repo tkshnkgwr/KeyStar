@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.0-beta.6] - 2026-10-27
+
+### Changed
+- **License Migration (MIT License ➔ GPL-3.0-or-later)**:
+  - Migrated project open-source licensing from the `MIT License` to the `GNU General Public License v3.0 or later (GPL-3.0-or-later)`.
+  - Added `license = "GPL-3.0-or-later"` to `Cargo.toml`.
+  - Updated `LICENSE` to the full text of GNU GPL v3.
+  - Synchronized license badges, project directory trees, and license sections across `README.md` and `README_JA.md`.
+
 ## [0.1.0-beta.5] - 2026-10-27
 
 ### Added
