@@ -182,6 +182,34 @@ impl HotKeyService {
         })
     }
 
+    /// 登録されているグローバルホットキーを新しい [`HotKeyBinding`] へ動的に差し替えます。
+    ///
+    /// 新しいホットキーの登録に失敗した場合は、以前のホットキー登録を自動的に復元します。
+    ///
+    /// # Errors
+    ///
+    /// 新しいホットキーが他のアプリケーションに占有されている等で OS 登録に失敗した場合にエラーを返します。
+    pub fn update_binding(&mut self, new_binding: HotKeyBinding) -> Result<(), String> {
+        if self.binding == new_binding {
+            return Ok(());
+        }
+
+        let new_hotkey = new_binding.to_hotkey();
+        let _ = self.manager.unregister(self.hotkey);
+
+        if let Err(e) = self.manager.register(new_hotkey) {
+            // 失敗時は元のホットキーを再登録して復旧する
+            let _ = self.manager.register(self.hotkey);
+            return Err(format!(
+                "新しいグローバルホットキーの登録に失敗しました: {e}"
+            ));
+        }
+
+        self.hotkey = new_hotkey;
+        self.binding = new_binding;
+        Ok(())
+    }
+
     /// 登録されている [`HotKeyBinding`] を返します。
     #[must_use]
     pub const fn binding(&self) -> HotKeyBinding {

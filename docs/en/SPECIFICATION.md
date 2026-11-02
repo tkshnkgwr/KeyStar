@@ -43,7 +43,7 @@
    - `/` displays all available commands; typing characters narrows down the list incrementally.
 2. **Supported Commands**:
    - `/task`: Launches Windows Task Manager (`taskmgr.exe`).
-   - `/config`: Opens shortcut configuration directory in Explorer.
+   - `/config`: Opens the GUI settings dialog (identical to tray menu).
    - `/cmd`: Opens `%USERPROFILE%\commands` in Explorer.
    - `/reload`: Immediately rescans monitored directories and updates cache.
    - `/restart`: Cleanly restarts KeyStar application.
@@ -70,6 +70,17 @@
    - Secondary processes terminate immediately if another instance is already running.
 2. **DOS Window Suppression**:
    - Applies `#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]` in release mode to eliminate console window on startup.
+
+### 2.6 GUI Settings Dialog & Configuration Persistence (Feature 6)
+1. **Configuration Persistence (`config.toml`)**:
+   - Automated loading/saving via `serde` / `toml` (prefers portable `./config.toml`, fallbacks to `%APPDATA%\KeyStar\config.toml`).
+   - Stores hotkey binding, monitored directories, max candidates, target extensions, window width, font size, and calculator format.
+2. **GUI Settings Dialog (`egui`)**:
+   - Independent multi-viewport settings dialog (480 × 460 px) accessible via tray menu and `/config`.
+   - Preset hotkey selection and interactive keystroke capture.
+   - Windows startup registration toggle (`HKCU\...\Run`).
+   - Monitored directory management with native folder picker (`SHBrowseForFolderW`). Automatic conversion of local user directories to `%USERPROFILE%`.
+   - Real-time application of appearance and calculator copy settings.
 
 ---
 

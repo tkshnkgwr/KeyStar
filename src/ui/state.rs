@@ -7,6 +7,7 @@ use crate::calc::evaluate;
 use crate::command::BuiltinCommand;
 use crate::indexer::ShortcutItem;
 use crate::search::{Candidate, CandidateKind, filter_candidates, split_command_and_args};
+use crate::settings::CalcCopyFormat;
 use eframe::egui;
 use std::path::PathBuf;
 
@@ -83,6 +84,8 @@ pub struct LauncherState {
     selected_index: usize,
     /// 表示する最大候補件数
     max_candidates: usize,
+    /// 電卓計算結果のコピー形式
+    calc_copy_format: CalcCopyFormat,
     /// クエリが空の際にも明示的にドロップダウンを展開しているかどうか
     force_dropdown_open: bool,
     /// ランチャーウィンドウが現在表示状態かどうか（ホットキートグル制御用）
@@ -121,10 +124,33 @@ impl LauncherState {
             candidates: Vec::new(),
             selected_index: 0,
             max_candidates: max_candidates.max(1),
+            calc_copy_format: CalcCopyFormat::Plain,
             force_dropdown_open: false,
             window_visible: true,
             focus_requested: true,
         }
+    }
+
+    /// 現在設定されている最大候補表示件数を返します。
+    #[must_use]
+    pub fn max_candidates(&self) -> usize {
+        self.max_candidates
+    }
+
+    /// 最大候補表示件数を更新します。
+    pub fn set_max_candidates(&mut self, max_candidates: usize) {
+        self.max_candidates = max_candidates.max(1);
+    }
+
+    /// 現在設定されている電卓計算結果のコピー形式を返します。
+    #[must_use]
+    pub fn calc_copy_format(&self) -> CalcCopyFormat {
+        self.calc_copy_format
+    }
+
+    /// 電卓計算結果のコピー形式を更新します。
+    pub fn set_calc_copy_format(&mut self, format: CalcCopyFormat) {
+        self.calc_copy_format = format;
     }
 
     /// ランチャーウィンドウが現在表示状態であるかを返します。
@@ -305,10 +331,11 @@ impl LauncherState {
                 LauncherAction::None
             }
             KeyCommand::Confirm => {
+                let copy_format = self.calc_copy_format;
                 let action = match self.selected_candidate() {
                     Some(candidate) => match &candidate.kind {
                         CandidateKind::Calc(calc) => {
-                            LauncherAction::CopyCalcResult(calc.copy_text.clone())
+                            LauncherAction::CopyCalcResult(copy_format.format_for_copy(calc))
                         }
                         CandidateKind::Shortcut(item) => {
                             let (_, args) = split_command_and_args(&self.query);
@@ -478,12 +505,21 @@ mod tests {
         );
         assert_eq!(state.query(), "");
 
-        // 電卓結果確定
+        // 電卓結果確定（生数値モード）
         state.update_query("1280 * 1.1", &shortcuts);
         let calc_action = state.handle_key_command(KeyCommand::Confirm, &shortcuts);
         assert_eq!(
             calc_action,
             LauncherAction::CopyCalcResult("1408".to_string())
+        );
+
+        // 電卓結果確定（カンマ区切りモード）
+        state.set_calc_copy_format(CalcCopyFormat::CommaSeparated);
+        state.update_query("1280 * 1.1", &shortcuts);
+        let calc_comma_action = state.handle_key_command(KeyCommand::Confirm, &shortcuts);
+        assert_eq!(
+            calc_comma_action,
+            LauncherAction::CopyCalcResult("1,408".to_string())
         );
     }
 

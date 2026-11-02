@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.0-beta.7] - 2026-11-03
+
+### Added
+- **GUI Settings Dialog Module (`src/settings.rs`)**:
+  - Implemented an independent multi-viewport configuration dialog via `egui` (480 × 460 px) supporting native title bar, `Esc`, and close buttons.
+  - **General**:
+    - Global hotkey preset selection (`Alt + Space`, `Ctrl + Space`, `Win + Space`, etc.) and interactive keystroke capture.
+    - Automatic launch on Windows startup toggle with registry synchronization (`HKCU\Software\Microsoft\Windows\CurrentVersion\Run`).
+  - **Shortcuts & Search**:
+    - Monitored directory management (manual path input, entry removal, and native folder picker dialog via Win32 `SHBrowseForFolderW`).
+    - Automatic path sanitization converting user home directory to `%USERPROFILE%` notation for portability and privacy.
+    - Maximum candidate count slider (3–15 items, default: 8).
+    - Dynamic target extension filtering toggles (`.lnk`, `.url`, `.bat`, `.cmd`, `.exe`, `.ps1`).
+  - **Appearance & Calculator**:
+    - Launcher window width slider (400–800 px, default: 500 px).
+    - Font size selector (12–20 pt, default: 15 pt).
+    - Calculator clipboard copy format radio options (plain raw number `1408` or comma-separated `1,408`).
+  - **Bottom Action Controls**: "Reset to Defaults", "Cancel", "Save & Apply".
+- **Configuration Persistence Engine (`config.toml`)**:
+  - Automated loading and saving via `serde` / `toml`.
+  - Path resolution prioritizing portable `./config.toml` with seamless fallback to `%APPDATA%\KeyStar\config.toml`.
+  - Robust sanitization and clamping against out-of-range dimensions and malformed key bindings.
+- **System Tray & Slash Command Integration (`src/ui/mod.rs`)**:
+  - Wired tray context menu item "設定" (Settings) and slash command `/config` to immediately open the GUI settings dialog.
+  - Enabled background wake-up and rendering support (`RequestPaintWhileHidden`) when invoked while launcher is hidden.
+  - Dynamic hotkey re-registration (`HotKeyService::update_binding`) and instant index rescan upon saving settings without restarting the process.
+- **Integration Tests for Configuration Pipeline (`tests/settings_integration.rs`)**:
+  - Added comprehensive public API integration test suite covering `config.toml` round-trip persistence, sanitization clamping, hotkey parsing, dialog state transitions, and extension filtering (all 63 tests passing).
+
 ## [0.1.0-beta.6] - 2026-10-27
 
 ### Changed

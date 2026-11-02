@@ -15,7 +15,7 @@
 | **Phase 2: GUI Prototype**  | Single-line input frame, candidate dropdown rendering | `eframe`, `egui`             | **Completed** |
 | **Phase 3: OS Integration** | Global hotkeys, clipboard copy, system tray           | `global-hotkey`, `tray-icon` | **Completed** |
 | **Phase 3.5: Command Ext**  | Slash commands (/task), launch arguments, mutex guard | `windows-sys`, `open`        | **Completed** |
-| **Phase 4: Settings GUI**   | Settings dialog, config persistence (`config.toml`)   | `egui`, `serde`, `toml`      |    Pending    |
+| **Phase 4: Settings GUI**   | Settings dialog, config persistence (`config.toml`)   | `egui`, `serde`, `toml`      | **Completed** |
 | **Phase 5: Optimization**   | Single-binary LTO optimization, Scoop package         | Cargo Release, Scoop         |    Pending    |
 
 ---
@@ -76,7 +76,7 @@
 - [x] **Built-in Slash Commands (`src/command.rs`)**:
   - [x] Dedicated incremental matching when query starts with `/`
   - [x] Task Manager launch (`/task`)
-  - [x] Open configuration / commands directories (`/config`, `/cmd`)
+  - [x] Open configuration dialog / commands directories (`/config`, `/cmd`)
   - [x] Rescan shortcuts (`/reload`), restart KeyStar (`/restart`)
   - [x] Clipboard utilities: date, time, local IP (`/date`, `/today`, `/time`, `/ip`)
   - [x] System control: lock workstation (`/lock`), sleep (`/sleep`), shutdown (`/shutdown`)
@@ -84,26 +84,26 @@
 - [x] **Single-Stroke Escape Dismissal**:
   - [x] `Esc` immediately hides window cleanly under all input conditions
 
-### Phase 4: GUI Settings Dialog (Beta Phase)
-- [ ] **【Settings Window】 GUI Configuration Dialog (`src/settings.rs` / `src/ui.rs`)**:
-  - [ ] **Tray Menu Wiring**: Open independent settings dialog upon selecting "Settings" from system tray menu
-  - [ ] **Configuration Persistence (`config.toml`)**:
-    - [ ] `serde` / `toml` loading and serialization (prefers portable `./config.toml`, fallbacks to `%APPDATA%\KeyStar\config.toml`)
-    - [ ] Schema definition (hotkey bindings, monitored directories, max candidates, window dimensions, calculator formatting)
-  - [ ] **Settings Dialog UI Design (egui)**:
-    - [ ] Window size: 480 × 420 px (with title bar, Esc/close button support, dark theme)
-    - [ ] Section 1 "General":
+### Phase 4: GUI Settings Dialog (Completed)
+- [x] **【Settings Window】 GUI Configuration Dialog (`src/settings.rs` / `src/ui/mod.rs`)**:
+  - [x] **Tray Menu & Slash Command Wiring**: Open independent settings dialog upon selecting "Settings" from system tray menu or `/config`
+  - [x] **Configuration Persistence (`config.toml`)**:
+    - [x] `serde` / `toml` loading and serialization (prefers portable `./config.toml`, fallbacks to `%APPDATA%\KeyStar\config.toml`)
+    - [x] Schema definition (hotkey bindings, monitored directories, max candidates, target extensions, window dimensions, calculator formatting)
+  - [x] **Settings Dialog UI Design (`egui`)**:
+    - [x] Window size: 480 × 460 px (with title bar, Esc/close button support, dark theme)
+    - [x] Section 1 "General":
       - Global hotkey modification (`Alt + Space`, `Ctrl + Space`, `Win + Space`, or custom key capture)
       - Auto-start with Windows (`HKCU\...\Run` startup registry toggle)
-    - [ ] Section 2 "Shortcuts & Search":
-      - Monitored directory list (list view, Add/Remove buttons, folder picker dialog via `rfd`)
+    - [x] Section 2 "Shortcuts & Search":
+      - Monitored directory list (list view, Add/Remove buttons, native folder picker dialog via `SHBrowseForFolderW`)
       - Max visible candidates slider (3–15 items, default: 8)
       - Target extension toggles (`.lnk`, `.url`, `.bat`, `.cmd`, `.exe`, `.ps1`)
-    - [ ] Section 3 "Appearance & Calculator":
+    - [x] Section 3 "Appearance & Calculator":
       - Launcher window width slider (400px–800px, default: 500px)
       - Font size selector (12px–20px, default: 15px)
       - Calculator clipboard format (Plain raw number `1408` vs Comma-separated `1,408`)
-    - [ ] Bottom action buttons: "Save & Apply", "Cancel", "Reset to Defaults"
+    - [x] Bottom action buttons: "Save & Apply", "Cancel", "Reset to Defaults"
 
 ---
 

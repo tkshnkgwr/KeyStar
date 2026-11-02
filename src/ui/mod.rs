@@ -18,18 +18,35 @@ use crate::command::BuiltinCommand;
 use crate::hotkey::{HotKeyService, install_hotkey_wakeup_hook};
 use crate::indexer::ShortcutIndexer;
 use crate::search::CandidateKind;
+use crate::settings::{
+    AppConfig, MAX_WINDOW_WIDTH, MIN_WINDOW_WIDTH, SettingsDialog, SettingsDialogAction,
+    sync_windows_auto_start,
+};
 use crate::tray::{TrayCommand, TrayService, install_tray_wakeup_hook};
 use eframe::egui;
 
-/// 1行極小ウィンドウ用の `eframe::NativeOptions` を構築します。
+/// 標準設定で 1行極小ウィンドウ用の `eframe::NativeOptions` を構築します。
 ///
 /// タイトルバーなし（Borderless）、常時最前面（Always on Top）、リサイズ不可、
 /// 画面中央初期配置の設定を適用します。
 #[must_use]
 pub fn build_native_options() -> eframe::NativeOptions {
+    build_native_options_with_config(&AppConfig::default())
+}
+
+/// 指定された [`AppConfig`] のウィンドウ横幅を反映して `eframe::NativeOptions` を構築します。
+///
+/// # Panics
+///
+/// パニックは発生しません。
+#[must_use]
+pub fn build_native_options_with_config(config: &AppConfig) -> eframe::NativeOptions {
+    let width = config
+        .window_width
+        .clamp(MIN_WINDOW_WIDTH, MAX_WINDOW_WIDTH);
     let viewport = egui::ViewportBuilder::default()
         .with_title("KeyStar")
-        .with_inner_size([WINDOW_WIDTH, BASE_WINDOW_HEIGHT])
+        .with_inner_size([width, BASE_WINDOW_HEIGHT])
         .with_decorations(false)
         .with_always_on_top()
         .with_resizable(false)
@@ -48,11 +65,17 @@ pub struct LauncherApp {
     state: LauncherState,
     /// ショートカット監視インデクサ
     indexer: ShortcutIndexer,
+    /// 現在のアプリケーション環境設定
+    config: AppConfig,
+    /// GUI 環境設定ダイアログ状態
+    settings_dialog: SettingsDialog,
+    /// 前フレームで設定したウィンドウ横幅
+    last_window_width: f32,
     /// 前フレームで設定したウィンドウ高さ
     last_window_height: f32,
     /// 非表示化時にプロセスを終了せずウィンドウのみ隠すか（Phase 3 常駐連携用）
     hide_only_on_dismiss: bool,
-    /// OS グローバルホットキー監視サービス（`Alt + Space`）
+    /// OS グローバルホットキー監視サービス（`Alt + Space` 等）
     hotkey_service: Option<HotKeyService>,
     /// OS システムトレイ常駐サービス
     tray_service: Option<TrayService>,
@@ -61,18 +84,36 @@ pub struct LauncherApp {
 }
 
 impl LauncherApp {
-    /// 指定されたインデクサを用いて新しい [`LauncherApp`] を生成します。
+    /// 指定されたインデクサと標準設定を用いて新しい [`LauncherApp`] を生成します。
     #[must_use]
-    pub fn new(mut indexer: ShortcutIndexer, hide_only_on_dismiss: bool) -> Self {
+    pub fn new(indexer: ShortcutIndexer, hide_only_on_dismiss: bool) -> Self {
+        Self::new_with_config(indexer, AppConfig::default(), hide_only_on_dismiss)
+    }
+
+    /// 指定されたインデクサと [`AppConfig`] を用いて新しい [`LauncherApp`] を生成します。
+    #[must_use]
+    pub fn new_with_config(
+        mut indexer: ShortcutIndexer,
+        config: AppConfig,
+        hide_only_on_dismiss: bool,
+    ) -> Self {
+        let config = config.sanitized();
+        indexer.set_target_extensions(config.target_extensions.clone());
         indexer.ensure_directories_exist();
         indexer.scan();
 
-        let mut state = LauncherState::default();
+        let mut state = LauncherState::new(config.max_candidates);
+        state.set_calc_copy_format(config.calc_copy_format);
         state.refresh_candidates(indexer.items());
+
+        let width = config.window_width;
 
         Self {
             state,
             indexer,
+            config,
+            settings_dialog: SettingsDialog::new(),
+            last_window_width: width,
             last_window_height: BASE_WINDOW_HEIGHT,
             hide_only_on_dismiss,
             hotkey_service: None,
@@ -81,15 +122,29 @@ impl LauncherApp {
         }
     }
 
-    /// グローバルホットキー（`Alt + Space`）およびシステムトレイ常駐を有効化した
+    /// グローバルホットキーおよびシステムトレイ常駐を有効化した
     /// 常駐モードの [`LauncherApp`] を生成します。
     #[must_use]
     pub fn new_resident(indexer: ShortcutIndexer, ctx: &egui::Context) -> Self {
+        Self::new_resident_with_config(indexer, AppConfig::load_or_default(), ctx)
+    }
+
+    /// 指定された [`AppConfig`] でグローバルホットキーおよびシステムトレイ常駐を有効化した
+    /// 常駐モードの [`LauncherApp`] を生成します。
+    #[must_use]
+    pub fn new_resident_with_config(
+        indexer: ShortcutIndexer,
+        config: AppConfig,
+        ctx: &egui::Context,
+    ) -> Self {
         install_hotkey_wakeup_hook(ctx.clone());
         install_tray_wakeup_hook(ctx.clone());
 
-        let mut app = Self::new(indexer, true);
-        app.hotkey_service = HotKeyService::new_default().ok();
+        let binding = config.resolved_hotkey_binding();
+        let mut app = Self::new_with_config(indexer, config, true);
+        app.hotkey_service = HotKeyService::with_binding(binding)
+            .or_else(|_| HotKeyService::new_default())
+            .ok();
         app.tray_service = TrayService::new_default().ok();
         app
     }
@@ -112,10 +167,81 @@ impl LauncherApp {
         &mut self.state
     }
 
+    /// 現在適用されている [`AppConfig`] への不変参照を返します。
+    #[must_use]
+    pub fn config(&self) -> &AppConfig {
+        &self.config
+    }
+
+    /// 内部の [`SettingsDialog`] への不変参照を返します。
+    #[must_use]
+    pub fn settings_dialog(&self) -> &SettingsDialog {
+        &self.settings_dialog
+    }
+
+    /// 内部の [`SettingsDialog`] への可変参照を返します。
+    pub fn settings_dialog_mut(&mut self) -> &mut SettingsDialog {
+        &mut self.settings_dialog
+    }
+
     /// 直近にクリップボードプロバイダへコピーされた文字列を返します。
     #[must_use]
     pub fn last_copied_text(&self) -> Option<&str> {
         self.clipboard.last_copied_text()
+    }
+
+    /// 環境設定ダイアログを展開表示します。
+    pub fn open_settings_dialog(&mut self, ctx: &egui::Context) {
+        self.settings_dialog.open(self.config.clone());
+        ctx.send_viewport_cmd(egui::ViewportCommand::RequestPaintWhileHidden);
+        ctx.request_repaint();
+    }
+
+    /// 新しい [`AppConfig`] をランチャー本体・インデクサ・ホットキー・設定ファイルへ即時反映します。
+    pub fn apply_config(&mut self, new_config: AppConfig, ctx: &egui::Context) {
+        let sanitized = new_config.sanitized();
+
+        // 1. 設定ファイル (config.toml) へ永続化
+        let _ = sanitized.save_default_location();
+
+        // 2. Windows スタートアップ登録の同期
+        if sanitized.auto_start != self.config.auto_start {
+            let _ = sync_windows_auto_start(sanitized.auto_start);
+        }
+
+        // 3. グローバルホットキーの動的再登録
+        let new_binding = sanitized.resolved_hotkey_binding();
+        if let Some(ref mut hk_service) = self.hotkey_service {
+            let _ = hk_service.update_binding(new_binding);
+        }
+
+        // 4. 監視ディレクトリおよび対象拡張子の反映・即時再スキャン
+        self.indexer
+            .set_directories(sanitized.resolved_watch_directories());
+        self.indexer
+            .set_target_extensions(sanitized.target_extensions.clone());
+        self.indexer.ensure_directories_exist();
+        self.indexer.scan();
+
+        // 5. UI 状態（最大候補数・電卓コピー書式）の更新
+        self.state.set_max_candidates(sanitized.max_candidates);
+        self.state.set_calc_copy_format(sanitized.calc_copy_format);
+        self.state.refresh_candidates(self.indexer.items());
+
+        // 6. ウィンドウ横幅の即時更新
+        self.config = sanitized;
+        let target_width = self.config.window_width;
+        let target_height = self.state.window_height();
+        if (target_width - self.last_window_width).abs() > 0.5
+            || (target_height - self.last_window_height).abs() > 0.5
+        {
+            self.last_window_width = target_width;
+            self.last_window_height = target_height;
+            ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(egui::vec2(
+                target_width,
+                target_height,
+            )));
+        }
     }
 
     /// ダークテーマおよび余白を極小化したカスタムビジュアルスタイルを適用します。
@@ -159,7 +285,7 @@ impl LauncherApp {
 
     /// グローバルホットキーおよびシステムトレイからの OS イベントをポーリングして処理します。
     fn poll_os_events(&mut self, ctx: &egui::Context) {
-        // 1. グローバルホットキー (Alt + Space) による表示 / 非表示トグル
+        // 1. グローバルホットキー (Alt + Space 等) による表示 / 非表示トグル
         let hotkey_pressed = self
             .hotkey_service
             .as_ref()
@@ -195,15 +321,7 @@ impl LauncherApp {
                     self.dismiss_window(ctx);
                 }
                 TrayCommand::OpenSettings => {
-                    if let Some(settings_dir) = self
-                        .indexer
-                        .directories()
-                        .get(1)
-                        .or_else(|| self.indexer.directories().first())
-                    {
-                        let _ = open::that_detached(settings_dir);
-                    }
-                    self.show_window(ctx);
+                    self.open_settings_dialog(ctx);
                 }
                 TrayCommand::Exit => {
                     ctx.send_viewport_cmd(egui::ViewportCommand::Close);
@@ -236,6 +354,12 @@ impl LauncherApp {
 
     /// ビルトイン（スラッシュ）コマンドを実行します。
     fn execute_builtin(&mut self, ctx: &egui::Context, cmd: BuiltinCommand) {
+        if cmd == BuiltinCommand::Config {
+            self.dismiss_window(ctx);
+            self.open_settings_dialog(ctx);
+            return;
+        }
+
         let is_help = cmd == BuiltinCommand::Help;
         execute_builtin_command(
             ctx,
@@ -278,11 +402,28 @@ impl LauncherApp {
 }
 
 impl eframe::App for LauncherApp {
+    fn logic(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        // ウィンドウ非表示（バックグラウンド待機）中もホットキー・トレイイベントを確実に処理する
+        self.poll_os_events(ctx);
+
+        if self.settings_dialog.is_open() && !self.state.is_window_visible() {
+            ctx.send_viewport_cmd(egui::ViewportCommand::RequestPaintWhileHidden);
+        }
+    }
+
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
         let ctx = ui.ctx().clone();
 
         // 0. グローバルホットキー・システムトレイ等の OS 常駐イベント処理
         self.poll_os_events(&ctx);
+
+        // 0.5. GUI 設定ダイアログ（独立ビューポート）の描画と反映
+        if self.settings_dialog.is_open() {
+            let dialog_action = self.settings_dialog.show_viewport(&ctx);
+            if let SettingsDialogAction::SaveAndApply(new_cfg) = dialog_action {
+                self.apply_config(new_cfg, &ctx);
+            }
+        }
 
         // 監視フォルダの更新があれば軽量再スキャン
         if self.indexer.needs_rescan() {
@@ -298,6 +439,9 @@ impl eframe::App for LauncherApp {
                 return;
             }
         }
+
+        let font_size = self.config.font_size;
+        let candidate_font_size = (font_size - 1.0).max(11.0);
 
         let panel_frame = egui::Frame::central_panel(&ctx.global_style())
             .fill(BG_COLOR)
@@ -315,12 +459,15 @@ impl eframe::App for LauncherApp {
                 ui.horizontal(|ui| {
                     ui.colored_label(
                         CALC_ACCENT_COLOR,
-                        egui::RichText::new(">").monospace().strong().size(16.0),
+                        egui::RichText::new(">")
+                            .monospace()
+                            .strong()
+                            .size(font_size + 1.0),
                     );
 
                     let text_edit = egui::TextEdit::singleline(&mut current_query)
                         .hint_text("ここに入力... (ショートカット名 または 計算式)")
-                        .font(egui::FontId::monospace(15.0))
+                        .font(egui::FontId::monospace(font_size))
                         .desired_width(f32::INFINITY)
                         .lock_focus(true)
                         .frame(egui::Frame::NONE);
@@ -379,7 +526,7 @@ impl eframe::App for LauncherApp {
                                         egui::RichText::new(display_line)
                                             .color(text_color)
                                             .monospace()
-                                            .size(14.0),
+                                            .size(candidate_font_size),
                                     )
                                     .selectable(false),
                                 )
@@ -400,12 +547,16 @@ impl eframe::App for LauncherApp {
                 }
             });
 
-        // 4. 候補数に応じたウィンドウ高さの動的調整
+        // 4. 候補数・設定横幅に応じたウィンドウサイズの動的調整
+        let target_width = self.config.window_width;
         let target_height = self.state.window_height();
-        if (target_height - self.last_window_height).abs() > 0.5 {
+        if (target_width - self.last_window_width).abs() > 0.5
+            || (target_height - self.last_window_height).abs() > 0.5
+        {
+            self.last_window_width = target_width;
             self.last_window_height = target_height;
             ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(egui::vec2(
-                WINDOW_WIDTH,
+                target_width,
                 target_height,
             )));
         }

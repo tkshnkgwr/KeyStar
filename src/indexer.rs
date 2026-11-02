@@ -23,7 +23,7 @@ pub struct ShortcutItem {
 }
 
 impl ShortcutItem {
-    /// ファイルパスから [`ShortcutItem`] を生成します。
+    /// 標準の対象拡張子一覧（[`TARGET_EXTENSIONS`]）を用いて、ファイルパスから [`ShortcutItem`] を生成します。
     ///
     /// 対象外の拡張子、ファイルが存在しない場合、またはファイル名が取得できない場合は `None` を返します。
     ///
@@ -42,6 +42,18 @@ impl ShortcutItem {
     /// ```
     #[must_use]
     pub fn from_path(path: &Path) -> Option<Self> {
+        let default_exts: Vec<String> =
+            TARGET_EXTENSIONS.iter().map(|s| (*s).to_string()).collect();
+        Self::from_path_with_extensions(path, &default_exts)
+    }
+
+    /// 指定された有効拡張子リストを用いて、ファイルパスから [`ShortcutItem`] を生成します。
+    ///
+    /// # Panics
+    ///
+    /// パニックは発生しません。
+    #[must_use]
+    pub fn from_path_with_extensions(path: &Path, allowed_extensions: &[String]) -> Option<Self> {
         if !path.is_file() {
             return None;
         }
@@ -51,7 +63,10 @@ impl ShortcutItem {
             .and_then(|ext| ext.to_str())
             .map(str::to_lowercase)?;
 
-        if !TARGET_EXTENSIONS.contains(&extension.as_str()) {
+        let is_allowed = allowed_extensions
+            .iter()
+            .any(|ext| ext.trim_start_matches('.').eq_ignore_ascii_case(&extension));
+        if !is_allowed {
             return None;
         }
 
@@ -66,16 +81,24 @@ impl ShortcutItem {
 }
 
 /// ショートカットの走査・キャッシュを担うインデクサ。
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone)]
 pub struct ShortcutIndexer {
     /// 監視対象のディレクトリリスト
     directories: Vec<PathBuf>,
+    /// スキャン対象とする拡張子リスト（小文字、ドットなし）
+    target_extensions: Vec<String>,
     /// キャッシュされたアイテム一覧
     items: Vec<ShortcutItem>,
     /// 最終走査時刻
     last_scanned: Option<SystemTime>,
     /// ディレクトリごとの最終更新時刻キャッシュ
     dir_modified_times: Vec<(PathBuf, SystemTime)>,
+}
+
+impl Default for ShortcutIndexer {
+    fn default() -> Self {
+        Self::new(Vec::new())
+    }
 }
 
 impl ShortcutIndexer {
@@ -94,6 +117,7 @@ impl ShortcutIndexer {
     pub fn new(directories: Vec<PathBuf>) -> Self {
         Self {
             directories,
+            target_extensions: TARGET_EXTENSIONS.iter().map(|s| (*s).to_string()).collect(),
             items: Vec::new(),
             last_scanned: None,
             dir_modified_times: Vec::new(),
@@ -113,6 +137,28 @@ impl ShortcutIndexer {
     #[must_use]
     pub fn with_default_directories() -> Self {
         Self::new(Self::default_directories())
+    }
+
+    /// 監視対象ディレクトリ一覧を更新します。更新後は次回スキャンが必要とマークされます。
+    pub fn set_directories(&mut self, directories: Vec<PathBuf>) {
+        self.directories = directories;
+        self.last_scanned = None;
+    }
+
+    /// スキャン対象拡張子一覧を更新します。更新後は次回スキャンが必要とマークされます。
+    pub fn set_target_extensions(&mut self, extensions: Vec<String>) {
+        self.target_extensions = extensions
+            .into_iter()
+            .map(|e| e.trim().trim_start_matches('.').to_lowercase())
+            .filter(|e| !e.is_empty())
+            .collect();
+        self.last_scanned = None;
+    }
+
+    /// 現在設定されているスキャン対象拡張子一覧の参照を返します。
+    #[must_use]
+    pub fn target_extensions(&self) -> &[String] {
+        &self.target_extensions
     }
 
     /// 標準の監視ディレクトリ一覧を取得します。
@@ -175,7 +221,9 @@ impl ShortcutIndexer {
             if let Ok(entries) = fs::read_dir(dir) {
                 for entry in entries.flatten() {
                     let path = entry.path();
-                    if let Some(item) = ShortcutItem::from_path(&path) {
+                    if let Some(item) =
+                        ShortcutItem::from_path_with_extensions(&path, &self.target_extensions)
+                    {
                         new_items.push(item);
                     }
                 }

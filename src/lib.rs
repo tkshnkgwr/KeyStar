@@ -11,6 +11,7 @@ pub mod command;
 pub mod hotkey;
 pub mod indexer;
 pub mod search;
+pub mod settings;
 pub mod single_instance;
 pub mod tray;
 pub mod ui;

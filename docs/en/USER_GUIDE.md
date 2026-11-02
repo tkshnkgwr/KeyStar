@@ -88,7 +88,7 @@ Type **`/`** into the input box to access built-in system utilities, launcher co
 | Command                    | Feature            | Description                                                   |
 | :------------------------- | :----------------- | :------------------------------------------------------------ |
 | **`/task`**                | Task Manager       | Launches Windows `taskmgr.exe` asynchronously                 |
-| **`/config`**              | Settings Directory | Opens shortcut settings folder in Windows Explorer            |
+| **`/config`**              | Settings Dialog    | Opens the GUI settings dialog (identical to tray menu)        |
 | **`/cmd`**                 | Commands Directory | Opens `%USERPROFILE%\commands` in Windows Explorer            |
 | **`/reload`**              | Rescan Shortcuts   | Immediately scans directories and updates in-memory index     |
 | **`/restart`**             | Restart KeyStar    | Gracefully terminates and relaunches KeyStar                  |
@@ -100,3 +100,14 @@ Type **`/`** into the input box to access built-in system utilities, launcher co
 | **`/shutdown`**            | Shutdown PC        | Powers off Windows system                                     |
 | **`/help`**                | Command List       | Shows all available slash commands in candidate list          |
 | **`/exit`**                | Exit KeyStar       | Completely shuts down KeyStar process                         |
+
+---
+
+## 7. GUI Settings Dialog (`/config` or Tray "Settings")
+
+Right-click the system tray icon and select "設定" (Settings), or type `/config` and press `Enter` to open the GUI Settings Dialog.
+
+- **General**: Customize global hotkey (via preset selection or keystroke capture), toggle automatic launch on Windows startup.
+- **Shortcuts & Search**: Manage monitored directories (with native folder picker support), adjust max candidate items (3–15), toggle target extensions.
+- **Appearance & Calculator**: Adjust launcher width (400–800px), font size (12–20pt), choose calculator copy format (raw plain text `1408` or comma-separated `1,408`).
+- **Persistence**: Automatically saved to `./config.toml` (portable mode) or `%APPDATA%\KeyStar\config.toml`.
