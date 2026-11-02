@@ -111,7 +111,7 @@
 ---
 
 ### Phase 4: GUI設定画面（完了）
-- [x] **【設定画面】 GUI環境設定ダイアログの実装 (`src/settings.rs` / `src/ui/mod.rs`)**:
+- [x] **【設定画面】 GUI環境設定ダイアログの実装 (`src/settings/` / `src/ui/mod.rs`)**:
   - [x] **トレイメニュー・スラッシュコマンド配線**: トレイ右クリック「設定」および `/config` 選択時に独立設定ダイアログを展開表示
   - [x] **設定ファイル永続化 (`config.toml`)**:
     - [x] `serde` / `toml` による設定読み込み・保存機構（ポータブル優先 `./config.toml`、次点で `%APPDATA%\KeyStar\config.toml`）

@@ -4,6 +4,17 @@
 
 ---
 
+## [0.1.0-beta.8] - 2026-11-03
+
+### Changed
+- **設定画面モジュールの責務分割リファクタリング (`src/settings/`)**:
+  - 単一ファイルで 1,304 行に肥大化していた `src/settings.rs` を、責務ごとに 4 つの独立したモジュールへ分割・再構築（全モジュール最大 552 行に縮小）。
+  - `src/settings/mod.rs` (42行): 公開 API の再エクスポート、設定ファイルのデフォルトパス定数の管理
+  - `src/settings/config.rs` (280行): `AppConfig` 構造体、TOML シリアライズ/デシリアライズ、設定値の安全なクランプ・正規化
+  - `src/settings/os.rs` (552行): `%USERPROFILE%` パス展開/折りたたみ、ホットキー文字列解析/フォーマット、Windows レジストリ自動起動同期、Win32 フォルダ選択ダイアログ (`SHBrowseForFolderW`)
+  - `src/settings/dialog.rs` (471行): `SettingsDialog` 状態管理、UI アクション定義、`egui` マルチビューポート描画
+  - 外部モジュール（`ui`, `main`, 結合テスト等）への公開 API のシグネチャを 100% 維持し、破壊的変更ゼロを達成。
+
 ## [0.1.0-beta.7] - 2026-11-03
 
 ### Added

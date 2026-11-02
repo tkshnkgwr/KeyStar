@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.0-beta.8] - 2026-11-03
+
+### Changed
+- **Modular Refactoring of Settings Window Architecture (`src/settings/`)**:
+  - Decomposed the monolithic 1,304-line `src/settings.rs` into four modular components organized under `src/settings/` (all modules now within ~550 lines):
+  - `src/settings/mod.rs` (42 lines): Public API re-exports and configuration path constants.
+  - `src/settings/config.rs` (280 lines): `AppConfig` schema, TOML serialization/deserialization, and validation clamping.
+  - `src/settings/os.rs` (552 lines): `%USERPROFILE%` expansion/collapsing, hotkey syntax parsing/formatting, Windows registry autostart sync, and Win32 folder picker.
+  - `src/settings/dialog.rs` (471 lines): `SettingsDialog` state machine, UI action dispatching, and `egui` viewport rendering.
+  - Preserved 100% backward compatibility across all public APIs, ensuring seamless interoperability with `ui`, `main`, and existing integration tests without external changes.
+
 ## [0.1.0-beta.7] - 2026-11-03
 
 ### Added

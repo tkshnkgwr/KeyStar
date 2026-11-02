@@ -85,7 +85,7 @@
   - [x] `Esc` immediately hides window cleanly under all input conditions
 
 ### Phase 4: GUI Settings Dialog (Completed)
-- [x] **【Settings Window】 GUI Configuration Dialog (`src/settings.rs` / `src/ui/mod.rs`)**:
+- [x] **【Settings Window】 GUI Configuration Dialog (`src/settings/` / `src/ui/mod.rs`)**:
   - [x] **Tray Menu & Slash Command Wiring**: Open independent settings dialog upon selecting "Settings" from system tray menu or `/config`
   - [x] **Configuration Persistence (`config.toml`)**:
     - [x] `serde` / `toml` loading and serialization (prefers portable `./config.toml`, fallbacks to `%APPDATA%\KeyStar\config.toml`)
