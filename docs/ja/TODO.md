@@ -133,13 +133,20 @@
 
 ---
 
-### Phase 5: 最適化 & 配布（正式版リリースフェーズ）
-- [ ] **【バイナリ最適化】 LTO & ストリップ設定**:
-  - [ ] `Cargo.toml` の `profile.release` に `lto = true`, `codegen-units = 1`, `panic = "abort"`, `strip = true` を追加
-  - [ ] 起動速度 0.001 秒、メモリ消費数MBの極限軽量化の達成
-- [ ] **【パッケージ配布】 Scoop / Winget 対応**:
-  - [ ] ポータブル単一バイナリ配布（zip）
+### Phase 5: 最適化 & 配布（正式版リリースフェーズ：完了）
+- [x] **【バイナリ最適化】 LTO & ストリップ設定**:
+  - [x] `Cargo.toml` の `profile.release` に `lto = true`, `codegen-units = 1`, `panic = "abort"`, `strip = true` を追加
+  - [x] 配布用 ZIP 4.1MB、起動速度数ミリ秒、省メモリの極限軽量化を達成
+- [x] **【パッケージ配布】 GitHub Actions 自動リリース**:
+  - [x] ポータブル単一バイナリ配布（ZIP & SHA-256 同梱）
   - [ ] 自作 Scoop バケットマニフェスト整備
+
+---
+
+### Phase 6: 機能拡張・便利コマンド（今後の改善タスク）
+- [ ] **【新コマンド】 `/version` コマンドの実装**:
+  - [ ] `/version` と入力した際、現在の KeyStar のバージョン（例: `v1.0.0`）を候補リストに表示
+  - [ ] Enter キーでバージョン文字列をクリップボードに即座にコピー
 
 ---
 

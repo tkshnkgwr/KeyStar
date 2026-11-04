@@ -15,6 +15,18 @@
 
 ---
 
+<div align="center">
+
+### 1行極小ランチャー入力バー
+![KeyStar ランチャー入力画面](assets/screenshot_launcher.png)
+
+<br>
+
+### 独立設定ダイアログ (GUI Settings)
+<img src="assets/screenshot_settings.png" alt="KeyStar 設定画面" width="460" />
+
+</div>
+
 ```text
 +-------------------------------------------------------+
 | > [ ここに入力（1行の極小テキストボックス）         ] |
@@ -149,9 +161,11 @@ KeyStar/
 ├── .agents/
 │   ├── rules/                  # Git規約、テスト規約、Rustdoc規約
 │   └── skills/                 # 検証・コミット・Markdown整形・Vault連携スキル
-├── assets/                     # アプリアイコン・トレイアイコン用アセット
+├── assets/                     # アプリアイコン・スクリーンショット等
 │   ├── icon.ico                # Windowsリソース用マルチ解像度アイコン
 │   ├── icon.png                # 高解像度マスター画像 (256x256)
+│   ├── screenshot_launcher.png # 1行入力枠スクリーンショット
+│   ├── screenshot_settings.png # 設定ダイアログスクリーンショット
 │   ├── tray_icon.png           # システムトレイ用PNG (32x32)
 │   └── tray_icon_32.rgba       # システムトレイ用RGBA生バッファ
 ├── benches/                    # 将来の性能ベンチマーク設計置き場 (Criterion)

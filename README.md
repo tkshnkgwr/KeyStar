@@ -15,6 +15,18 @@
 
 ---
 
+<div align="center">
+
+### Minimal 1-Line Launcher Bar
+![KeyStar Launcher Input Bar](assets/screenshot_launcher.png)
+
+<br>
+
+### Settings Dialog (GUI Settings)
+<img src="assets/screenshot_settings.png" alt="KeyStar Settings Dialog" width="460" />
+
+</div>
+
 ```text
 +-------------------------------------------------------+
 | > [ Type here (Minimal single-line input box)       ] |
