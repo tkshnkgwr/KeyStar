@@ -18,7 +18,10 @@ pub const WINDOW_WIDTH: f32 = 500.0;
 pub const BASE_WINDOW_HEIGHT: f32 = 42.0;
 
 /// 候補ドロップダウン1行あたりの高さ（ピクセル）。
-pub const CANDIDATE_ROW_HEIGHT: f32 = 26.0;
+pub const CANDIDATE_ROW_HEIGHT: f32 = 28.0;
+
+/// 候補ドロップダウン展開時の追加固定高さ（セパレータおよび上下余白、ピクセル）。
+pub const DROPDOWN_EXTRA_HEIGHT: f32 = 18.0;
 
 /// 候補ドロップダウンに表示する標準最大件数。
 pub const DEFAULT_MAX_CANDIDATES: usize = 8;
@@ -273,7 +276,7 @@ impl LauncherState {
         if count == 0 {
             BASE_WINDOW_HEIGHT
         } else {
-            BASE_WINDOW_HEIGHT + (count as f32 * CANDIDATE_ROW_HEIGHT) + 8.0
+            BASE_WINDOW_HEIGHT + (count as f32 * CANDIDATE_ROW_HEIGHT) + DROPDOWN_EXTRA_HEIGHT
         }
     }
 

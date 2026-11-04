@@ -121,12 +121,16 @@ pub fn execute_builtin_command(
             {
                 use std::os::windows::process::CommandExt;
                 if let Ok(exe) = std::env::current_exe() {
-                    let _ = std::process::Command::new("cmd.exe")
-                        .arg("/c")
-                        .arg(format!(
-                            "timeout /t 1 /nobreak >nul & start \"\" \"{}\"",
-                            exe.display()
-                        ))
+                    let exe_str = exe.to_string_lossy().replace('\'', "''");
+                    let script = format!(
+                        "Start-Sleep -Milliseconds 500; Start-Process -FilePath '{exe_str}'"
+                    );
+                    let _ = std::process::Command::new("powershell.exe")
+                        .arg("-NoProfile")
+                        .arg("-WindowStyle")
+                        .arg("Hidden")
+                        .arg("-Command")
+                        .arg(script)
                         .creation_flags(0x08000000)
                         .spawn();
                 }

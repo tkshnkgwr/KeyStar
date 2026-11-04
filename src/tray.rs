@@ -1,4 +1,4 @@
-﻿//! システムトレイ常駐・コンテキストメニュー管理モジュール。
+//! システムトレイ常駐・コンテキストメニュー管理モジュール。
 //!
 //! `tray-icon` クレートを用いて Windows システムトレイ（通知領域）への常駐アイコン表示と、
 //! 右クリックメニュー（「設定」「コマンドフォルダを開く」「終了」）および左クリックによる
@@ -145,12 +145,27 @@ pub fn generate_default_icon_rgba(width: u32, height: u32) -> Vec<u8> {
     rgba
 }
 
+/// 新アイコンの 32x32 RGBA 生バイト列（`include_bytes!` でバイナリ埋め込み）。
+const EMBEDDED_TRAY_ICON_RGBA: &[u8] = include_bytes!("../assets/tray_icon_32.rgba");
+
 /// 標準サイズのシステムトレイ用 [`Icon`] を生成します。
+///
+/// `assets/tray_icon_32.rgba` の埋め込みバイト列を用いて新デザインのアイコンを構築します。
+/// 失敗した場合は従来の動的生成（`generate_default_icon_rgba`）にフォールバックします。
 ///
 /// # Errors
 ///
 /// RGBA バッファのサイズ不正等で `tray_icon::Icon` の構築に失敗した場合にエラーを返します。
 pub fn build_default_tray_icon() -> Result<Icon, String> {
+    if EMBEDDED_TRAY_ICON_RGBA.len() == (DEFAULT_ICON_SIZE * DEFAULT_ICON_SIZE * 4) as usize
+        && let Ok(icon) = Icon::from_rgba(
+            EMBEDDED_TRAY_ICON_RGBA.to_vec(),
+            DEFAULT_ICON_SIZE,
+            DEFAULT_ICON_SIZE,
+        )
+    {
+        return Ok(icon);
+    }
     let rgba = generate_default_icon_rgba(DEFAULT_ICON_SIZE, DEFAULT_ICON_SIZE);
     Icon::from_rgba(rgba, DEFAULT_ICON_SIZE, DEFAULT_ICON_SIZE)
         .map_err(|e| format!("トレイアイコンの生成に失敗しました: {e}"))

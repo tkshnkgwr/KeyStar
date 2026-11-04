@@ -81,6 +81,8 @@ pub struct LauncherApp {
     tray_service: Option<TrayService>,
     /// クリップボード書き込みプロバイダ（`arboard` OS連携 / テスト用モック）
     clipboard: Box<dyn ClipboardProvider>,
+    /// 意図的なアプリ終了処理の進行中フラグ（常駐時のクローズキャンセル抑止用）
+    is_exiting: bool,
 }
 
 impl LauncherApp {
@@ -119,6 +121,7 @@ impl LauncherApp {
             hotkey_service: None,
             tray_service: None,
             clipboard: Box::new(SystemClipboard::new()),
+            is_exiting: false,
         }
     }
 
@@ -321,9 +324,11 @@ impl LauncherApp {
                     self.dismiss_window(ctx);
                 }
                 TrayCommand::OpenSettings => {
+                    self.dismiss_window(ctx);
                     self.open_settings_dialog(ctx);
                 }
                 TrayCommand::Exit => {
+                    self.is_exiting = true;
                     ctx.send_viewport_cmd(egui::ViewportCommand::Close);
                 }
             }
@@ -358,6 +363,10 @@ impl LauncherApp {
             self.dismiss_window(ctx);
             self.open_settings_dialog(ctx);
             return;
+        }
+
+        if cmd == BuiltinCommand::Exit || cmd == BuiltinCommand::Restart {
+            self.is_exiting = true;
         }
 
         let is_help = cmd == BuiltinCommand::Help;
@@ -403,6 +412,15 @@ impl LauncherApp {
 
 impl eframe::App for LauncherApp {
     fn logic(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        // ルートウィンドウへの予期せぬクローズ要求を常駐モードで防御
+        if ctx.input(|i| i.viewport().close_requested())
+            && !self.is_exiting
+            && self.hide_only_on_dismiss
+        {
+            ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
+            self.dismiss_window(ctx);
+        }
+
         // ウィンドウ非表示（バックグラウンド待機）中もホットキー・トレイイベントを確実に処理する
         self.poll_os_events(ctx);
 
@@ -414,6 +432,15 @@ impl eframe::App for LauncherApp {
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
         let ctx = ui.ctx().clone();
 
+        // ルートウィンドウへの予期せぬクローズ要求を常駐モードで防御
+        if ctx.input(|i| i.viewport().close_requested())
+            && !self.is_exiting
+            && self.hide_only_on_dismiss
+        {
+            ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
+            self.dismiss_window(&ctx);
+        }
+
         // 0. グローバルホットキー・システムトレイ等の OS 常駐イベント処理
         self.poll_os_events(&ctx);
 
@@ -423,6 +450,11 @@ impl eframe::App for LauncherApp {
             if let SettingsDialogAction::SaveAndApply(new_cfg) = dialog_action {
                 self.apply_config(new_cfg, &ctx);
             }
+        }
+
+        // ランチャーウィンドウが非表示状態の場合は、メイン入力 UI の描画やフォーカス奪取をスキップ
+        if !self.state.is_window_visible() {
+            return;
         }
 
         // 監視フォルダの更新があれば軽量再スキャン
@@ -445,7 +477,12 @@ impl eframe::App for LauncherApp {
 
         let panel_frame = egui::Frame::central_panel(&ctx.global_style())
             .fill(BG_COLOR)
-            .inner_margin(egui::Margin::symmetric(8, 6))
+            .inner_margin(egui::Margin {
+                left: 10,
+                right: 10,
+                top: 0,
+                bottom: 0,
+            })
             .stroke(egui::Stroke::new(
                 1.0,
                 egui::Color32::from_rgb(0x3c, 0x3c, 0x3c),
@@ -454,34 +491,44 @@ impl eframe::App for LauncherApp {
         egui::CentralPanel::default()
             .frame(panel_frame)
             .show(ui, |ui| {
-                // 2. 1行入力テキストボックスの描画
+                // 2. 1行入力テキストボックスの描画（上下中央配置）
                 let mut current_query = self.state.query().to_string();
-                ui.horizontal(|ui| {
-                    ui.colored_label(
-                        CALC_ACCENT_COLOR,
-                        egui::RichText::new(">")
-                            .monospace()
-                            .strong()
-                            .size(font_size + 1.0),
-                    );
+                let input_bar_height = 40.0;
+                ui.allocate_ui_with_layout(
+                    egui::vec2(ui.available_width(), input_bar_height),
+                    egui::Layout::left_to_right(egui::Align::Center),
+                    |ui| {
+                        ui.spacing_mut().item_spacing.x = 6.0;
 
-                    let text_edit = egui::TextEdit::singleline(&mut current_query)
-                        .hint_text("ここに入力... (ショートカット名 または 計算式)")
-                        .font(egui::FontId::monospace(font_size))
-                        .desired_width(f32::INFINITY)
-                        .lock_focus(true)
-                        .frame(egui::Frame::NONE);
+                        ui.colored_label(
+                            CALC_ACCENT_COLOR,
+                            egui::RichText::new(">")
+                                .monospace()
+                                .strong()
+                                .size(font_size + 1.0),
+                        );
 
-                    let response = ui.add(text_edit);
-                    // ホットキー復帰時または非フォーカス時は1行テキストボックスへフォーカス強制
-                    if self.state.take_focus_request() || !response.has_focus() {
-                        response.request_focus();
-                    }
+                        let text_edit = egui::TextEdit::singleline(&mut current_query)
+                            .hint_text("ここに入力... (ショートカット名 または 計算式)")
+                            .font(egui::FontId::monospace(font_size))
+                            .desired_width(f32::INFINITY)
+                            .lock_focus(true)
+                            .frame(egui::Frame::NONE);
 
-                    if response.changed() {
-                        self.state.update_query(current_query, self.indexer.items());
-                    }
-                });
+                        let response = ui.add(text_edit);
+                        // ホットキー復帰時または非フォーカス時は1行テキストボックスへフォーカス強制
+                        // （設定ダイアログ表示中以外）
+                        if !self.settings_dialog.is_open()
+                            && (self.state.take_focus_request() || !response.has_focus())
+                        {
+                            response.request_focus();
+                        }
+
+                        if response.changed() {
+                            self.state.update_query(current_query, self.indexer.items());
+                        }
+                    },
+                );
 
                 // 3. 候補ドロップダウンパネルの動的展開描画
                 let visible_candidates = self.state.visible_candidates().to_vec();

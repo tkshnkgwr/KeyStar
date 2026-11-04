@@ -1,28 +1,28 @@
 # KeyStar: テスト結果報告書 (TEST_REPORT)
 
-本ドキュメントは、`KeyStar` の各開発フェーズにおける品質検証およびテスト実行結果を記録した公式レポートです。
+本ドキュメントは、KeyStar の各開発フェーズにおける品質検証およびテスト実行結果を記録した公式レポートです。
 
 ---
 
-## 📋 検証実施サマリー (Phase 3.5 コマンド拡張・多重起動抑止完了時点)
+## 📋 検証実施サマリー (Phase 4 設定画面 ＆ v0.1.0-beta.8 現行時点)
 
 | 検証項目                    | 対象スコープ                   | 実行コマンド                  |    結果ステータス    |
 | :-------------------------- | :----------------------------- | :---------------------------- | :------------------: |
-| **型チェック & 構文検証**   | 全ターゲット (`--all-targets`) | `cargo check --all-targets`   |   **合格 (PASS)**    |
-| **内部単体テスト**          | `src/*.rs` (`#[cfg(test)]`)    | `cargo test --lib`            |    **34/34 PASS**    |
-| **公開API統合テスト**       | `tests/*.rs`                   | `cargo test --test *`         |    **21/21 PASS**    |
-| **Docテスト**               | `/// # Examples`               | `cargo test --doc`            |    **19/19 PASS**    |
-| **静的リント解析**          | Clippy 警告ゼロ検査            | `cargo clippy -- -D warnings` |   **0警告 (PASS)**   |
-| **コードフォーマット**      | Rust標準コードスタイル         | `cargo fmt --check`           |   **0差分 (PASS)**   |
-| **コード規模 (1000行制限)** | 全 `.rs` ファイル              | 行数計測スクリプト            | **最大522行 (適合)** |
+| **型チェック & 構文検証**   | 全ターゲット (--all-targets) | cargo check --all-targets   |   **合格 (PASS)**    |
+| **内部単体テスト**          | src/*.rs (#[cfg(test)])    | cargo test --lib            |    **36/36 PASS**    |
+| **公開API統合テスト**       | 	ests/*.rs                   | cargo test --test *         |    **28/28 PASS**    |
+| **Docテスト**               | /// # Examples               | cargo test --doc            |    **28/28 PASS**    |
+| **静的リント解析**          | Clippy 警告ゼロ検査            | cargo clippy -- -D warnings |   **0警告 (PASS)**   |
+| **コードフォーマット**      | Rust標準コードスタイル         | cargo fmt --check           |   **0差分 (PASS)**   |
+| **コード規模 (1000行制限)** | 全 .rs ファイル              | 行数計測スクリプト            | **最大522行 (適合)** |
 
 ---
 
-## 🧪 詳細テスト実行結果 (全 74 テスト完全合格)
+## 🧪 詳細テスト実行結果 (全 92 テスト完全合格)
 
-### 1. 内部単体テスト (`src/lib.rs`) — 34 passed / 0 failed
-```text
-running 34 tests
+### 1. 内部単体テスト (src/lib.rs) — 36 passed / 0 failed
+`	ext
+running 36 tests
 test calc::tests::test_format_integer_with_commas ... ok
 test calc::tests::test_evaluate_large_numbers_and_decimals ... ok
 test calc::tests::test_evaluate_basic_arithmetic ... ok
@@ -44,6 +44,8 @@ test search::tests::test_filter_substring_matching ... ok
 test search::tests::test_filter_with_calc_result ... ok
 test search::tests::test_filter_with_space_in_shortcut_name ... ok
 test search::tests::test_split_command_and_args ... ok
+test settings::os::tests::test_parse_and_format_hotkey_binding ... ok
+test settings::os::tests::test_strip_prefix_case_insensitive ... ok
 test single_instance::tests::test_single_instance_guard_acquire_and_release ... ok
 test tray::tests::test_resolve_menu_commands ... ok
 test tray::tests::test_generate_default_icon_rgba_and_build_icon ... ok
@@ -58,11 +60,11 @@ test indexer::tests::test_indexer_non_existent_dir ... ok
 test indexer::tests::test_shortcut_item_from_path ... ok
 test indexer::tests::test_indexer_scan_and_dedup ... ok
 
-test result: ok. 34 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
-```
+test result: ok. 36 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+`
 
-### 2. 公開API統合テスト (`tests/`) — 21 passed / 0 failed
-```text
+### 2. 公開API統合テスト (	ests/) — 28 passed / 0 failed
+`	ext
 running 5 tests (tests/calc_integration.rs)
 test test_calc_invalid_and_edge_cases ... ok
 test test_calc_compound_and_parentheses ... ok
@@ -75,7 +77,7 @@ running 3 tests (tests/indexer_integration.rs)
 test test_indexer_default_directories_exist ... ok
 test test_shortcut_item_filtering ... ok
 test test_indexer_lifecycle ... ok
-test result: ok. 3 passed; 0 failed; finished in 0.00s
+test result: ok. 3 passed; 0 failed; finished in 0.01s
 
 running 4 tests (tests/os_integration.rs)
 test test_global_hotkey_binding_and_press_filtering ... ok
@@ -91,37 +93,55 @@ test test_search_prefix_vs_substring ... ok
 test test_search_calculator_priority_merge ... ok
 test result: ok. 4 passed; 0 failed; finished in 0.00s
 
+running 6 tests (tests/settings_integration.rs)
+test test_env_path_expansion_and_userprofile_collapsing ... ok
+test test_hotkey_parsing_and_formatting ... ok
+test test_settings_dialog_state_transitions ... ok
+test test_config_sanitization_and_clamping ... ok
+test test_indexer_extension_filter_and_calc_format_with_settings ... ok
+test test_config_toml_roundtrip_and_file_persistence ... ok
+test result: ok. 6 passed; 0 failed; finished in 0.81s
+
 running 5 tests (tests/ui_integration.rs)
 test test_native_options_frameless_configuration ... ok
 test test_ui_empty_query_explicit_dropdown_and_escape ... ok
 test test_ui_slash_command_execution_scenario ... ok
 test test_ui_incremental_completion_and_launch_scenario ... ok
 test test_ui_calculator_evaluation_and_copy_scenario ... ok
-test result: ok. 5 passed; 0 failed; finished in 0.01s
-```
+test result: ok. 5 passed; 0 failed; finished in 0.00s
+`
 
-### 3. ドキュメンテーションテスト (`cargo test --doc`) — 19 passed / 0 failed
-```text
-running 19 tests
-test src\clipboard.rs - clipboard::SystemClipboard::new (line 41) ... ok
-test src\hotkey.rs - hotkey::should_trigger_hotkey (line 106) ... ok
-test src\hotkey.rs - hotkey::HotKeyBinding::default_alt_space (line 68) ... ok
-test src\calc.rs - calc::evaluate (line 84) ... ok
-test src\hotkey.rs - hotkey::HotKeyBinding::new (line 48) ... ok
-test src\calc.rs - calc::is_evaluable (line 32) ... ok
-test src\clipboard.rs - clipboard::MemoryClipboard::new (line 83) ... ok
-test src\indexer.rs - indexer::ShortcutItem::from_path (line 36) ... ok
-test src\indexer.rs - indexer::ShortcutIndexer::new (line 86) ... ok
-test src\search.rs - search::Candidate::from_calc (line 42) ... ok
-test src\indexer.rs - indexer::ShortcutIndexer::with_default_directories (line 107) ... ok
-test src\command.rs - command::match_builtin_commands (line 129) ... ok
-test src\search.rs - search::filter_candidates (line 138) ... ok
-test src\search.rs - search::split_command_and_args (line 104) ... ok
-test src\tray.rs - tray::generate_default_icon_rgba (line 109) ... ok
-test src\tray.rs - tray::resolve_menu_command (line 65) ... ok
-test src\ui\state.rs - ui::state::LauncherState::new (line 109) ... ok
-test src\ui\state.rs - ui::state::LauncherState::toggle_visibility (line 164) ... ok
-test src\ui\state.rs - ui::state::LauncherState::window_height (line 238) ... ok
+### 3. ドキュメンテーションテスト (cargo test --doc) — 28 passed / 0 failed
+`	ext
+running 28 tests
+test src/indexer.rs - indexer::ShortcutIndexer::new ... ok
+test src/calc.rs - calc::is_evaluable ... ok
+test src/calc.rs - calc::evaluate ... ok
+test src/hotkey.rs - hotkey::should_trigger_hotkey ... ok
+test src/search.rs - search::Candidate::from_calc ... ok
+test src/hotkey.rs - hotkey::HotKeyBinding::new ... ok
+test src/command.rs - command::match_builtin_commands ... ok
+test src/clipboard.rs - clipboard::MemoryClipboard::new ... ok
+test src/hotkey.rs - hotkey::HotKeyBinding::default_alt_space ... ok
+test src/indexer.rs - indexer::ShortcutIndexer::with_default_directories ... ok
+test src/indexer.rs - indexer::ShortcutItem::from_path ... ok
+test src/clipboard.rs - clipboard::SystemClipboard::new ... ok
+test src/search.rs - search::filter_candidates ... ok
+test src/search.rs - search::split_command_and_args ... ok
+test src/settings/config.rs - settings::config::AppConfig::from_toml_str ... ok
+test src/settings/config.rs - settings::config::AppConfig::resolved_watch_directories ... ok
+test src/settings/config.rs - settings::config::AppConfig::sanitized ... ok
+test src/settings/config.rs - settings::config::CalcCopyFormat::format_for_copy ... ok
+test src/settings/dialog.rs - settings::dialog::SettingsDialog::new ... ok
+test src/settings/dialog.rs - settings::dialog::SettingsDialog::open ... ok
+test src/settings/os.rs - settings::os::expand_env_path ... ok
+test src/settings/os.rs - settings::os::format_hotkey_binding ... ok
+test src/settings/os.rs - settings::os::parse_hotkey_binding ... ok
+test src/tray.rs - tray::generate_default_icon_rgba ... ok
+test src/tray.rs - tray::resolve_menu_command ... ok
+test src/ui/state.rs - ui::state::LauncherState::new ... ok
+test src/ui/state.rs - ui::state::LauncherState::toggle_visibility ... ok
+test src/ui/state.rs - ui::state::LauncherState::window_height ... ok
 
-test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.25s
-```
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.99s
+`

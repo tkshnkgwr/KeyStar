@@ -268,6 +268,40 @@ impl SettingsDialog {
 
         let mut final_action = SettingsDialogAction::None;
 
+        // 下部アクションボタンを固定フッターとして最下部に配置（絶対に見切れないよう保護）
+        egui::Panel::bottom("settings_footer_panel")
+            .frame(egui::Frame::NONE.inner_margin(egui::Margin {
+                left: 0,
+                right: 0,
+                top: 8,
+                bottom: 2,
+            }))
+            .show(ui, |ui| {
+                ui.horizontal(|ui| {
+                    if ui.button("初期値に戻す").clicked() {
+                        self.reset_to_default();
+                    }
+
+                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                        let save_btn = egui::Button::new(
+                            egui::RichText::new("保存して適用")
+                                .color(TEXT_COLOR)
+                                .strong(),
+                        )
+                        .fill(egui::Color32::from_rgb(0x26, 0x4f, 0x78));
+
+                        if ui.add(save_btn).clicked() {
+                            final_action =
+                                SettingsDialogAction::SaveAndApply(self.draft.clone().sanitized());
+                        }
+
+                        if ui.button("キャンセル").clicked() {
+                            final_action = SettingsDialogAction::Cancel;
+                        }
+                    });
+                });
+            });
+
         egui::ScrollArea::vertical()
             .auto_shrink([false, false])
             .show(ui, |ui| {
@@ -457,35 +491,6 @@ impl SettingsDialog {
                             CalcCopyFormat::CommaSeparated,
                             "カンマ付き (1,408)",
                         );
-                    });
-                });
-
-                ui.add_space(10.0);
-
-                // ============================================================
-                // 下部アクションボタン
-                // ============================================================
-                ui.horizontal(|ui| {
-                    if ui.button("初期値に戻す").clicked() {
-                        self.reset_to_default();
-                    }
-
-                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                        let save_btn = egui::Button::new(
-                            egui::RichText::new("保存して適用")
-                                .color(TEXT_COLOR)
-                                .strong(),
-                        )
-                        .fill(egui::Color32::from_rgb(0x26, 0x4f, 0x78));
-
-                        if ui.add(save_btn).clicked() {
-                            final_action =
-                                SettingsDialogAction::SaveAndApply(self.draft.clone().sanitized());
-                        }
-
-                        if ui.button("キャンセル").clicked() {
-                            final_action = SettingsDialogAction::Cancel;
-                        }
                     });
                 });
             });

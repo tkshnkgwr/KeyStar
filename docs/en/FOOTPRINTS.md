@@ -22,7 +22,7 @@ This document defines the resource consumption metrics (RAM, CPU, cold start, ke
 
 | Measurement Item               | Measured Value | Status  | Notes                                                             |
 | :----------------------------- | :------------: | :-----: | :---------------------------------------------------------------- |
-| **Full Test Suite (64 tests)** |  **~0.18 s**   | ✅ PASS | 27 unit, 20 integration, and 17 doc tests passing instantly       |
+| **Full Test Suite (92 tests)** |  **~0.18 s**   | ✅ PASS | 36 unit, 28 integration, and 28 doc tests passing instantly       |
 | **Type Check (`cargo check`)** |   **~1.9 s**   | ✅ PASS | Fast incremental check loop for efficient iteration cycles        |
 | **Static Analysis (`clippy`)** |   **~2.7 s**   | ✅ PASS | Zero warnings achieved across all targets (`-D warnings`)         |
 | **Max Source File Line Count** | **859 lines**  | ✅ PASS | All files conform strictly to the 1,000-line limit                |
@@ -85,3 +85,20 @@ strip = true
 
 - **Binary Size Target**: < 5 MB (single standalone executable)
 - **Resident RAM Target**: < 10 MB
+
+
+---
+
+## 🎨 UI/UX Improvements & Stability Hardening (2026-11)
+
+- **Native Application Icon Integration**:
+  - Generated `assets/icon.ico` and `assets/icon.png`; embedded into Windows PE resources via `build.rs` (`winresource`) and used for system tray display.
+- **Tray Settings Exit Prevention**:
+  - Dismiss root window before opening modal settings dialog to eliminate focus contention.
+  - Handled `CancelClose` on root viewport to prevent accidental shutdown during background resident mode.
+- **Vertically Centered Input Bar**:
+  - Centered prompt (`>`) and text edit inside the 40px input bar (`Align::Center`) for clean minimal aesthetics.
+- **Candidate Dropdown Clipping Fix**:
+  - Recalculated row pitch (28.0px) and dropdown padding (18.0px) including `item_spacing` and separators to eliminate candidate clipping.
+- **Settings Dialog Stability**:
+  - Expanded initial window height to 560px and locked action buttons into a sticky footer (`Panel::bottom`).

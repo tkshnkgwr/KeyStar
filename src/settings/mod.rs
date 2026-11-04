@@ -19,7 +19,7 @@ pub use os::{
 pub const SETTINGS_WINDOW_WIDTH: f32 = 480.0;
 
 /// 設定ダイアログウィンドウの標準高さ（ピクセル）。
-pub const SETTINGS_WINDOW_HEIGHT: f32 = 460.0;
+pub const SETTINGS_WINDOW_HEIGHT: f32 = 560.0;
 
 /// 最大候補表示件数の設定可能な下限値。
 pub const MIN_MAX_CANDIDATES: usize = 3;

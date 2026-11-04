@@ -41,24 +41,24 @@ Having relied on CraftLaunch for many years, the author wanted to create an ever
 
 ## 🙏 Special Thanks & Respect
 
-The `KeyStar` project is developed with the utmost respect and heartfelt gratitude to **craftware**, the creator of the timeless, legendary Windows keyboard launcher "**CraftLaunch** (CraftLaunch 2 / 3)".
+The `KeyStar` project is developed with the respect and gratitude to **craftware**, the creator of the classic Windows keyboard launcher "**CraftLaunch** (CraftLaunch 2 / 3)".
 
 - **Original Software**: CraftLaunch (clnch)
 - **Author**: **craftware**
 - **Official Site**: [craftware (Google Sites)](https://sites.google.com/site/craftware/clnch)
 - **Repository**: [GitHub (crftwr/clnch)](https://github.com/crftwr/clnch)
 
-The unobtrusive single-line input frame popping up at the top of the screen, lightning-fast prefix-based incremental completion, and instant math evaluation copying—CraftLaunch pioneered the true joy and speed of keyboard-driven launcher workflows for countless power users and developers.
+The unobtrusive single-line input frame popping up at the top of the screen, prefix-based incremental completion, and instant math evaluation copying—CraftLaunch established an intuitive and efficient keyboard-driven launcher workflow for many users and developers.
 
-We express our deepest appreciation to craftware for creating such an exceptional masterpiece and enriching the keyboard-first desktop experience for decades.
+We express our gratitude to craftware for creating such practical software and demonstrating the enduring utility of keyboard-first desktop tools.
 
 ---
 
 ## 🎯 Concept & Design Highlights
 
 - **Modern Remake of the Classic "CraftLaunch 2"**:
-  - Rather than recreating the bloated, Python-embedded path of "CraftLaunch 3", `KeyStar` revives the widely celebrated essence of **CraftLaunch 2 (single-line, instant response, keyboard-driven, registered shortcuts execution)** in modern Rust.
-  - Adheres to the ultimate minimalism: **"Trigger only the shortcuts you placed in your designated folder, with minimal keystrokes."**
+  - Rather than following the more complex configuration path of "CraftLaunch 3", `KeyStar` focuses on the streamlined essence of **CraftLaunch 2 (single-line, lightweight, keyboard-driven, registered shortcuts execution)** in modern Rust.
+  - Adheres to minimalism: **"Trigger only the shortcuts you placed in your designated folder, with minimal keystrokes."**
 - **Two Sharpened Core Features**:
   1. **Incremental Shortcut Completion & Launch**:
      - Simply drop `.lnk`, `.bat`, `.cmd`, or `.url` files into `%USERPROFILE%\commands` (or the local `shortcuts/` folder).
@@ -149,6 +149,11 @@ KeyStar/
 ├── .agents/
 │   ├── rules/                  # Git, Rust testing, and Rustdoc specifications
 │   └── skills/                 # Verification, commit, table format, and memo skills
+├── assets/                     # Application and system tray icon assets
+│   ├── icon.ico                # Multi-resolution icon for Windows executable resource
+│   ├── icon.png                # High-resolution master icon (256x256)
+│   ├── tray_icon.png           # System tray icon PNG (32x32)
+│   └── tray_icon_32.rgba       # Raw RGBA buffer for system tray
 ├── benches/                    # Benchmarking design workspace (Criterion)
 │   └── README.md
 ├── docs/                       # Comprehensive bilingual documentation suite (15 each)
@@ -188,22 +193,35 @@ KeyStar/
 │   └── README.md
 ├── scripts/                    # Automation scripts
 │   └── align_table.py          # East Asian Width markdown table aligner
+├── shortcuts/                  # Bundled shortcuts folder
 ├── src/                        # Rust source code (all < 1,000 lines)
 │   ├── main.rs                 # Main entrypoint (resident daemon & window subsystem)
 │   ├── lib.rs                  # Library root & public module exports
 │   ├── calc.rs                 # Real-time arithmetic math engine (evalexpr)
+│   ├── clipboard.rs            # OS clipboard provider (arboard)
+│   ├── command.rs              # Built-in slash command dispatcher
+│   ├── hotkey.rs               # Global hotkey daemon for Alt+Space (global-hotkey)
 │   ├── indexer.rs              # Shortcut directory scanner & cache
 │   ├── search.rs               # Incremental search & dynamic scoring
-│   ├── ui.rs                   # Minimal 1-line window & state machine (egui)
-│   ├── hotkey.rs               # Global hotkey daemon for Alt+Space (global-hotkey)
+│   ├── settings/               # GUI settings dialog and config persistence
+│   │   ├── mod.rs              # Settings module root
+│   │   ├── config.rs           # config.toml serialization & deserialization
+│   │   ├── dialog.rs           # egui configuration dialog rendering
+│   │   └── os.rs               # Registry startup and hotkey parsing
+│   ├── single_instance.rs      # Windows named mutex single-instance guard
 │   ├── tray.rs                 # System tray resident & context menu (tray-icon)
-│   └── clipboard.rs            # OS clipboard provider (arboard)
-├── tests/                      # Public API integration test suite (20 tests)
-│   ├── calc_integration.rs    # Arithmetic & edge-case integration tests
-│   ├── indexer_integration.rs # Real filesystem scan & cache tests
-│   ├── search_integration.rs  # Case-insensitivity & ranking tests
-│   ├── ui_integration.rs      # Completion & window state transition tests
-│   └── os_integration.rs      # Hotkey, tray, and clipboard integration tests
+│   └── ui/                     # Minimal 1-line window & state machine (egui)
+│       ├── mod.rs              # Launcher main application & event loop
+│       ├── executor.rs         # Shell execute & process launcher
+│       └── state.rs            # Query input, candidates, & UI state machine
+├── tests/                      # Public API integration test suite (28 tests)
+│   ├── calc_integration.rs    # Arithmetic & edge-case integration tests (5)
+│   ├── indexer_integration.rs # Real filesystem scan & cache tests (3)
+│   ├── os_integration.rs      # Hotkey, tray, and clipboard integration tests (4)
+│   ├── search_integration.rs  # Case-insensitivity & ranking tests (4)
+│   ├── settings_integration.rs# Settings dialog, TOML & OS integration tests (6)
+│   └── ui_integration.rs      # Completion & window state transition tests (5)
+├── build.rs                    # Windows resource (.ico) embed build script
 ├── Cargo.lock                  # Dependency lockfile
 ├── Cargo.toml                  # Rust crate manifest
 ├── GEMINI.md                   # AI assistant master directives
