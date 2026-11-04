@@ -57,3 +57,17 @@ git commit -m "<prefix>: <要約>"
 # 3. ボスから Push の指示もある場合のみ Push 実行
 git push
 ```
+
+## 4. リリースタグ運用手順（GitHub Actions 自動リリース連携）
+
+ボスから「リリースして」「タグを切って」と指示された場合は、以下の手順でタグを発行します：
+
+```powershell
+# 1. 注釈付きタグを作成（例: v1.0.0）
+git tag -a v1.0.0 -m "Release v1.0.0"
+
+# 2. ボスから Push の指示がある場合のみタグを Push
+git push origin v1.0.0
+```
+
+タグが Push されると、`.github/workflows/release.yml` が自動起動し、GitHub Releases に最適化バイナリ（ZIP/EXE）が自動公開されます。

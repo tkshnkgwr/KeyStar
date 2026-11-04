@@ -4,7 +4,7 @@ This document serves as the official quality verification and test execution rep
 
 ---
 
-## 📋 Verification Summary (Phase 4 Settings Dialog & v0.1.0-beta.8 Current Status)
+## 📋 Verification Summary (Phase 4 Settings Dialog & v1.0.0 Current Status)
 
 | Verification Item          | Target Scope                   | Command Execution             |   Status Result    |
 | :------------------------- | :----------------------------- | :---------------------------- | :----------------: |

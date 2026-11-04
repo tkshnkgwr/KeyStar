@@ -64,3 +64,33 @@ fd -e rs --exec-batch wc -l
 - バージョン番号は [セマンティックバージョニング (SemVer)](https://semver.org/) を採用し、各フェーズ完了ごとに `Cargo.toml`、`README.md`、`README_JA.md` のバッジおよびステータス記述を引き上げる。
 - `docs/ja/CHANGELOG.md` および `docs/en/CHANGELOG.md` の2ファイルに同一内容の更新履歴（追加・変更・修正）を日本語および英語で正確に追記する。
 - Gitタグは注釈付きタグ（Annotated Tag: `git tag -a vX.Y.Z -m "..."`）として作成する。
+
+
+---
+
+## 5. 自動リリース運用手順 (GitHub Actions 連携)
+
+本リポジトリには、タグ Push に連動して Windows 向け最適化バイナリを自動ビルドし、GitHub Releases を自動発行するワークフロー (`.github/workflows/release.yml`) が構築されています。
+
+### リリース手順
+1. `Cargo.toml` の `version` を更新（例: `1.0.0`）。
+2. `CHANGELOG.md` を更新。
+3. 変更をコミット:
+   ```powershell
+   git add .
+   git commit -m "chore: release v1.0.0"
+   ```
+4. リリースタグを作成:
+   ```powershell
+   git tag -a v1.0.0 -m "Release v1.0.0"
+   ```
+5. コミットおよびタグをリモートへ Push:
+   ```powershell
+   git push origin main
+   git push origin v1.0.0
+   ```
+6. GitHub Actions の `Release` ワークフローが自動起動し、以下の成果物が GitHub Releases に自動公開されます：
+   - `KeyStar-vX.Y.Z-windows-x64.zip`（実行ファイル・アイコン・説明書同梱）
+   - `KeyStar-vX.Y.Z-windows-x64.zip.sha256`
+   - `KeyStar.exe`（スタンドアロン単体バイナリ）
+   - `KeyStar.exe.sha256`

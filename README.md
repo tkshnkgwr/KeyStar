@@ -6,7 +6,7 @@
 
 [![License: GPL-3.0-or-later](https://img.shields.io/badge/License-GPL--3.0--or--later-blue.svg)](LICENSE)
 [![Rust 2024](https://img.shields.io/badge/Rust-2024%20Edition-orange.svg)](https://www.rust-lang.org)
-[![Version](https://img.shields.io/badge/version-v0.1.0--beta.7-brightgreen.svg)](Cargo.toml)
+[![Version](https://img.shields.io/badge/version-v1.0.0-brightgreen.svg)](Cargo.toml)
 [![Platform](https://img.shields.io/badge/Platform-Windows-blue.svg)](https://github.com/tkshnkgwr/KeyStar)
 
 [English](./README.md) | [日本語](./README_JA.md)
@@ -35,7 +35,7 @@ Having relied on CraftLaunch for many years, the author wanted to create an ever
 * **Development Approach**:  
   Implemented in Rust in collaborative pair programming with AI (Gemini).
 * **Current Status**:  
-  Currently at `v0.1.0-beta.2`. Phase 0 (Setup & Specs), Phase 1 (Core Logic), Phase 2 (egui minimal 1-line GUI), Phase 3 (OS integration: Alt+Space global hotkey, system tray daemon, and arboard clipboard copy), and the complete 15-document bilingual specification suite are fully delivered and verified. All stub implementations have been audited and confirmed zero. Subsequent packaging and optimizations (Phase 4) are conducted under the **Beta** phase.
+  Currently at **Official Release `v1.0.0`**. Phase 0 (Setup & Specs), Phase 1 (Core Logic), Phase 2 (egui minimal 1-line GUI), Phase 3 (OS integration: Alt+Space global hotkey, tray daemon, settings GUI, and calculator pipeline), and comprehensive UI/UX & binary size optimizations (4.1 MB ZIP) are complete and verified as the first stable public release.
 
 ---
 

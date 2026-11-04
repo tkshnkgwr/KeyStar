@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.0.0] - 2026-11-04
+
+### Added
+- **First Official Stable Release**:
+  - Initial public stable release of KeyStar, faithfully recreating the minimalist philosophy of the legendary "CraftLaunch 2" in pure Rust.
+- **Native Application Icon Integration**:
+  - Embedded Windows PE application icon (`assets/icon.ico`) via `build.rs` and integrated high-DPI system tray icon.
+- **GitHub Actions Automated Release Pipeline**:
+  - Established CI/CD workflow (`.github/workflows/release.yml`) for automated builds, packaging (ZIP with SHA-256), and GitHub Releases publishing on tag push.
+
+### Changed
+- **UI/UX Precision Layout Alignment**:
+  - Vertically centered prompt (`>`) and TextEdit (`Align::Center`) inside the 40px input bar.
+  - Recalculated dropdown row pitch (28.0px) and separator padding (18.0px) to prevent candidate clipping.
+  - Expanded settings dialog window height to 560px and converted bottom action buttons into a sticky footer (`Panel::bottom`).
+- **Binary Size Optimization**:
+  - Configured `[profile.release]` with `opt-level = "z"`, `lto = true`, and `strip = true`, achieving an 8.7 MB standalone EXE and 4.1 MB ZIP archive (< 5 MB target).
+
+### Fixed
+- **System Tray Settings Exit Bug**:
+  - Prevented unexpected app termination by dismissing the root window prior to opening modal settings, resolving focus contention, and intercepting close requests via `CancelClose`.
+
 ## [0.1.0-beta.8] - 2026-11-03
 
 ### Changed

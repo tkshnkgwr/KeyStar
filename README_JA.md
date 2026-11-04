@@ -6,7 +6,7 @@
 
 [![License: GPL-3.0-or-later](https://img.shields.io/badge/License-GPL--3.0--or--later-blue.svg)](LICENSE)
 [![Rust 2024](https://img.shields.io/badge/Rust-2024%20Edition-orange.svg)](https://www.rust-lang.org)
-[![Version](https://img.shields.io/badge/version-v0.1.0--beta.7-brightgreen.svg)](Cargo.toml)
+[![Version](https://img.shields.io/badge/version-v1.0.0-brightgreen.svg)](Cargo.toml)
 [![Platform](https://img.shields.io/badge/Platform-Windows-blue.svg)](https://github.com/tkshnkgwr/KeyStar)
 
 [English](./README.md) | [日本語](./README_JA.md)
@@ -35,7 +35,7 @@ PC全体をインデックス検索する現代の巨大なランチャーとは
 * **開発体制**:  
   Rustによるコード実装は、AI（Gemini）と相談しながら進めています。
 * **現在のステータス**:  
-  現在は `v0.1.0-beta.2` です。Phase 0（環境・規約）、Phase 1（コアロジック）、Phase 2（egui 1行GUI）、Phase 3（OS連携常駐：Alt+Spaceホットキー・トレイ・クリップボード）、および全15種の日英完全対称ドキュメント体系がすべて整備完了・実動検証済みです。スタブ・仮置きコードが存在しないことを完全精査済みであり、ここから先のパッケージングや最適化（Phase 4: バイナリ最適化・Scoop対応等）は **β版（Beta）** フェーズとして進行します。
+  現在は **正式版 `v1.0.0`** です。Phase 0（環境・規約）、Phase 1（コアロジック）、Phase 2（egui 1行GUI）、Phase 3（OS常駐・ホットキー・トレイ・設定画面・電卓連携）、および UI/UX 最適化・バイナリサイズ最適化（ZIP 4.1MB）がすべて完了し、安定稼働する正式リリース版として提供されています。
 
 ---
 
