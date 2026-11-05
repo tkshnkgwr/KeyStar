@@ -125,3 +125,4 @@ cargo build --release
 | 9-10 | Lock Workstation       | Select /lock and press Enter     | Windows workstation is locked immediately (Win + L)       | [ ]  |
 | 9-11 | Restart KeyStar        | Select /restart and press Enter  | KeyStar closes and automatically relaunches clean process | [ ]  |
 | 9-12 | Clean Application Exit | Select /exit and press Enter     | KeyStar process exits cleanly and terminates              | [ ]  |
+| 9-13 | Version Dialog & Copy  | Select /version or /ver & Enter  | Version dialog pops up and version string is copied       | [ ]  |

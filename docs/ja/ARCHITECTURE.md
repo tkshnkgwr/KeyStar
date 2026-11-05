@@ -111,7 +111,7 @@ flowchart TD
 
 ### 4.4 ビルトインコマンド (`src/command.rs`)
 - **スラッシュコマンド群**:
-  - `/task`, `/config`, `/cmd`, `/reload`, `/restart`, `/date`, `/today`, `/time`, `/ip`, `/lock`, `/sleep`, `/shutdown`, `/help`, `/exit` の全14種を静的テーブル定義。
+  - `/task`, `/config`, `/cmd`, `/reload`, `/restart`, `/date`, `/today`, `/time`, `/ip`, `/version`, `/ver`, `/lock`, `/sleep`, `/shutdown`, `/help`, `/exit` の全16種（14機能）を静的テーブル定義。
 - **Windows API 直接連携**:
   - 画面ロック: `LockWorkStation`
   - 日時取得: `GetLocalTime`

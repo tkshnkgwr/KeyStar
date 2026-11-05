@@ -32,6 +32,8 @@ pub enum BuiltinCommand {
     Task,
     /// 現在時刻（`HH:MM:SS`）をクリップボードにコピー
     Time,
+    /// KeyStar のバージョン情報を表示・クリップボードにコピー
+    Version,
 }
 
 /// スラッシュコマンドの定義情報。
@@ -116,6 +118,16 @@ pub static ALL_BUILTIN_COMMANDS: &[BuiltinCommandDef] = &[
         name: "/today",
         description: "今日の日付をクリップボードにコピー (/date)",
         command: BuiltinCommand::Date,
+    },
+    BuiltinCommandDef {
+        name: "/ver",
+        description: concat!("KeyStar v", env!("CARGO_PKG_VERSION"), " (/version)"),
+        command: BuiltinCommand::Version,
+    },
+    BuiltinCommandDef {
+        name: "/version",
+        description: concat!("KeyStar v", env!("CARGO_PKG_VERSION")),
+        command: BuiltinCommand::Version,
     },
 ];
 
@@ -231,6 +243,37 @@ pub fn system_sleep() {
 }
 
 /// Windows をシャットダウンします。
+/// KeyStar の完全なバージョン情報文字列（例: `"KeyStar v1.0.0"`）を取得します。
+#[must_use]
+pub fn app_version_string() -> String {
+    format!("KeyStar v{}", env!("CARGO_PKG_VERSION"))
+}
+
+/// Windows のメッセージボックスでバージョン情報を表示します。
+#[cfg(windows)]
+pub fn show_version_dialog() {
+    use windows_sys::Win32::UI::WindowsAndMessaging::{
+        MB_ICONINFORMATION, MB_OK, MB_SETFOREGROUND, MB_TOPMOST, MessageBoxW,
+    };
+
+    let title: Vec<u16> = "KeyStar\0".encode_utf16().collect();
+    let message: Vec<u16> = format!(
+        "KeyStar v{}\nUltra-Lightweight Keyboard Launcher in Rust\n\n(バージョン情報をクリップボードにコピーしました)\0",
+        env!("CARGO_PKG_VERSION")
+    )
+    .encode_utf16()
+    .collect();
+
+    unsafe {
+        MessageBoxW(
+            std::ptr::null_mut(),
+            message.as_ptr(),
+            title.as_ptr(),
+            MB_OK | MB_ICONINFORMATION | MB_TOPMOST | MB_SETFOREGROUND,
+        );
+    }
+}
+
 pub fn system_shutdown() {
     #[cfg(windows)]
     {
@@ -285,6 +328,15 @@ mod tests {
         let exit_matches = match_builtin_commands("/ex");
         assert_eq!(exit_matches[0].command, BuiltinCommand::Exit);
 
+        // "/ver" / "/version" で Version が最上位
+        let ver_matches = match_builtin_commands("/ver");
+        assert!(!ver_matches.is_empty());
+        assert_eq!(ver_matches[0].command, BuiltinCommand::Version);
+
+        let version_matches = match_builtin_commands("/version");
+        assert_eq!(version_matches[0].command, BuiltinCommand::Version);
+        assert_eq!(exit_matches[0].command, BuiltinCommand::Exit);
+
         // "/" で始まらないクエリは空
         assert!(match_builtin_commands("task").is_empty());
     }
@@ -297,6 +349,12 @@ mod tests {
         assert_eq!(&date[7..8], "-");
 
         let time = current_local_time_string();
+        assert_eq!(time.len(), 8);
+        assert_eq!(&time[2..3], ":");
+        assert_eq!(&time[5..6], ":");
+
+        let ver = app_version_string();
+        assert!(ver.starts_with("KeyStar v"));
         assert_eq!(time.len(), 8);
         assert_eq!(&time[2..3], ":");
         assert_eq!(&time[5..6], ":");

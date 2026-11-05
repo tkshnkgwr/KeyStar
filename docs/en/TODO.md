@@ -16,7 +16,8 @@
 | **Phase 3: OS Integration** | Global hotkeys, clipboard copy, system tray           | `global-hotkey`, `tray-icon` | **Completed** |
 | **Phase 3.5: Command Ext**  | Slash commands (/task), launch arguments, mutex guard | `windows-sys`, `open`        | **Completed** |
 | **Phase 4: Settings GUI**   | Settings dialog, config persistence (`config.toml`)   | `egui`, `serde`, `toml`      | **Completed** |
-| **Phase 5: Optimization**   | Single-binary LTO optimization, Scoop package         | Cargo Release, Scoop         |    Pending    |
+| **Phase 5: Optimization**   | Single-binary LTO optimization, portable ZIP release  | Cargo Release, ZIP           | **Completed** |
+| **Phase 6: Extensions**     | /version command, utility features                    | Windows API, Cargo           | **Completed** |
 
 ---
 
@@ -107,13 +108,20 @@
 
 ---
 
-### Phase 5: Optimization & Distribution (Official Release Phase)
-- [ ] **Release Binary Optimization**:
-  - [ ] Configure `profile.release` in `Cargo.toml`: `lto = true`, `codegen-units = 1`, `panic = "abort"`, `strip = true`
-  - [ ] Sub-millisecond cold start (<50ms) and minimal resident RAM (<10MB)
-- [ ] **Package Distribution (Scoop / Winget / ZIP)**:
-  - [ ] Standalone portable ZIP distribution
+### Phase 5: Optimization & Distribution (Completed)
+- [x] **Release Binary Optimization**:
+  - [x] Configure `profile.release` in `Cargo.toml`: `lto = true`, `codegen-units = 1`, `panic = "abort"`, `strip = true`
+  - [x] Sub-millisecond cold start (<50ms) and minimal resident RAM (<10MB)
+- [x] **Package Distribution (Scoop / Winget / ZIP)**:
+  - [x] Standalone portable ZIP distribution
   - [ ] Custom Scoop bucket manifest configuration
+
+---
+
+### Phase 6: Feature Extensions & Utility Commands (Completed)
+- [x] **New `/version` Slash Command**:
+  - [x] Shows KeyStar version (e.g. `v1.1.0`) in completion candidate list on `/version` or `/ver`
+  - [x] Displays native OS version information dialog (`MessageBoxW`) and copies version string to clipboard on Enter
 
 ---
 

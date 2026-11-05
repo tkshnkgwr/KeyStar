@@ -49,6 +49,7 @@
    - `/date` / `/today`: 今日の日付（`YYYY-MM-DD`）をクリップボードにコピー。
    - `/time`: 現在時刻（`HH:MM:SS`）をクリップボードにコピー。
    - `/ip`: 端末のローカルIPアドレスを取得してクリップボードにコピー。
+   - `/version` / `/ver`: KeyStar のバージョン情報を表示し、クリップボードにコピー。
    - `/lock`: Windows 画面を即座にロック（`Win + L` 相当）。
    - `/sleep`: Windows をスリープ状態に移行。
    - `/shutdown`: Windows を即座に電源OFF（シャットダウン）。

@@ -14,6 +14,11 @@
 名作「CraftLaunch 2」の最大の魅力は、**「画面を占有せず、邪魔にならず、呼び出した瞬間にキーボードの入力先としてそこにある」** という極小・1行の佇まいでした。
 `KeyStar` は、現代の過剰に装飾されたUI（半透明ブラー、巨大な検索カード、リッチなサムネイル等）をあえて排し、**道具としての切れ味と視認性** を最優先します。
 
+> 📷 **実機スクリーンショット**:
+> - 1行極小入力バー: [`assets/screenshot_launcher.png`](../../assets/screenshot_launcher.png)
+> - インクリメンタル補完候補リスト: [`assets/screenshot_completion.png`](../../assets/screenshot_completion.png)
+> - 独立設定ダイアログ: [`assets/screenshot_settings.png`](../../assets/screenshot_settings.png)
+
 ---
 
 ## 2. ウィンドウ構造 & 配置仕様

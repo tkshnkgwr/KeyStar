@@ -14,6 +14,11 @@
 The greatest appeal of the classic "CraftLaunch 2" was its unobtrusive presence: **"It occupies zero unnecessary screen estate, never gets in your way, and is immediately there as your typing target the millisecond you summon it."**
 `KeyStar` intentionally rejects modern visual bloat (translucent acrylic blurs, oversized search cards, heavy thumbnails) to prioritize **razor-sharp tactile speed and immediate legibility**.
 
+> 📷 **Screenshots**:
+> - Minimal 1-Line Launcher Bar: [`assets/screenshot_launcher.png`](../../assets/screenshot_launcher.png)
+> - Incremental Search & Dropdown List: [`assets/screenshot_completion.png`](../../assets/screenshot_completion.png)
+> - Standalone Settings Dialog: [`assets/screenshot_settings.png`](../../assets/screenshot_settings.png)
+
 ---
 
 ## 2. Window Geometry & Placement

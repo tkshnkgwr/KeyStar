@@ -20,7 +20,7 @@ User manual and setup guide for `KeyStar`, the ultra-lightweight keyboard launch
 
 ## 2. Registering Shortcuts (Folder Drop System)
 
-There are no complex configuration GUIs or fragile scripting setups.  
+KeyStar requires no tedious initial configuration. While you can customize directories and hotkeys via the Settings Dialog (`/config`), the core workflow remains:  
 **Just drop your shortcuts into your designated folder.**
 
 ### Monitored Locations
@@ -85,21 +85,22 @@ Type an executable or shortcut name followed by a space and parameters to pass a
 
 Type **`/`** into the input box to access built-in system utilities, launcher controls, and productivity tools with incremental filtering.
 
-| Command                    | Feature            | Description                                                   |
-| :------------------------- | :----------------- | :------------------------------------------------------------ |
-| **`/task`**                | Task Manager       | Launches Windows `taskmgr.exe` asynchronously                 |
-| **`/config`**              | Settings Dialog    | Opens the GUI settings dialog (identical to tray menu)        |
-| **`/cmd`**                 | Commands Directory | Opens `%USERPROFILE%\commands` in Windows Explorer            |
-| **`/reload`**              | Rescan Shortcuts   | Immediately scans directories and updates in-memory index     |
-| **`/restart`**             | Restart KeyStar    | Gracefully terminates and relaunches KeyStar                  |
-| **`/date`** / **`/today`** | Copy Current Date  | Copies `YYYY-MM-DD` (e.g. `2026-10-21`) to OS clipboard       |
-| **`/time`**                | Copy Current Time  | Copies `HH:MM:SS` (e.g. `17:30:00`) to OS clipboard           |
-| **`/ip`**                  | Copy Local IP      | Resolves and copies primary local IP address to clipboard     |
-| **`/lock`**                | Lock Workstation   | Instantly locks Windows workstation (equivalent to `Win + L`) |
-| **`/sleep`**               | Sleep Mode         | Puts PC into sleep mode                                       |
-| **`/shutdown`**            | Shutdown PC        | Powers off Windows system                                     |
-| **`/help`**                | Command List       | Shows all available slash commands in candidate list          |
-| **`/exit`**                | Exit KeyStar       | Completely shuts down KeyStar process                         |
+| Command                     | Feature             | Description                                                                |
+| :-------------------------- | :------------------ | :------------------------------------------------------------------------- |
+| **`/task`**                 | Task Manager        | Launches Windows `taskmgr.exe` asynchronously                              |
+| **`/config`**               | Settings Dialog     | Opens the GUI settings dialog (identical to tray menu)                     |
+| **`/cmd`**                  | Commands Directory  | Opens `%USERPROFILE%\commands` in Windows Explorer                         |
+| **`/reload`**               | Rescan Shortcuts    | Immediately scans directories and updates in-memory index                  |
+| **`/restart`**              | Restart KeyStar     | Gracefully terminates and relaunches KeyStar                               |
+| **`/date`** / **`/today`**  | Copy Current Date   | Copies `YYYY-MM-DD` (e.g. `2026-10-21`) to OS clipboard                    |
+| **`/time`**                 | Copy Current Time   | Copies `HH:MM:SS` (e.g. `17:30:00`) to OS clipboard                        |
+| **`/ip`**                   | Copy Local IP       | Resolves and copies primary local IP address to clipboard                  |
+| **`/version`** / **`/ver`** | Show Version & Copy | Displays version dialog and copies version (`KeyStar v1.1.0`) to clipboard |
+| **`/lock`**                 | Lock Workstation    | Instantly locks Windows workstation (equivalent to `Win + L`)              |
+| **`/sleep`**                | Sleep Mode          | Puts PC into sleep mode                                                    |
+| **`/shutdown`**             | Shutdown PC         | Powers off Windows system                                                  |
+| **`/help`**                 | Command List        | Shows all available slash commands in candidate list                       |
+| **`/exit`**                 | Exit KeyStar        | Completely shuts down KeyStar process                                      |
 
 ---
 

@@ -97,7 +97,7 @@ flowchart TD
 - Case-insensitive filtering.
 
 ### 4.4 Built-in Slash Commands (`src/command.rs`)
-- Provides 14 built-in slash commands: `/task`, `/config`, `/cmd`, `/reload`, `/restart`, `/date`, `/today`, `/time`, `/ip`, `/lock`, `/sleep`, `/shutdown`, `/help`, `/exit`.
+- Provides 16 built-in slash command definitions: `/task`, `/config`, `/cmd`, `/reload`, `/restart`, `/date`, `/today`, `/time`, `/ip`, `/version`, `/ver`, `/lock`, `/sleep`, `/shutdown`, `/help`, `/exit`.
 - Directly interfaces with Windows native APIs for screen locking (`LockWorkStation`), local time (`GetLocalTime`), and network routing resolution.
 
 ### 4.5 Single Instance Guard (`src/single_instance.rs`)

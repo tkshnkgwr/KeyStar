@@ -50,6 +50,7 @@
    - `/date` / `/today`: Copies current date (`YYYY-MM-DD`) to clipboard.
    - `/time`: Copies current time (`HH:MM:SS`) to clipboard.
    - `/ip`: Copies local IP address to clipboard.
+   - `/version` / `/ver`: Displays KeyStar version dialog and copies version string to clipboard.
    - `/lock`: Locks Windows workstation screen (`Win + L`).
    - `/sleep`: Puts Windows into sleep mode.
    - `/shutdown`: Powers off Windows system.

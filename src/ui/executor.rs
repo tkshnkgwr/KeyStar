@@ -5,8 +5,8 @@
 
 use crate::clipboard::ClipboardProvider;
 use crate::command::{
-    BuiltinCommand, current_local_date_string, current_local_time_string, get_local_ip_string,
-    lock_workstation, system_shutdown, system_sleep,
+    BuiltinCommand, app_version_string, current_local_date_string, current_local_time_string,
+    get_local_ip_string, lock_workstation, system_shutdown, system_sleep,
 };
 use crate::indexer::ShortcutIndexer;
 use crate::ui::state::LauncherState;
@@ -165,6 +165,18 @@ pub fn execute_builtin_command(
             ctx.copy_text(ip);
         }
         BuiltinCommand::Help => {
+            state.update_query("/", indexer.items());
+        }
+        BuiltinCommand::Version => {
+            let version = app_version_string();
+            let _ = clipboard.copy_text(&version);
+            ctx.copy_text(version);
+            #[cfg(windows)]
+            {
+                std::thread::spawn(|| {
+                    crate::command::show_version_dialog();
+                });
+            }
             state.update_query("/", indexer.items());
         }
     }

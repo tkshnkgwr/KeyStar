@@ -6,15 +6,15 @@ This document serves as the official quality verification and test execution rep
 
 ## 📋 Verification Summary (Phase 4 Settings Dialog & v1.0.0 Current Status)
 
-| Verification Item          | Target Scope                   | Command Execution             |   Status Result    |
-| :------------------------- | :----------------------------- | :---------------------------- | :----------------: |
-| **Type & Syntax Check**    | All Targets (--all-targets)  | cargo check --all-targets   |  **Passed (PASS)** |
-| **Internal Unit Tests**    | src/*.rs (#[cfg(test)])    | cargo test --lib            |   **36/36 PASS**   |
-| **Public Integration Tests**| 	ests/*.rs                  | cargo test --test *         |   **28/28 PASS**   |
-| **Documentation Tests**    | /// # Examples               | cargo test --doc            |   **28/28 PASS**   |
-| **Static Lint Inspection** | Zero Clippy Warnings           | cargo clippy -- -D warnings |  **0 Warn (PASS)** |
-| **Code Formatting**        | Rust Standard Style            | cargo fmt --check           |  **0 Diff (PASS)** |
-| **File Scale Limit (1000)**| All .rs Files                | Line Counter Script           | **Max 522 (PASS)** |
+| Verification Item            | Target Scope                | Command Execution           |   Status Result    |
+| :--------------------------- | :-------------------------- | :-------------------------- | :----------------: |
+| **Type & Syntax Check**      | All Targets (--all-targets) | cargo check --all-targets   | **Passed (PASS)**  |
+| **Internal Unit Tests**      | src/*.rs (#[cfg(test)])     | cargo test --lib            |   **36/36 PASS**   |
+| **Public Integration Tests** | ests/*.rs                   | cargo test --test *         |   **28/28 PASS**   |
+| **Documentation Tests**      | /// # Examples              | cargo test --doc            |   **28/28 PASS**   |
+| **Static Lint Inspection**   | Zero Clippy Warnings        | cargo clippy -- -D warnings | **0 Warn (PASS)**  |
+| **Code Formatting**          | Rust Standard Style         | cargo fmt --check           | **0 Diff (PASS)**  |
+| **File Scale Limit (1000)**  | All .rs Files               | Line Counter Script         | **Max 522 (PASS)** |
 
 ---
 

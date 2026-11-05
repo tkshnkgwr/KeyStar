@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.0] - 2026-11-05
+
+### Added
+- **`/version` and `/ver` Built-in Slash Commands**:
+  - Displays current KeyStar version directly in the incremental completion dropdown.
+  - On Enter, pops up native Windows information dialog (`MessageBoxW`) and automatically copies version string (`KeyStar v1.1.0`) to clipboard.
+- **Incremental Completion Screenshot (`assets/screenshot_completion.png`)**:
+  - Refreshed README and documentation visuals with actual dark-themed candidate dropdown screenshot.
+
 ## [1.0.0] - 2026-11-04
 
 ### Added
