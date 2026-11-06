@@ -112,3 +112,18 @@ Right-click the system tray icon and select "設定" (Settings), or type `/confi
 - **Shortcuts & Search**: Manage monitored directories (with native folder picker support), adjust max candidate items (3–15), toggle target extensions.
 - **Appearance & Calculator**: Adjust launcher width (400–800px), font size (12–20pt), choose calculator copy format (raw plain text `1408` or comma-separated `1,408`).
 - **Persistence**: Automatically saved to `./config.toml` (portable mode) or `%APPDATA%\KeyStar\config.toml`.
+
+
+---
+
+## 8. Troubleshooting (FAQ)
+
+### Q1. Error: "Operation did not complete successfully because the file contains a virus or potentially unwanted software (os error 225)"
+- **Cause**: Unsigned, newly compiled Rust binaries that register global hotkeys or launch external processes can trigger Windows Defender heuristic false positives.
+- **Solution**:
+  1. Open **Windows Security** ➔ **Virus & threat protection** ➔ **Manage settings** under "Virus & threat protection settings".
+  2. Scroll down to **Exclusions** ➔ Click **Add or remove exclusions**.
+  3. Even on enterprise/managed PCs showing "Some settings are managed by your organization", exclusion folders can often still be added manually with local user privileges.
+  4. Click **Add an exclusion** ➔ **Folder**, and add:
+     - `%USERPROFILE%\.cargo\bin`
+     - `%USERPROFILE%\Documents\自作\KeyStar` (or your repository folder)

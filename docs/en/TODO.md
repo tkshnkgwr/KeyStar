@@ -8,16 +8,17 @@
 
 ## 📊 Phase Matrix Table
 
-| Phase                       | Core Focus & Deliverables                             | Key Tech Stack               |    Status     |
-| :-------------------------- | :---------------------------------------------------- | :--------------------------- | :-----------: |
-| **Phase 0: Environment**    | Agent rules, skills, CI & formatting baselines        | Rust 2024, `.agents`         | **Completed** |
-| **Phase 1: Core Logic**     | Math engine, shortcut indexer, completion engine      | `evalexpr`, `std::fs`        | **Completed** |
-| **Phase 2: GUI Prototype**  | Single-line input frame, candidate dropdown rendering | `eframe`, `egui`             | **Completed** |
-| **Phase 3: OS Integration** | Global hotkeys, clipboard copy, system tray           | `global-hotkey`, `tray-icon` | **Completed** |
-| **Phase 3.5: Command Ext**  | Slash commands (/task), launch arguments, mutex guard | `windows-sys`, `open`        | **Completed** |
-| **Phase 4: Settings GUI**   | Settings dialog, config persistence (`config.toml`)   | `egui`, `serde`, `toml`      | **Completed** |
-| **Phase 5: Optimization**   | Single-binary LTO optimization, portable ZIP release  | Cargo Release, ZIP           | **Completed** |
-| **Phase 6: Extensions**     | /version command, utility features                    | Windows API, Cargo           | **Completed** |
+| Phase                        | Core Focus & Deliverables                             | Key Tech Stack               |    Status     |
+| :--------------------------- | :---------------------------------------------------- | :--------------------------- | :-----------: |
+| **Phase 0: Environment**     | Agent rules, skills, CI & formatting baselines        | Rust 2024, `.agents`         | **Completed** |
+| **Phase 1: Core Logic**      | Math engine, shortcut indexer, completion engine      | `evalexpr`, `std::fs`        | **Completed** |
+| **Phase 2: GUI Prototype**   | Single-line input frame, candidate dropdown rendering | `eframe`, `egui`             | **Completed** |
+| **Phase 3: OS Integration**  | Global hotkeys, clipboard copy, system tray           | `global-hotkey`, `tray-icon` | **Completed** |
+| **Phase 3.5: Command Ext**   | Slash commands (/task), launch arguments, mutex guard | `windows-sys`, `open`        | **Completed** |
+| **Phase 4: Settings GUI**    | Settings dialog, config persistence (`config.toml`)   | `egui`, `serde`, `toml`      | **Completed** |
+| **Phase 5: Optimization**    | Single-binary LTO optimization, portable ZIP release  | Cargo Release, ZIP           | **Completed** |
+| **Phase 6: Extensions**      | /version command, utility features                    | Windows API, Cargo           | **Completed** |
+| **Phase 7: Future Roadmaps** | Generic docstrings, history sort, hotkey hide, Scoop  | Rust, Windows API, Scoop     |  **Planned**  |
 
 ---
 
