@@ -22,6 +22,7 @@
 | **Phase 4: 設定画面**        | GUI環境設定ダイアログ、設定永続化 (`config.toml`)        | `egui`, `serde`, `toml`      |    **完了**    |
 | **Phase 5: 最適化 & 配布**   | 単一バイナリ最適化、ポータブル配布パッケージ             | Cargo Release, ZIP           |    **完了**    |
 | **Phase 6: 機能拡張**        | /version コマンド、追加ユーティリティ                    | Windows API, Cargo           |    **完了**    |
+| **Phase 7: 省メモリ最適化**  | `eframe` の `glow` 切替による常駐メモリ削減            | Cargo features (`glow`)      |   **未着手**   |
 
 ---
 
@@ -148,6 +149,15 @@
 - [x] **【新コマンド】 `/version` コマンドの実装**:
   - [x] `/version` （および `/ver`）と入力した際、現在の KeyStar のバージョン（例: `v1.1.0`）を候補リストに表示
   - [x] Enter キーでバージョン情報ダイアログ（`MessageBoxW`）をポップアップ表示し、クリップボードに即座にコピー
+
+---
+
+### Phase 7: 省メモリ最適化（未着手 / 2026-11-16 実測調査反映）
+- [ ] **【描画バックエンド切替】 `eframe` を既定 `wgpu` から `glow` (OpenGL) へ変更 (`Cargo.toml`)**:
+  - **背景**: 2026-11-16 の実機計測で `KeyStar.exe` の固有メモリ（Private Memory）が **285.41 MB** に達していることを確認。`eframe = "0.37.0"` の `default` feature に `wgpu` が含まれており、DX12 / Vulkan / DXC シェーダコンパイラ関連の巨大 DLL 群が常駐ロードされるのが主因（同環境の `clondar-native` 検証で `wgpu` 293.06 MB → `glow` 68.45 MB と **-224.61 MB / -76.6%** 削減を確認済み）。
+  - [ ] `Cargo.toml` を `eframe = { version = "0.37.0", default-features = false, features = ["glow", "default_fonts"] }`（必要に応じて `accesskit` 等の最小構成）へ変更する。
+  - [ ] リリースビルドして枠なしウィンドウ・透過・IME入力・設定ダイアログ・`/version` 等が正常動作するか検証する。
+  - [ ] 切り替え前後の `Private Memory` / `WorkingSet` / ホットキー復帰応答を実機再計測して効果を記録する。
 
 ---
 

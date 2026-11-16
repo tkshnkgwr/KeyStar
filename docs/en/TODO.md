@@ -126,6 +126,15 @@
 
 ---
 
+### Phase 7: Memory & Backend Optimization (Planned / Added 2026-11-16)
+- [ ] **Switch `eframe` Rendering Backend from Default `wgpu` to `glow` (OpenGL) (`Cargo.toml`)**:
+  - **Background**: Process inspection on 2026-11-16 revealed `KeyStar.exe` consumes **285.41 MB** Private Memory because `eframe = "0.37.0"` enables `wgpu` by default, loading heavy DX12/Vulkan/DXC shader compiler DLLs at startup (verified in `clondar-native` benchmark: `wgpu` 293.06 MB $\to$ `glow` 68.45 MB, **-76.6%** reduction).
+  - [ ] Update `Cargo.toml` to `eframe = { version = "0.37.0", default-features = false, features = ["glow", "default_fonts"] }` (adding minimal features as needed).
+  - [ ] Verify frameless window, transparency, IME input, settings dialog, and hotkey wakeup in release build.
+  - [ ] Re-measure Private Memory and WorkingSet before/after switching to confirm memory reduction.
+
+---
+
 ## 🎨 GUI Settings Dialog Specification & Wireframe
 
 ```text
