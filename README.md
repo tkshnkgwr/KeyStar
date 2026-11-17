@@ -6,7 +6,7 @@
 
 [![License: GPL-3.0-or-later](https://img.shields.io/badge/License-GPL--3.0--or--later-blue.svg)](LICENSE)
 [![Rust 2024](https://img.shields.io/badge/Rust-2024%20Edition-orange.svg)](https://www.rust-lang.org)
-[![Version](https://img.shields.io/badge/version-v1.1.0-brightgreen.svg)](Cargo.toml)
+[![Version](https://img.shields.io/badge/version-v1.2.0-brightgreen.svg)](Cargo.toml)
 [![Platform](https://img.shields.io/badge/Platform-Windows-blue.svg)](https://github.com/tkshnkgwr/KeyStar)
 
 [English](./README.md) | [日本語](./README_JA.md)
@@ -43,7 +43,7 @@ Having relied on CraftLaunch for many years, the author wanted to create an ever
 * **Development Approach**:  
   Implemented in Rust in collaborative pair programming with AI (Gemini).
 * **Current Status**:  
-  Currently at **Official Release `v1.1.0`**. Phase 0 (Setup & Specs), Phase 1 (Core Logic), Phase 2 (egui minimal 1-line GUI), Phase 3 (OS integration: Alt+Space global hotkey, tray daemon, settings GUI, and calculator pipeline), Phase 4 (GUI settings dialog), Phase 5 (binary size optimizations, 4.1 MB ZIP), and Phase 6 (`/version` command & visual completion screenshots) are complete and verified.
+  Currently at **Official Release `v1.2.0`**. Phase 0 (Setup & Specs), Phase 1 (Core Logic), Phase 2 (egui minimal 1-line GUI), Phase 3 (OS integration: Alt+Space global hotkey, tray daemon, settings GUI, and calculator pipeline), Phase 4 (GUI settings dialog), Phase 5 (binary size optimizations), Phase 6 (`/version` command & visual completion screenshots), and Phase 7 (`glow` OpenGL backend transition achieving -83.9% Private Memory & 5.53 MB EXE) are complete and verified.
 
 ---
 

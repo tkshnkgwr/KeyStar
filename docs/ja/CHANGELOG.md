@@ -4,6 +4,21 @@
 
 ---
 
+## [1.2.0] - 2026-11-17
+
+### Changed
+- **描画バックエンドの `wgpu` から `glow` (OpenGL) への切り替えによる大幅な省メモリ化 (`Cargo.toml`, `src/ui/mod.rs`)**:
+  - `eframe` (v0.37.0) のデフォルト feature (`wgpu`) を無効化し、`["clipboard", "default_fonts", "glow", "system_fonts"]` の最小構成へ変更。
+  - `build_native_options_with_config` にて `renderer: eframe::Renderer::Glow` を明示指定し、統合テスト (`tests/ui_integration.rs`) にバックエンド検証を追加。
+  - DX12 / Vulkan / DXC シェーダコンパイラ関連の常駐メモリを排除し、実機計測で **固有メモリ (Private Memory) を 284.78 MB → 45.99 MB（-238.79 MB / -83.9% 削減）**、**単一 `.exe` バイナリサイズを 8.40 MB → 5.53 MB（-2.87 MB / -34.2% 削減）** に圧縮。
+
+### Fixed
+- **`glow` バックエンド下での設定画面開閉時のマルチビューポート GL コンテキストクラッシュを根本対策 (`src/settings/dialog.rs`, `src/ui/mod.rs`)**:
+  - `eframe 0.37.0` (`glow_integration.rs`) において、子ビューポート（`show_viewport_immediate`）破棄時に `current_gl_context` の解放漏れが発生し、設定画面の再オープン時にパニック終了する問題を解消。
+  - 設定ダイアログを別 OS ウィンドウではなく **同一ルートウィンドウ内の画面切り替え（`show_in_root` / 動的リサイズ方式）** へ変更し、カスタムドラッグタイトルバーと閉じるボタン（`✕`）を統合。
+- **タスクトレイ左クリック時のコンテキストメニュー誤表示を抑制 (`src/tray.rs`)**:
+  - `TrayIconBuilder::with_menu_on_left_click(false)` を明示設定し、左クリックではランチャーの表示/非表示トグルのみを行い、右クリック時のみコンテキストメニューを表示するよう修正。
+
 ## [1.1.0] - 2026-11-05
 
 ### Added

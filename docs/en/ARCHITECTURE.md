@@ -108,9 +108,9 @@ flowchart TD
 
 ## 5. Technology Choices & Constraints
 
-1. **`eframe` / `egui` (Immediate Mode GUI)**:
-   - Eliminates heavyweight browser engines (Tauri/Electron), achieving sub-millisecond cold start and minimal RAM consumption (<15MB).
-   - Ideal for single-line frameless text edit and dynamic candidate dropdowns.
+1. **`eframe` / `egui` (Immediate Mode GUI with `glow` / OpenGL Backend)**:
+   - Eliminates heavyweight browser engines (Tauri/Electron) and replaces `eframe`'s default `wgpu` backend (DX12/Vulkan/DXC shader compiler) with the ultra-lightweight **`glow` (OpenGL)** renderer, reducing Private Memory by 83.9% (284.78 MB → 45.99 MB) and shrinking the standalone binary to 5.53 MB.
+   - Selectively enables `system_fonts` (for native CJK font fallback) and `clipboard`, making it ideal for a single-line frameless text edit and dynamic candidate dropdowns.
 2. **`evalexpr`**:
    - High-performance in-binary expression evaluator without requiring external runtime engines (Python/Lua).
 3. **`open` & `ShellExecuteW`**:

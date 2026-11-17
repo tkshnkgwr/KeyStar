@@ -7,7 +7,7 @@
 | **アプリ名** | KeyStar                                                                    |
 | **種別**     | Windowsデスクトップ向け 超軽量1行キーボードランチャー                      |
 | **開発言語** | Rust (Edition 2024)                                                        |
-| **GUI基盤**  | `eframe` / `egui`                                                          |
+| **GUI基盤**  | `eframe` / `egui`（`glow` OpenGL バックエンド）                            |
 | **対象OS**   | Windows 11 (x86_64)                                                        |
 | **設計思想** | 名作「CraftLaunch 2」の原点復帰（1行・爆速・キーボード特化・単一バイナリ） |
 

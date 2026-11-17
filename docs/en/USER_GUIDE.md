@@ -95,7 +95,7 @@ Type **`/`** into the input box to access built-in system utilities, launcher co
 | **`/date`** / **`/today`**  | Copy Current Date   | Copies `YYYY-MM-DD` (e.g. `2026-10-21`) to OS clipboard                    |
 | **`/time`**                 | Copy Current Time   | Copies `HH:MM:SS` (e.g. `17:30:00`) to OS clipboard                        |
 | **`/ip`**                   | Copy Local IP       | Resolves and copies primary local IP address to clipboard                  |
-| **`/version`** / **`/ver`** | Show Version & Copy | Displays version dialog and copies version (`KeyStar v1.1.0`) to clipboard |
+| **`/version`** / **`/ver`** | Show Version & Copy | Displays version dialog and copies version (`KeyStar v1.2.0`) to clipboard |
 | **`/lock`**                 | Lock Workstation    | Instantly locks Windows workstation (equivalent to `Win + L`)              |
 | **`/sleep`**                | Sleep Mode          | Puts PC into sleep mode                                                    |
 | **`/shutdown`**             | Shutdown PC         | Powers off Windows system                                                  |

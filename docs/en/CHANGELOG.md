@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.2.0] - 2026-11-17
+
+### Changed
+- **Switched `eframe` Rendering Backend from `wgpu` to `glow` (OpenGL) for Drastic Memory Reduction (`Cargo.toml`, `src/ui/mod.rs`)**:
+  - Disabled `eframe` (v0.37.0) default features (`wgpu`) and enabled minimal required features: `["clipboard", "default_fonts", "glow", "system_fonts"]`.
+  - Explicitly configured `renderer: eframe::Renderer::Glow` in `build_native_options_with_config` and added backend verification to `tests/ui_integration.rs`.
+  - Eliminated heavy DX12/Vulkan/DXC shader compiler overhead, reducing **Private Memory from 284.78 MB to 45.99 MB (-238.79 MB / -83.9%)** and **standalone `.exe` binary size from 8.40 MB to 5.53 MB (-2.87 MB / -34.2%)**.
+
+### Fixed
+- **Eliminated `glow` Multi-Viewport OpenGL Context Crash on Settings Dialog Close/Reopen (`src/settings/dialog.rs`, `src/ui/mod.rs`)**:
+  - Worked around an `eframe 0.37.0` (`glow_integration.rs`) bug where closing a child viewport (`show_viewport_immediate`) drops its GL surface without unbinding `current_gl_context`, causing a panic upon reopening settings.
+  - Transitioned the settings dialog from a secondary OS viewport to **single-window in-place view switching (`show_in_root` with dynamic viewport resizing)**, complete with a draggable custom header bar and close (`✕`) button.
+- **Disabled Tray Context Menu Popup on Left Click (`src/tray.rs`)**:
+  - Added `.with_menu_on_left_click(false)` to `TrayIconBuilder` so left-clicking the tray icon strictly toggles the launcher window, while right-clicking opens the context menu.
+
 ## [1.1.0] - 2026-11-05
 
 ### Added

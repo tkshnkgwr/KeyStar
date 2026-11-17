@@ -124,6 +124,7 @@ fn test_ui_empty_query_explicit_dropdown_and_escape() {
 fn test_native_options_frameless_configuration() {
     let opts = build_native_options();
     assert!(opts.centered);
+    assert_eq!(opts.renderer, eframe::Renderer::Glow);
     assert_eq!(opts.viewport.decorations, Some(false));
     assert_eq!(opts.viewport.resizable, Some(false));
     assert_eq!(opts.viewport.taskbar, Some(false));

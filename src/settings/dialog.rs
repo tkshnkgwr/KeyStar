@@ -15,7 +15,7 @@ use super::os::{
 };
 use super::{
     HOTKEY_PRESETS, MAX_FONT_SIZE, MAX_MAX_CANDIDATES, MAX_WINDOW_WIDTH, MIN_FONT_SIZE,
-    MIN_MAX_CANDIDATES, MIN_WINDOW_WIDTH, SETTINGS_WINDOW_HEIGHT, SETTINGS_WINDOW_WIDTH,
+    MIN_MAX_CANDIDATES, MIN_WINDOW_WIDTH,
 };
 
 /// 設定ダイアログでのユーザー操作結果を表すアクション。
@@ -176,37 +176,51 @@ impl SettingsDialog {
         }
     }
 
-    /// 独立した `egui` ビューポートとして設定ダイアログを描画し、ユーザーの確定・キャンセル操作を返します。
-    pub fn show_viewport(&mut self, ctx: &egui::Context) -> SettingsDialogAction {
+    /// 現在ホットキーのキー入力キャプチャ待機中かを返します。
+    ///
+    /// キャプチャ待機中は、グローバルホットキー押下イベントによるウィンドウ開閉を抑制するために参照されます。
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use KeyStar::settings::SettingsDialog;
+    ///
+    /// let dialog = SettingsDialog::new();
+    /// assert!(!dialog.is_capturing_hotkey());
+    /// ```
+    #[must_use]
+    pub fn is_capturing_hotkey(&self) -> bool {
+        self.capturing_hotkey
+    }
+
+    /// ルートウィンドウの `egui::Ui` 内に設定ダイアログを直接描画し、ユーザーの確定・キャンセル操作を返します。
+    ///
+    /// `eframe` (`glow` バックエンド) におけるマルチビューポート破棄時の OpenGL コンテキスト解放漏れクラッシュを
+    /// 回避するため、別 OS ウィンドウ（`show_viewport_immediate`）を生成せず単一ウィンドウ内で画面を切り替えます。
+    pub fn show_in_root(&mut self, ui: &mut egui::Ui) -> SettingsDialogAction {
         if !self.is_open {
             return SettingsDialogAction::None;
         }
 
+        if ui.ctx().input(|i| i.viewport().close_requested()) {
+            self.close();
+            return SettingsDialogAction::Cancel;
+        }
+
         let mut action = SettingsDialogAction::None;
-        let viewport_id = egui::ViewportId::from_hash_of("keystar_settings_dialog");
-        let builder = egui::ViewportBuilder::default()
-            .with_title("KeyStar 設定")
-            .with_inner_size([SETTINGS_WINDOW_WIDTH, SETTINGS_WINDOW_HEIGHT])
-            .with_decorations(true)
-            .with_resizable(false)
-            .with_always_on_top();
+        let panel_frame = egui::Frame::central_panel(&ui.ctx().global_style())
+            .fill(BG_COLOR)
+            .inner_margin(egui::Margin::symmetric(12, 10))
+            .stroke(egui::Stroke::new(
+                1.0,
+                egui::Color32::from_rgb(0x3c, 0x3c, 0x3c),
+            ));
 
-        ctx.show_viewport_immediate(viewport_id, builder, |ui, _class| {
-            if ui.ctx().input(|i| i.viewport().close_requested()) {
-                action = SettingsDialogAction::Cancel;
-                return;
-            }
-
-            let panel_frame = egui::Frame::central_panel(&ui.ctx().global_style())
-                .fill(BG_COLOR)
-                .inner_margin(egui::Margin::symmetric(12, 10));
-
-            egui::CentralPanel::default()
-                .frame(panel_frame)
-                .show(ui, |ui| {
-                    action = self.render_contents(ui);
-                });
-        });
+        egui::CentralPanel::default()
+            .frame(panel_frame)
+            .show(ui, |ui| {
+                action = self.render_contents(ui);
+            });
 
         if action != SettingsDialogAction::None {
             self.close();
@@ -267,6 +281,40 @@ impl SettingsDialog {
         }
 
         let mut final_action = SettingsDialogAction::None;
+
+        // 上部カスタムタイトルバー（ドラッグ移動 & 閉じるボタン）
+        egui::Panel::top("settings_header_panel")
+            .frame(egui::Frame::NONE.inner_margin(egui::Margin {
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 6,
+            }))
+            .show(ui, |ui| {
+                let header_rect = ui.max_rect();
+                let drag_resp = ui.interact(
+                    header_rect,
+                    ui.scope_id().with("settings_title_drag"),
+                    egui::Sense::drag(),
+                );
+                if drag_resp.drag_started() {
+                    ui.ctx().send_viewport_cmd(egui::ViewportCommand::StartDrag);
+                }
+
+                ui.horizontal(|ui| {
+                    ui.label(
+                        egui::RichText::new("KeyStar 設定")
+                            .color(TEXT_COLOR)
+                            .strong()
+                            .size(15.0),
+                    );
+                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                        if ui.button("✕").clicked() {
+                            final_action = SettingsDialogAction::Cancel;
+                        }
+                    });
+                });
+            });
 
         // 下部アクションボタンを固定フッターとして最下部に配置（絶対に見切れないよう保護）
         egui::Panel::bottom("settings_footer_panel")

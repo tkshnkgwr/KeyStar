@@ -8,17 +8,17 @@
 
 ## 📊 Phase Matrix Table
 
-| Phase                        | Core Focus & Deliverables                             | Key Tech Stack               |    Status     |
-| :--------------------------- | :---------------------------------------------------- | :--------------------------- | :-----------: |
-| **Phase 0: Environment**     | Agent rules, skills, CI & formatting baselines        | Rust 2024, `.agents`         | **Completed** |
-| **Phase 1: Core Logic**      | Math engine, shortcut indexer, completion engine      | `evalexpr`, `std::fs`        | **Completed** |
-| **Phase 2: GUI Prototype**   | Single-line input frame, candidate dropdown rendering | `eframe`, `egui`             | **Completed** |
-| **Phase 3: OS Integration**  | Global hotkeys, clipboard copy, system tray           | `global-hotkey`, `tray-icon` | **Completed** |
-| **Phase 3.5: Command Ext**   | Slash commands (/task), launch arguments, mutex guard | `windows-sys`, `open`        | **Completed** |
-| **Phase 4: Settings GUI**    | Settings dialog, config persistence (`config.toml`)   | `egui`, `serde`, `toml`      | **Completed** |
-| **Phase 5: Optimization**    | Single-binary LTO optimization, portable ZIP release  | Cargo Release, ZIP           | **Completed** |
-| **Phase 6: Extensions**      | /version command, utility features                    | Windows API, Cargo           | **Completed** |
-| **Phase 7: Future Roadmaps** | Generic docstrings, history sort, hotkey hide, Scoop  | Rust, Windows API, Scoop     |  **Planned**  |
+| Phase                       | Core Focus & Deliverables                             | Key Tech Stack               |    Status     |
+| :-------------------------- | :---------------------------------------------------- | :--------------------------- | :-----------: |
+| **Phase 0: Environment**    | Agent rules, skills, CI & formatting baselines        | Rust 2024, `.agents`         | **Completed** |
+| **Phase 1: Core Logic**     | Math engine, shortcut indexer, completion engine      | `evalexpr`, `std::fs`        | **Completed** |
+| **Phase 2: GUI Prototype**  | Single-line input frame, candidate dropdown rendering | `eframe`, `egui`             | **Completed** |
+| **Phase 3: OS Integration** | Global hotkeys, clipboard copy, system tray           | `global-hotkey`, `tray-icon` | **Completed** |
+| **Phase 3.5: Command Ext**  | Slash commands (/task), launch arguments, mutex guard | `windows-sys`, `open`        | **Completed** |
+| **Phase 4: Settings GUI**   | Settings dialog, config persistence (`config.toml`)   | `egui`, `serde`, `toml`      | **Completed** |
+| **Phase 5: Optimization**   | Single-binary LTO optimization, portable ZIP release  | Cargo Release, ZIP           | **Completed** |
+| **Phase 6: Extensions**     | /version command, utility features                    | Windows API, Cargo           | **Completed** |
+| **Phase 7: Memory Opt**     | Switch `eframe` from `wgpu` to `glow` backend         | Cargo features (`glow`)      | **Completed** |
 
 ---
 
@@ -126,12 +126,13 @@
 
 ---
 
-### Phase 7: Memory & Backend Optimization (Planned / Added 2026-11-16)
-- [ ] **Switch `eframe` Rendering Backend from Default `wgpu` to `glow` (OpenGL) (`Cargo.toml`)**:
+### Phase 7: Memory & Backend Optimization (Completed / Measured 2026-11-17)
+- [x] **Switch `eframe` Rendering Backend from Default `wgpu` to `glow` (OpenGL) (`Cargo.toml`, `src/ui/mod.rs`)**:
   - **Background**: Process inspection on 2026-11-16 revealed `KeyStar.exe` consumes **285.41 MB** Private Memory because `eframe = "0.37.0"` enables `wgpu` by default, loading heavy DX12/Vulkan/DXC shader compiler DLLs at startup (verified in `clondar-native` benchmark: `wgpu` 293.06 MB $\to$ `glow` 68.45 MB, **-76.6%** reduction).
-  - [ ] Update `Cargo.toml` to `eframe = { version = "0.37.0", default-features = false, features = ["glow", "default_fonts"] }` (adding minimal features as needed).
-  - [ ] Verify frameless window, transparency, IME input, settings dialog, and hotkey wakeup in release build.
-  - [ ] Re-measure Private Memory and WorkingSet before/after switching to confirm memory reduction.
+  - [x] Updated `Cargo.toml` to `eframe = { version = "0.37.0", default-features = false, features = ["clipboard", "default_fonts", "glow", "system_fonts"] }` and explicitly set `Renderer::Glow` in `src/ui/mod.rs`.
+  - [x] Transitioned the settings dialog from `show_viewport_immediate` to single-window in-place view switching (`show_in_root`) to avoid the `eframe 0.37.0` (`glow_integration.rs`) multi-viewport GL context panic.
+  - [x] Verified frameless window, CJK system font rendering, clipboard integration, settings dialog, and all test suites in release build.
+  - [x] Re-measured before/after switching: **Private Memory reduced from 284.78 MB to 45.99 MB (-238.79 MB / -83.9%)**, and **release binary size reduced from 8.40 MB to 5.53 MB (-2.87 MB / -34.2%)**.
 
 ---
 

@@ -19,8 +19,8 @@ use crate::hotkey::{HotKeyService, install_hotkey_wakeup_hook};
 use crate::indexer::ShortcutIndexer;
 use crate::search::CandidateKind;
 use crate::settings::{
-    AppConfig, MAX_WINDOW_WIDTH, MIN_WINDOW_WIDTH, SettingsDialog, SettingsDialogAction,
-    sync_windows_auto_start,
+    AppConfig, MAX_WINDOW_WIDTH, MIN_WINDOW_WIDTH, SETTINGS_WINDOW_HEIGHT, SETTINGS_WINDOW_WIDTH,
+    SettingsDialog, SettingsDialogAction, sync_windows_auto_start,
 };
 use crate::tray::{TrayCommand, TrayService, install_tray_wakeup_hook};
 use eframe::egui;
@@ -55,6 +55,7 @@ pub fn build_native_options_with_config(config: &AppConfig) -> eframe::NativeOpt
     eframe::NativeOptions {
         viewport,
         centered: true,
+        renderer: eframe::Renderer::Glow,
         ..eframe::NativeOptions::default()
     }
 }
@@ -193,11 +194,37 @@ impl LauncherApp {
         self.clipboard.last_copied_text()
     }
 
-    /// 環境設定ダイアログを展開表示します。
+    /// 環境設定ダイアログを同一ルートウィンドウ内で展開表示します（`glow` マルチビューポート不具合回避）。
     pub fn open_settings_dialog(&mut self, ctx: &egui::Context) {
+        self.state.reset(self.indexer.items());
         self.settings_dialog.open(self.config.clone());
-        ctx.send_viewport_cmd(egui::ViewportCommand::RequestPaintWhileHidden);
+        self.state.set_window_visible(true);
+        self.last_window_width = SETTINGS_WINDOW_WIDTH;
+        self.last_window_height = SETTINGS_WINDOW_HEIGHT;
+        ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(egui::vec2(
+            SETTINGS_WINDOW_WIDTH,
+            SETTINGS_WINDOW_HEIGHT,
+        )));
+        ctx.send_viewport_cmd(egui::ViewportCommand::Visible(true));
+        ctx.send_viewport_cmd(egui::ViewportCommand::WindowLevel(
+            egui::WindowLevel::AlwaysOnTop,
+        ));
+        ctx.send_viewport_cmd(egui::ViewportCommand::Focus);
         ctx.request_repaint();
+    }
+
+    /// 環境設定ダイアログを閉じ、ルートウィンドウを 1 行ランチャーサイズへ戻して非表示待機させます。
+    fn close_settings_dialog(&mut self, ctx: &egui::Context) {
+        self.settings_dialog.close();
+        let target_width = self.config.window_width;
+        let target_height = self.state.window_height();
+        self.last_window_width = target_width;
+        self.last_window_height = target_height;
+        ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(egui::vec2(
+            target_width,
+            target_height,
+        )));
+        self.dismiss_window(ctx);
     }
 
     /// 新しい [`AppConfig`] をランチャー本体・インデクサ・ホットキー・設定ファイルへ即時反映します。
@@ -293,12 +320,16 @@ impl LauncherApp {
             .hotkey_service
             .as_ref()
             .is_some_and(HotKeyService::poll_pressed);
-        if hotkey_pressed {
-            let now_visible = self.state.toggle_visibility(self.indexer.items());
-            if now_visible {
-                self.show_window(ctx);
+        if hotkey_pressed && !self.settings_dialog.is_capturing_hotkey() {
+            if self.settings_dialog.is_open() {
+                self.close_settings_dialog(ctx);
             } else {
-                self.dismiss_window(ctx);
+                let now_visible = self.state.toggle_visibility(self.indexer.items());
+                if now_visible {
+                    self.show_window(ctx);
+                } else {
+                    self.dismiss_window(ctx);
+                }
             }
         }
 
@@ -310,21 +341,28 @@ impl LauncherApp {
         {
             match cmd {
                 TrayCommand::ToggleWindow => {
-                    let now_visible = self.state.toggle_visibility(self.indexer.items());
-                    if now_visible {
-                        self.show_window(ctx);
+                    if self.settings_dialog.is_open() {
+                        self.close_settings_dialog(ctx);
                     } else {
-                        self.dismiss_window(ctx);
+                        let now_visible = self.state.toggle_visibility(self.indexer.items());
+                        if now_visible {
+                            self.show_window(ctx);
+                        } else {
+                            self.dismiss_window(ctx);
+                        }
                     }
                 }
                 TrayCommand::OpenCommandsFolder => {
                     if let Some(first_dir) = self.indexer.directories().first() {
                         let _ = open::that_detached(first_dir);
                     }
-                    self.dismiss_window(ctx);
+                    if self.settings_dialog.is_open() {
+                        self.close_settings_dialog(ctx);
+                    } else {
+                        self.dismiss_window(ctx);
+                    }
                 }
                 TrayCommand::OpenSettings => {
-                    self.dismiss_window(ctx);
                     self.open_settings_dialog(ctx);
                 }
                 TrayCommand::Exit => {
@@ -360,7 +398,6 @@ impl LauncherApp {
     /// ビルトイン（スラッシュ）コマンドを実行します。
     fn execute_builtin(&mut self, ctx: &egui::Context, cmd: BuiltinCommand) {
         if cmd == BuiltinCommand::Config {
-            self.dismiss_window(ctx);
             self.open_settings_dialog(ctx);
             return;
         }
@@ -418,15 +455,15 @@ impl eframe::App for LauncherApp {
             && self.hide_only_on_dismiss
         {
             ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
-            self.dismiss_window(ctx);
+            if self.settings_dialog.is_open() {
+                self.close_settings_dialog(ctx);
+            } else {
+                self.dismiss_window(ctx);
+            }
         }
 
         // ウィンドウ非表示（バックグラウンド待機）中もホットキー・トレイイベントを確実に処理する
         self.poll_os_events(ctx);
-
-        if self.settings_dialog.is_open() && !self.state.is_window_visible() {
-            ctx.send_viewport_cmd(egui::ViewportCommand::RequestPaintWhileHidden);
-        }
     }
 
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
@@ -438,18 +475,41 @@ impl eframe::App for LauncherApp {
             && self.hide_only_on_dismiss
         {
             ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
-            self.dismiss_window(&ctx);
+            if self.settings_dialog.is_open() {
+                self.close_settings_dialog(&ctx);
+            } else {
+                self.dismiss_window(&ctx);
+            }
         }
 
         // 0. グローバルホットキー・システムトレイ等の OS 常駐イベント処理
         self.poll_os_events(&ctx);
 
-        // 0.5. GUI 設定ダイアログ（独立ビューポート）の描画と反映
+        // 0.5. GUI 設定ダイアログ（同一ルートウィンドウ内画面切り替え）の描画と反映
         if self.settings_dialog.is_open() {
-            let dialog_action = self.settings_dialog.show_viewport(&ctx);
-            if let SettingsDialogAction::SaveAndApply(new_cfg) = dialog_action {
-                self.apply_config(new_cfg, &ctx);
+            let dialog_action = self.settings_dialog.show_in_root(ui);
+            match dialog_action {
+                SettingsDialogAction::SaveAndApply(new_cfg) => {
+                    self.apply_config(new_cfg, &ctx);
+                    self.close_settings_dialog(&ctx);
+                }
+                SettingsDialogAction::Cancel => {
+                    self.close_settings_dialog(&ctx);
+                }
+                SettingsDialogAction::None => {
+                    if (SETTINGS_WINDOW_WIDTH - self.last_window_width).abs() > 0.5
+                        || (SETTINGS_WINDOW_HEIGHT - self.last_window_height).abs() > 0.5
+                    {
+                        self.last_window_width = SETTINGS_WINDOW_WIDTH;
+                        self.last_window_height = SETTINGS_WINDOW_HEIGHT;
+                        ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(egui::vec2(
+                            SETTINGS_WINDOW_WIDTH,
+                            SETTINGS_WINDOW_HEIGHT,
+                        )));
+                    }
+                }
             }
+            return;
         }
 
         // ランチャーウィンドウが非表示状態の場合は、メイン入力 UI の描画やフォーカス奪取をスキップ

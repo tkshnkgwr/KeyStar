@@ -72,6 +72,9 @@ The greatest appeal of the classic "CraftLaunch 2" was its unobtrusive presence:
 
 ## 5. `eframe` / `egui` Implementation Strategy
 
+- **Lightweight OpenGL (`glow`) Renderer & System Fonts**:
+  - Explicitly sets `renderer: eframe::Renderer::Glow` in `eframe::NativeOptions` to avoid heavy `wgpu` DX12/Vulkan/DXC shader compiler memory overhead.
+  - Enables `system_fonts` feature in `Cargo.toml` for native Windows CJK font fallback without bundling large font assets.
 - **Native Options**:
   - Configure `decorated: false`, `always_on_top: true`, `taskbar: false` in `ViewportBuilder`.
 - **Background Event Loop**:

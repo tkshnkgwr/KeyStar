@@ -233,6 +233,7 @@ impl TrayService {
 
         let tray_icon = TrayIconBuilder::new()
             .with_menu(Box::new(menu))
+            .with_menu_on_left_click(false)
             .with_tooltip(DEFAULT_TRAY_TOOLTIP)
             .with_icon(icon)
             .build()

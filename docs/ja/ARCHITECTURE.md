@@ -126,9 +126,9 @@ flowchart TD
 
 ## 5. 技術選定の理由と制約
 
-1. **`eframe` / `egui` (即時描画GUI)**:
-   - Web技術（Tauri/Electron）のような重厚なブラウザエンジンを排し、GPU即時描画による起動速度 0.001 秒・メモリ消費数MBの超軽量性を実現。
-   - 1行の入力欄と数行の候補リストという極小UIに最適。
+1. **`eframe` / `egui` (`glow` / OpenGL バックエンドによる即時描画GUI)**:
+   - Web技術（Tauri/Electron）のような重厚なブラウザエンジンを排し、さらに `eframe` 既定の `wgpu`（DX12/Vulkan/DXCシェーダコンパイラ）から超軽量な **`glow` (OpenGL)** バックエンドへ切り替えることで、固有メモリ消費を約 84% 削減（284.78 MB → 45.99 MB）・単一バイナリサイズ 5.53 MB の極限軽量性を実現。
+   - `system_fonts` と `clipboard` のみを厳選有効化し、日本語システムフォント表示と1行入力欄・候補リストの高速描画に最適化。
 2. **`evalexpr`**:
    - 外部ランタイム（PythonやLua）を埋め込むことなく、Rust単体バイナリ内で数式評価を完結。
 3. **`open` & `ShellExecuteW`**:

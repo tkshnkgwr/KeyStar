@@ -70,21 +70,38 @@ This document defines the resource consumption metrics (RAM, CPU, cold start, ke
 
 ---
 
-## 5. Optimization Roadmap (Phase 4 Plan)
+## 5. Binary & Memory Optimization Results (Phase 5 & Phase 7 Completed)
 
-In Phase 4, release build optimizations will be configured in `Cargo.toml`:
+By combining release profile optimizations with switching `eframe`'s rendering backend from default **`wgpu` to `glow` (OpenGL)** in `Cargo.toml`, `KeyStar` achieves drastic reductions in both standalone binary size and resident Private Memory:
 
 ```toml
+[dependencies]
+eframe = { version = "0.37.0", default-features = false, features = [
+    "clipboard",
+    "default_fonts",
+    "glow",
+    "system_fonts",
+] }
+
 [profile.release]
-opt-level = 3
+opt-level = "z"
 lto = true
 codegen-units = 1
 panic = "abort"
 strip = true
 ```
 
-- **Binary Size Target**: < 5 MB (single standalone executable)
-- **Resident RAM Target**: < 10 MB
+### Measured Comparison Before & After `wgpu` → `glow` Switch (2026-11-17)
+
+| Metric                           | Previous `wgpu` | Current `glow`  | Reduction / Improvement |
+| :------------------------------- | :-------------: | :-------------: | :---------------------: |
+| **Private Memory**               |  **284.78 MB**  |  **45.99 MB**   | **-238.79 MB (-83.9%)** |
+| **Virtual Memory**               | **4,916.83 MB** | **4,551.79 MB** | **-365.04 MB (-7.4%)**  |
+| **Release Binary Size (`.exe`)** |   **8.40 MB**   |   **5.53 MB**   |  **-2.87 MB (-34.2%)**  |
+
+- **Why `glow` over `wgpu`**:
+  - `eframe`'s default `wgpu` backend loads heavy DirectX 12 / Vulkan / DXC shader compiler DLLs and GPU buffers at startup, inflating Private Memory to ~285 MB.
+  - Switching to the lightweight OpenGL (`glow`) backend while retaining only `system_fonts` (for CJK font fallback) and `clipboard` cuts Private Memory by **83.9% (down to 45.99 MB)** and shrinks the standalone `.exe` by **34.2% (down to 5.53 MB)**.
 
 
 ---

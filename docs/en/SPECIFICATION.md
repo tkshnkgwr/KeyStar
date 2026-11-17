@@ -7,7 +7,7 @@
 | **Name**          | KeyStar                                                                  |
 | **Category**      | Ultra-Lightweight Single-Line Windows Keyboard Launcher                  |
 | **Language**      | Rust (Edition 2024)                                                      |
-| **GUI Framework** | `eframe` / `egui`                                                        |
+| **GUI Framework** | `eframe` / `egui` (`glow` OpenGL backend)                                |
 | **Target OS**     | Windows 11 (x86_64)                                                      |
 | **Design Spirit** | Revival of "CraftLaunch 2" (Single-line, blazing fast, keyboard-centric) |
 

@@ -72,6 +72,9 @@
 
 ## 5. `eframe` / `egui` による実装方針
 
+- **軽量 OpenGL (`glow`) レンダラー & 日本語フォント連携**:
+  - `eframe::NativeOptions` で `renderer: eframe::Renderer::Glow` を指定し、`wgpu` 由来の巨大グラフィックドライバ・シェーダコンパイラ常駐を回避。
+  - `Cargo.toml` にて `system_fonts` feature を有効化し、外部フォントファイル同梱なしで Windows システムフォントによる日本語表示を実現。
 - **イベントループ**:
   - `eframe::NativeOptions` で `decorated: false`, `always_on_top: true`, `transparent: false` を設定。
   - アプリケーション非アクティブ時（または Esc 押下時）はウィンドウを最小化または `set_visible(false)` で非表示化。

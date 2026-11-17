@@ -22,7 +22,7 @@
 | **Phase 4: 設定画面**        | GUI環境設定ダイアログ、設定永続化 (`config.toml`)        | `egui`, `serde`, `toml`      |    **完了**    |
 | **Phase 5: 最適化 & 配布**   | 単一バイナリ最適化、ポータブル配布パッケージ             | Cargo Release, ZIP           |    **完了**    |
 | **Phase 6: 機能拡張**        | /version コマンド、追加ユーティリティ                    | Windows API, Cargo           |    **完了**    |
-| **Phase 7: 省メモリ最適化**  | `eframe` の `glow` 切替による常駐メモリ削減            | Cargo features (`glow`)      |   **未着手**   |
+| **Phase 7: 省メモリ最適化**  | `eframe` の `glow` 切替による常駐メモリ削減              | Cargo features (`glow`)      |    **完了**    |
 
 ---
 
@@ -152,12 +152,13 @@
 
 ---
 
-### Phase 7: 省メモリ最適化（未着手 / 2026-11-16 実測調査反映）
-- [ ] **【描画バックエンド切替】 `eframe` を既定 `wgpu` から `glow` (OpenGL) へ変更 (`Cargo.toml`)**:
+### Phase 7: 省メモリ最適化（完了 / 2026-11-17 実測反映）
+- [x] **【描画バックエンド切替】 `eframe` を既定 `wgpu` から `glow` (OpenGL) へ変更 (`Cargo.toml`, `src/ui/mod.rs`)**:
   - **背景**: 2026-11-16 の実機計測で `KeyStar.exe` の固有メモリ（Private Memory）が **285.41 MB** に達していることを確認。`eframe = "0.37.0"` の `default` feature に `wgpu` が含まれており、DX12 / Vulkan / DXC シェーダコンパイラ関連の巨大 DLL 群が常駐ロードされるのが主因（同環境の `clondar-native` 検証で `wgpu` 293.06 MB → `glow` 68.45 MB と **-224.61 MB / -76.6%** 削減を確認済み）。
-  - [ ] `Cargo.toml` を `eframe = { version = "0.37.0", default-features = false, features = ["glow", "default_fonts"] }`（必要に応じて `accesskit` 等の最小構成）へ変更する。
-  - [ ] リリースビルドして枠なしウィンドウ・透過・IME入力・設定ダイアログ・`/version` 等が正常動作するか検証する。
-  - [ ] 切り替え前後の `Private Memory` / `WorkingSet` / ホットキー復帰応答を実機再計測して効果を記録する。
+  - [x] `Cargo.toml` を `eframe = { version = "0.37.0", default-features = false, features = ["clipboard", "default_fonts", "glow", "system_fonts"] }` へ変更し、`src/ui/mod.rs` で `Renderer::Glow` を明示指定。
+  - [x] `eframe 0.37.0` (`glow_integration.rs`) の子ビューポート破棄時 GL コンテキスト解放漏れバグを回避するため、設定ダイアログを別ウィンドウ（`show_viewport_immediate`）から同一ルートウィンドウ内の画面切り替え（`show_in_root`）へ改修。
+  - [x] リリースビルドして枠なしウィンドウ・日本語システムフォント描画・クリップボード連携・設定ダイアログ・`/version` 等の動作および全テストスイート通過を検証。
+  - [x] 切り替え前後の実機再計測を実施し、**Private Memory: 284.78 MB → 45.99 MB（-238.79 MB / -83.9% 削減）**、**実行バイナリサイズ: 8.40 MB → 5.53 MB（-2.87 MB / -34.2% 削減）** を達成。
 
 ---
 
